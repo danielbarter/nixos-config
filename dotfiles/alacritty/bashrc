@@ -1,0 +1,10 @@
+MOZ_ENABLE_WAYLAND="1"
+XDG_CURRENT_DESKTOP="sway"
+
+
+prompts=(🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍈 🍒 🥭 🍍 🥥 🥝 🍅 🍆 🥑 🥦 🥬 🥒 🫑 🌽 🥕 🫒 🧄)
+size=${#prompts[@]}
+index=$(($RANDOM % $size))
+prompt=${prompts[$index]}
+PROMPT_COMMAND='echo -ne "\033]0;$(whoami)@$(hostname):$(pwd) ${prompt}\007"'
+PS1="${prompt} "
