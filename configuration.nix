@@ -291,7 +291,7 @@ in
       # some of my systems have external nvidia gpus which are not used for rendering
       # and sway won't start without the flag on those machines.
       ExecStart = ''
-        ${pkgs.dbus}/bin/dbus-run-session ${pkgs.sway}/bin/sway --debug --my-next-gpu-wont-be-nvidia
+        ${pkgs.dbus}/bin/dbus-run-session ${pkgs.sway}/bin/sway
       '';
     };
   };
