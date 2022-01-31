@@ -112,7 +112,7 @@ in
   };
 
   # needed for users to use non standard caches
-  nix.trustedUsers = ["danielbarter" "root"];
+  nix.settings.trusted-users = ["danielbarter" "root"];
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
