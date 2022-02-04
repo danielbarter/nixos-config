@@ -19,7 +19,7 @@ with import <nixpkgs> {
     wget
     htop
     firefox-wayland
-    google-chrome
+    # chromium
     emacsPgtk
     zathura
     aspell
@@ -27,7 +27,7 @@ with import <nixpkgs> {
     (pass.withExtensions (exts: [exts.pass-otp]))
     python38
     nix-serve
-    steam
+    # steam
     nmap
     zip
     unzip
