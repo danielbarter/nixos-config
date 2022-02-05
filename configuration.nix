@@ -21,7 +21,9 @@ let
   hostSpecificVariables = import ./host-specific-variables.nix {inherit pkgs;};
 
 
-# bash script to start sway
+  # bash script to let dbus know about important env variables and propogate them to
+  # relevent services
+  # run at the end of sway config
   dbus-sway-environment = pkgs.writeTextFile {
     name = "dbus-sway-environment";
     destination = "/bin/dbus-sway-environment";
