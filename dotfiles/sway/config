@@ -271,3 +271,6 @@ bar {
         inactive_workspace $base02 $base02 $base1
     }
 }
+
+# Import the WAYLAND_DISPLAY env var from sway into the systemd user session.
+exec dbus-sway-environment

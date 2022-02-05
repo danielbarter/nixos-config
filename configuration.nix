@@ -21,39 +21,19 @@ let
   hostSpecificVariables = import ./host-specific-variables.nix {inherit pkgs;};
 
 
-  # bash script to start sway
-  startsway = pkgs.writeTextFile {
-      name = "startsway";
-      destination = "/bin/startsway";
-      executable = true;
-      text = let
-
-        # currently, there is some friction between sway and gtk:
-        # https://github.com/swaywm/sway/wiki/GTK-3-settings-on-Wayland
-        # the only way to set certain gtk settings is with gsettings
-        # for gsettings to work, we need to tell it where the schemas are
-        # using the XDG_DATA_DIR environment variable
-        schema = pkgs.gsettings-desktop-schemas;
-        datadir = "${schema}/share/gsettings-schemas/${schema.name}";
-      in ''
-        #! ${pkgs.bash}/bin/bash
-        export XDG_DATA_DIRS=${datadir}:$XDG_DATA_DIRS
-        systemctl --user import-environment $(env | awk -F '=' '{print $1}')
-        systemctl --user start sway.service'';
-  };
-
-  # bash script to kick redshift
-  kickredshift = pkgs.writeTextFile {
-    name = "kickredshift";
-    destination = "/bin/kickredshift";
+# bash script to start sway
+  dbus-sway-environment = pkgs.writeTextFile {
+    name = "dbus-sway-environment";
+    destination = "/bin/dbus-sway-environment";
     executable = true;
+
+    # Import the WAYLAND_DISPLAY env var from sway into the systemd user session.
     text = ''
-    #! ${pkgs.bash}/bin/bash
-
-    systemctl --user stop redshift
-    systemctl --user start redshift'';
-  };
-
+  dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+  systemctl --user stop pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
+  systemctl --user start pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
+      '';
+};
 
 in
 {
@@ -130,8 +110,7 @@ in
     gnupg
     git
     sway
-    startsway           # defined above
-    kickredshift        # defined above
+    dbus-sway-environment
     wayland
     manpages
     file
@@ -272,47 +251,6 @@ in
         gnome3.adwaita-icon-theme
       ];
   };
-
-
-
-
-  # sway systemd service
-  systemd.user.services.sway = {
-    description = "Sway - Wayland window manager";
-    documentation = [ "man:sway(5)" ];
-    bindsTo = [ "graphical-session.target" ];
-    wants = [ "graphical-session-pre.target" ];
-    after = [ "graphical-session-pre.target" ];
-    # We explicitly unset PATH here, as we want it to be set by
-    # systemctl --user import-environment in startsway
-    environment.PATH = lib.mkForce null;
-    serviceConfig = {
-      Type = "simple";
-      # we are never actually running sway on an nvidia gpu
-      # some of my systems have external nvidia gpus which are not used for rendering
-      # and sway won't start without the flag on those machines.
-      ExecStart = ''
-        ${pkgs.dbus}/bin/dbus-run-session ${pkgs.sway}/bin/sway
-      '';
-    };
-  };
-
-  # redshift systemd service
-  systemd.user.services.redshift = {
-    description = "redshift daemon";
-    documentation = [ "man redshift" ];
-    bindsTo = [ "graphical-session.target" ];
-    wants = [ "graphical-session-pre.target" ];
-    after = [ "graphical-session-pre.target" ];
-    wantedBy = [ "graphical-session.target" ];
-    # parameterize service over WAYLAND_DISPLAY
-    environment = { WAYLAND_DISPLAY = "wayland-1";};
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = '' ${pkgs.gammastep}/bin/gammastep -O 3700 '';
-    };
-  };
-
 
   # cool simple batch system
   systemd.user.services.pueued = {
