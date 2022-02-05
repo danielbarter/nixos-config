@@ -24,6 +24,7 @@ let
   # bash script to let dbus know about important env variables and propogate them to
   # relevent services
   # run at the end of sway config
+  # see https://github.com/emersion/xdg-desktop-portal-wlr/wiki/"It-doesn't-work"-Troubleshooting-Checklist
   dbus-sway-environment = pkgs.writeTextFile {
     name = "dbus-sway-environment";
     destination = "/bin/dbus-sway-environment";
