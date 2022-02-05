@@ -29,7 +29,6 @@ let
     destination = "/bin/dbus-sway-environment";
     executable = true;
 
-    # Import the WAYLAND_DISPLAY env var from sway into the systemd user session.
     text = ''
   dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
   systemctl --user stop pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
