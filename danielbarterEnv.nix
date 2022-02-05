@@ -1,4 +1,5 @@
-# list of packages in my user environment
+# I use user environments to install packages with overlays, since it is kind of
+# messy to do it in configuration.nix
 # refresh with nix-env --remove-all -if /etc/nixos/danielbarterEnv.nix
 
 with import <nixpkgs> {
@@ -16,22 +17,5 @@ with import <nixpkgs> {
 
 };
 [
-    wget
-    htop
-    firefox-wayland
-    # chromium
     emacsPgtk
-    zathura
-    aspell
-    aspellDicts.en
-    (pass.withExtensions (exts: [exts.pass-otp]))
-    python38
-    nix-serve
-    # steam
-    nmap
-    zip
-    unzip
-    radare2
-    fzf
-    zbar
 ]

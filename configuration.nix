@@ -107,7 +107,7 @@ in
     alacritty           # gpu accelerated terminal
     pavucontrol         # pulseaudio control volume
     helvum              # pipewire patchbay
-    gammastep
+    gammastep           # redshift
     gnupg
     git
     sway
@@ -120,8 +120,22 @@ in
     pciutils            # lspci
     man-pages
     man-pages-posix
-    glib                # gsettings
-
+    wget
+    htop
+    firefox-wayland
+    zathura
+    aspell
+    aspellDicts.en
+    (pass.withExtensions (exts: [exts.pass-otp]))
+    python38
+    nix-serve
+    steam
+    nmap
+    zip
+    unzip
+    radare2
+    fzf                # fuzzy searcher
+    zbar               # QRcode reader
   ] ++ hostSpecificVariables.packages;
 
 
@@ -171,6 +185,7 @@ in
   xdg.portal = {
     enable = true;
     wlr.enable = true;
+    # gtk portal needed to make firefox happy
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     gtkUsePortal = true;
   };
