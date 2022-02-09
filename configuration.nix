@@ -124,6 +124,7 @@ in
     wget
     htop
     firefox-wayland
+    chromium
     zathura
     aspell
     aspellDicts.en
