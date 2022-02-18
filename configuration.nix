@@ -265,6 +265,7 @@ in
         grim         # screenshot functionality
         slurp        # screenshot functionality
         wl-clipboard
+        bemenu
         # make sure the default gnome icons are avaliable
         # to gtk applications
         gnome3.adwaita-icon-theme
@@ -281,6 +282,23 @@ in
     serviceConfig = {
       Type = "simple";
       ExecStart = '' ${pkgs.pueue}/bin/pueued'';
+    };
+  };
+
+
+  # gammastep systemd service
+  systemd.user.services.gammastep = {
+    description = "gammastep daemon";
+    documentation = [ "man gammastep" ];
+    bindsTo = [ "graphical-session.target" ];
+    wants = [ "graphical-session-pre.target" ];
+    after = [ "graphical-session-pre.target" ];
+    wantedBy = [ "graphical-session.target" ];
+    # parameterize service over WAYLAND_DISPLAY
+    # environment = { WAYLAND_DISPLAY = "wayland-1";};
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = '' ${pkgs.gammastep}/bin/gammastep -O 4000 '';
     };
   };
 
