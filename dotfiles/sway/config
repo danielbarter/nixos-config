@@ -54,7 +54,7 @@ set $green             #859900
 
 
 set $menu bemenu-run \
-          --fn "pango:SourceCodePro Regular 11" \
+          --fn "SourceCodePro Regular 11" \
           --line-height=25 \
           --tb=$base02 \
           --tf=$base1 \
@@ -293,3 +293,5 @@ exec swayidle -w \
               resume 'swaymsg "output * dpms on"' \
          before-sleep 'swaylock -f -c 000000'
 
+# set gtk settings
+exec configure-gtk

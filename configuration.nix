@@ -35,7 +35,27 @@ let
   systemctl --user stop pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
   systemctl --user start pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
       '';
-};
+  };
+
+  # currently, there is some friction between sway and gtk:
+  # https://github.com/swaywm/sway/wiki/GTK-3-settings-on-Wayland
+  # the suggested way to set gtk settings is with gsettings
+  # for gsettings to work, we need to tell it where the schemas are
+  # using the XDG_DATA_DIR environment variable
+  configure-gtk = pkgs.writeTextFile {
+      name = "configure-gtk";
+      destination = "/bin/configure-gtk";
+      executable = true;
+      text = let
+        schema = pkgs.gsettings-desktop-schemas;
+        datadir = "${schema}/share/gsettings-schemas/${schema.name}";
+      in ''
+        export XDG_DATA_DIRS=${datadir}:$XDG_DATA_DIRS
+        gnome_schema=org.gnome.desktop.interface
+        gsettings set $gnome_schema gtk-theme 'NumixSolarizedDarkBlue'
+        '';
+  };
+
 
 in
 {
@@ -113,6 +133,7 @@ in
     git
     sway
     dbus-sway-environment
+    configure-gtk
     wayland
     manpages
     file
@@ -136,8 +157,17 @@ in
     zip
     unzip
     radare2
-    fzf                # fuzzy searcher
-    zbar               # QRcode reader
+    fzf                       # fuzzy searcher
+    zbar                      # QRcode reader
+    glib                      # gsettings
+    numix-solarized-gtk-theme # solarized gtk theme
+    gnome3.adwaita-icon-theme # default gnome icons
+    swaylock
+    swayidle
+    grim         # screenshot functionality
+    slurp        # screenshot functionality
+    wl-clipboard
+    bemenu
   ] ++ hostSpecificVariables.packages;
 
 
@@ -259,17 +289,6 @@ in
   programs.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
-    extraPackages = with pkgs; [
-        swaylock
-        swayidle
-        grim         # screenshot functionality
-        slurp        # screenshot functionality
-        wl-clipboard
-        bemenu
-        # make sure the default gnome icons are avaliable
-        # to gtk applications
-        gnome3.adwaita-icon-theme
-      ];
   };
 
   # cool simple batch system
