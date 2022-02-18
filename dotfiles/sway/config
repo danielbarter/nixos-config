@@ -15,6 +15,7 @@ set $up k
 set $right l
 # Your preferred terminal emulator
 set $term alacritty
+set $menu bemenu-run
 
 ### Output configuration
 #
@@ -109,6 +110,9 @@ input type:keyboard {
 #
 # Start a terminal
 bindsym $mod+Return exec $term
+
+# Start menu
+bindsym $mod+d exec $menu
 
 bindsym $mod+c exec grim  -g "$(slurp)" /tmp/$(date +'%H:%M:%S.png')
 
