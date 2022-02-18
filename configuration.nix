@@ -52,7 +52,7 @@ let
       in ''
         export XDG_DATA_DIRS=${datadir}:$XDG_DATA_DIRS
         gnome_schema=org.gnome.desktop.interface
-        gsettings set $gnome_schema gtk-theme 'NumixSolarizedDarkBlue'
+        gsettings set $gnome_schema gtk-theme 'Dracula'
         '';
   };
 
@@ -160,12 +160,12 @@ in
     fzf                       # fuzzy searcher
     zbar                      # QRcode reader
     glib                      # gsettings
-    numix-solarized-gtk-theme # solarized gtk theme
+    dracula-theme             # gtk theme
     gnome3.adwaita-icon-theme # default gnome icons
     swaylock
     swayidle
-    grim         # screenshot functionality
-    slurp        # screenshot functionality
+    grim                      # screenshot functionality
+    slurp                     # screenshot functionality
     wl-clipboard
     bemenu
   ] ++ hostSpecificVariables.packages;
