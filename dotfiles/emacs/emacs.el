@@ -351,6 +351,9 @@
 ;; remove the lsp headline
 (setq lsp-headerline-breadcrumb-enable nil)
 
+;; disable inline lsp buttons
+(setq lsp-lens-enable nil)
+
 ;; When using lsp-mode most of the features depend on server capabilities.
 ;; lsp-mode provides default bindings which are dynamically enabled/disabled
 ;; based on the server functionality. all the commands are in lsp-command-map,
