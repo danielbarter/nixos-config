@@ -92,7 +92,6 @@
 
 
                      haskell-mode
-                     futhark-mode
                      rust-mode
                      yaml-mode
                      lsp-mode
