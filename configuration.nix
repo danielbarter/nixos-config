@@ -135,7 +135,7 @@ in
     dbus-sway-environment
     configure-gtk
     wayland
-    manpages
+    man-pages
     file
     strace
     pueue               # task management
