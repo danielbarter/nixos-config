@@ -273,7 +273,7 @@ bindsym $mod+r mode "resize"
 
 bar {
     position top
-    status_command while /etc/nixos/dotfiles/sway/status_command.sh; do sleep 5; done
+    status_command while python /etc/nixos/dotfiles/sway/status_command.py; do sleep 5; done
     height 25
     colors {
         background $base02
