@@ -32,8 +32,8 @@ let
 
     text = ''
   dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
-  systemctl --user stop pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
-  systemctl --user start pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
+  systemctl --user stop pipewire wireplumber pipewire-pulse xdg-desktop-portal xdg-desktop-portal-wlr
+  systemctl --user start pipewire wireplumber pipewire-pulse xdg-desktop-portal xdg-desktop-portal-wlr
       '';
   };
 
@@ -199,6 +199,10 @@ in
   # allow real-time scheduling to be used by normal user processes.
   security.rtkit.enable = true;
   services.pipewire = {
+
+    config.pipewire = {
+      "log.level" = 4;  # https://docs.pipewire.org/page_daemon.html
+    };
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
