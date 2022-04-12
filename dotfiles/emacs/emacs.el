@@ -154,6 +154,9 @@
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
+;; enable hideshow mode
+(add-hook 'prog-mode-hook 'hs-minor-mode)
+
 ;; highlight matching parens
 (show-paren-mode 1)
 
