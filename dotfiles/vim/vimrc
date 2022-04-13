@@ -18,5 +18,5 @@ map <Leader>wm :only<Return>
 
 map <Leader>jl :<Space>
 
-map <Leader>! :!
+map <Leader>! :!<Space>
 
