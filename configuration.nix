@@ -131,6 +131,7 @@ in
     gammastep           # redshift
     gnupg
     git
+    vim
     sway
     dbus-sway-environment
     configure-gtk

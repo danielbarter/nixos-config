@@ -12,6 +12,7 @@ mkdir /home/danielbarter/.ssh/sockets
 
 
 ln -s /etc/nixos/dotfiles/emacs/emacs.el /home/danielbarter/.emacs.el
+ln -s /etc/nixos/dotfiles/vim/vimrc /home/danielbarter/.vimrc
 ln -s /etc/nixos/dotfiles/alacritty/alacritty.yml /home/danielbarter/.alacritty.yml
 ln -s /etc/nixos/dotfiles/alacritty/bashrc /home/danielbarter/.bashrc
 
