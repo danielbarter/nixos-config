@@ -99,6 +99,7 @@
                      nix-mode
                      markdown-mode
                      meson-mode
+                     kotlin-mode
                     ))
 
 
@@ -332,6 +333,10 @@
   (kbd "<localleader>e") 'eval-region
 
 )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; kotlin mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(add-hook 'kotlin-mode-hook 'lsp)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; c/c++ mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
