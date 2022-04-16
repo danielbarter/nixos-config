@@ -89,6 +89,7 @@
                      rainbow-delimiters
                      flycheck
                      company
+                     yasnippet
                      undo-fu
 
 
@@ -337,7 +338,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; kotlin mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-hook 'kotlin-mode-hook 'lsp)
-
+(add-hook 'kotlin-mode-hook 'yas-minor-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; c/c++ mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
