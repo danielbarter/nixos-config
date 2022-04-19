@@ -11,6 +11,18 @@
     };
   };
 
+  systemd.user.services.powertop = {
+    description = "pueued daemon";
+    bindsTo = [ "default.target" ];
+    wants = [ "default.target" ];
+    after = [ "default.target" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = '' ${pkgs.powertop}/bin/powertop --auto-tune'';
+    };
+  };
+
   powerManagement.powertop.enable = true;
 
   # make udev rules for backlight
