@@ -42,6 +42,7 @@ let
   # the suggested way to set gtk settings is with gsettings
   # for gsettings to work, we need to tell it where the schemas are
   # using the XDG_DATA_DIR environment variable
+  # also some gtk fonts not being set by nixos config
   configure-gtk = pkgs.writeTextFile {
       name = "configure-gtk";
       destination = "/bin/configure-gtk";
@@ -52,7 +53,13 @@ let
       in ''
         export XDG_DATA_DIRS=${datadir}:$XDG_DATA_DIRS
         gnome_schema=org.gnome.desktop.interface
+        wm_schema=org.gnome.desktop.wm.preferences
+
         gsettings set $gnome_schema gtk-theme 'SolArc-Dark'
+        gsettings set $gnome_schema document-font-name "Source Sans Pro 11"
+        gsettings set $gnome_schema font-name "Source Sans Pro 11"
+        gsettings set $gnome_schema monospace-font-name "Source Code Pro 11"
+        gsettings set $wm_schema titlebar-font "Source Sans Pro 11"
         '';
   };
 
