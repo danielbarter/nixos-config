@@ -17,6 +17,7 @@ in
   packages = with pkgs; [
     light # control backlight
     calibrate-display
+    powertop
   ];
 }
 
