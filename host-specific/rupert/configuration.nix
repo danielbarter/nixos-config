@@ -32,7 +32,6 @@
 
 
   # xpad messes up usb passthrough to windows for xbox controllers, so disable it.
-  nixpkgs.config.allowUnfree = true;
   boot.blacklistedKernelModules = [ "nouveau" "nvidia_drm" "nvidia_modeset" "nvidia" "xpad" ];
   boot.extraModulePackages = [ pkgs.linuxPackages.nvidia_x11 ];
 

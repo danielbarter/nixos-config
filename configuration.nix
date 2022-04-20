@@ -64,6 +64,25 @@ let
   };
 
 
+  pkgsEmacsOverlay =  import <nixpkgs> {
+
+    config = config.nixpkgs.config;
+    # emacs overlay to get pureGTK emacs
+    # current mainline emacs isn't wayland native
+    # this is a problem if you are using multiple screens with different resolutions
+    # this community overlay adds developer versions of emacs with wayland support
+    # amoung other things.
+    overlays = [
+      (import (builtins.fetchTarball {
+        url = https://github.com/nix-community/emacs-overlay/archive/master.tar.gz;
+      }))
+    ];
+  };
+
+  # local nixpkgs
+  pkgsLocal = import /home/danielbarter/nixpkgs { config = config.nixpkgs.config; };
+
+
 in
 {
   imports =
@@ -129,9 +148,17 @@ in
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
 
+  nixpkgs.config.allowUnfree = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+
+    # packages from overlays and local nixpkgs
+    pkgsEmacsOverlay.emacsPgtk
+    (pkgsLocal.android-studio.override { tiling_wm = true;})
+
+
     alacritty           # gpu accelerated terminal
     pavucontrol         # pulseaudio control volume
     helvum              # pipewire patchbay

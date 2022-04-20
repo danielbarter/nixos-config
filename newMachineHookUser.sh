@@ -21,10 +21,3 @@ ln -s /etc/nixos/dotfiles/alacritty/alacritty.yml /home/danielbarter/.alacritty.
 ln -s /etc/nixos/dotfiles/alacritty/bashrc /home/danielbarter/.bashrc
 
 git clone git@github.com:danielbarter/password_store.git /home/danielbarter/.password-store
-
-mkdir /home/danielbarter/.config
-mkdir /home/danielbarter/.config/nixpkgs/
-echo "{ allowUnfree = true; }" > /home/danielbarter/.config/nixpkgs/config.nix
-
-# set up user environment
-nix-env --remove-all -if /etc/nixos/danielbarterEnv.nix
