@@ -159,6 +159,7 @@ in
     (pkgsLocal.android-studio.override { tiling_wm = true;})
 
 
+    nix-index           # nix-locate
     alacritty           # gpu accelerated terminal
     pavucontrol         # pulseaudio control volume
     helvum              # pipewire patchbay
