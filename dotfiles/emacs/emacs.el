@@ -346,6 +346,9 @@
 (add-hook 'c++-mode-hook 'lsp)
 (setq c-default-style "linux"
       c-basic-offset 4)
+(setq lsp-clients-clangd-args
+    '("--header-insertion=never"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; rust mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
