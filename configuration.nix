@@ -74,7 +74,7 @@ let
     # amoung other things.
     overlays = [
       (import (builtins.fetchTarball {
-        url = https://github.com/nix-community/emacs-overlay/archive/master.tar.gz;
+        url = https://github.com/nix-community/emacs-overlay/archive/8309def99872ead48b2591d7fd7ed198f0b3fb43.tar.gz;
       }))
     ];
   };
