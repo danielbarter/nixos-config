@@ -82,16 +82,6 @@ let
   # local nixpkgs
   pkgsLocal = import /home/danielbarter/nixpkgs { config = config.nixpkgs.config; };
 
-
-  # function to generate patterns for fontconfig font banning
-  fontBanPattern = s: ''
-  <pattern>
-    <patelt name="family">
-      <string>${s}</string>
-    </patelt>
-  </pattern>
-  '';
-
 in
 {
   imports =
@@ -305,24 +295,34 @@ in
       # over user specified ones
 
 
-      localConf = let fontsToBan = [
-        "Noto Emoji"
-        "DejaVu Sans"
-        "FreeSans"
-        "FreeMono"
-        "FreeSerif"
-        "DejaVu Math TeX Gyre"
-        "DejaVu Sans Mono"
-        "DejaVu Serif"
-        "Liberation Mono"
-        "Liberation Serif"
-        "Liberation Sans"
-        "Unifont"
-        "DejaVu Serif"
-        "DejaVu Serif"
-        "Liberation Serif"
-        "DejaVu Serif"
-      ]; in
+      localConf = let
+        # function to generate patterns for fontconfig font banning
+        fontBanPattern = s: ''
+        <pattern>
+          <patelt name="family">
+            <string>${s}</string>
+          </patelt>
+        </pattern>
+        '';
+
+        fontsToBan = [
+          "Noto Emoji"
+          "DejaVu Sans"
+          "FreeSans"
+          "FreeMono"
+          "FreeSerif"
+          "DejaVu Math TeX Gyre"
+          "DejaVu Sans Mono"
+          "DejaVu Serif"
+          "Liberation Mono"
+          "Liberation Serif"
+          "Liberation Sans"
+          "Unifont"
+          "DejaVu Serif"
+          "DejaVu Serif"
+          "Liberation Serif"
+          "DejaVu Serif"
+        ]; in
         ''
         <?xml version="1.0"?>
         <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
