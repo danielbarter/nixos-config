@@ -292,7 +292,7 @@ in
       # fontconfigs internal ordering of fonts rather than specific font
       # tags. To get the correct fonts to be rendered, we need to disable some
       # fallback fonts which nixos includes by default and fontconfig prefers
-      # over user specified ones
+      # over user specified ones. To see this internal list, run fc-match -s
 
 
       localConf = let
