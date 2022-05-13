@@ -83,6 +83,15 @@ let
   pkgsLocal = import /home/danielbarter/nixpkgs { config = config.nixpkgs.config; };
 
 
+  # function to generate patterns for fontconfig font banning
+  fontBanPattern = s: ''
+  <pattern>
+    <patelt name="family">
+      <string>${s}</string>
+    </patelt>
+  </pattern>
+  '';
+
 in
 {
   imports =
@@ -288,29 +297,41 @@ in
 
     fontconfig = {
       enable = true;
-      # bump NotoColorEmoji up in the fc-match -s list
-      localConf = ''
+
+      # some applications, notably alacritty, choose fonts according to
+      # fontconfigs internal ordering of fonts rather than specific font
+      # tags. To get the correct fonts to be rendered, we need to disable some
+      # fallback fonts which nixos includes by default and fontconfig prefers
+      # over user specified ones
+
+
+      localConf = let fontsToBan = [
+        "Noto Emoji"
+        "DejaVu Sans"
+        "FreeSans"
+        "FreeMono"
+        "FreeSerif"
+        "DejaVu Math TeX Gyre"
+        "DejaVu Sans Mono"
+        "DejaVu Serif"
+        "Liberation Mono"
+        "Liberation Serif"
+        "Liberation Sans"
+        "Unifont"
+        "DejaVu Serif"
+        "DejaVu Serif"
+        "Liberation Serif"
+        "DejaVu Serif"
+      ]; in
+        ''
         <?xml version="1.0"?>
         <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
         <fontconfig>
-          <alias binding="weak">
-            <family>monospace</family>
-            <prefer>
-              <family>emoji</family>
-            </prefer>
-          </alias>
-          <alias binding="weak">
-            <family>sans-serif</family>
-            <prefer>
-              <family>emoji</family>
-            </prefer>
-          </alias>
-          <alias binding="weak">
-            <family>serif</family>
-            <prefer>
-              <family>emoji</family>
-            </prefer>
-          </alias>
+          <selectfont>
+            <rejectfont>
+              ${lib.strings.concatStringsSep "\n" (map fontBanPattern fontsToBan)}
+            </rejectfont>
+          </selectfont>
         </fontconfig>
       '';
 
