@@ -127,6 +127,9 @@ bindsym $mod+Return exec $term
 # Start menu
 bindsym $mod+d exec $menu
 
+# Start control panels
+bindsym $mod+Shift+d exec wpa_gui; exec pavucontrol; exec blueman-manager
+
 bindsym $mod+c exec grim  -g "$(slurp)" /tmp/$(date +'%H:%M:%S.png')
 
 # Kill focused window
@@ -300,7 +303,3 @@ exec swayidle -w \
 
 # set gtk settings
 exec configure-gtk
-
-exec wpa_gui
-exec pavucontrol
-exec blueman-manager
