@@ -259,7 +259,11 @@ in
   # (/org/freedesktop/portal/desktop).
   # The portal interfaces include APIs for file access, opening URIs,
   # printing and others.
-  services.dbus.enable = true;
+  services.dbus = {
+    enable = true;
+    packages = [ pkgs.wpa_supplicant ];
+  };
+
   xdg.portal = {
     enable = true;
     wlr.enable = true;
