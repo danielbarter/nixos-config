@@ -159,6 +159,7 @@ in
     # packages from overlays and local nixpkgs
     pkgsEmacsOverlay.emacsPgtk
     (pkgsLocal.android-studio.override { tiling_wm = true;})
+    (pkgsLocal.wpa_supplicant.override { wheelDbusAccess = true;})
 
 
     nix-index           # nix-locate
@@ -261,7 +262,7 @@ in
   # printing and others.
   services.dbus = {
     enable = true;
-    packages = [ pkgs.wpa_supplicant ];
+    packages = [ pkgsLocal.wpa_supplicant ];
   };
 
   xdg.portal = {
