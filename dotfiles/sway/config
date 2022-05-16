@@ -300,3 +300,7 @@ exec swayidle -w \
 
 # set gtk settings
 exec configure-gtk
+
+exec wpa_gui
+exec pavucontrol
+exec blueman-manager
