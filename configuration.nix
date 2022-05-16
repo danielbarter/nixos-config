@@ -107,6 +107,9 @@ in
     wireless = {
       enable = true;  # Enables wireless support via wpa_supplicant.
 
+      # let users directly control wpa_supplicant
+      userControlled.enable = true;
+
       # make sure wpa_supplicant attempts to use the correct interface
       interfaces = [ hostSpecificVariables.wirelessInterface ];
 
@@ -160,6 +163,7 @@ in
 
     nix-index           # nix-locate
     alacritty           # gpu accelerated terminal
+    pulseaudioFull      # pactl
     pavucontrol         # pulseaudio control volume
     helvum              # pipewire patchbay
     gammastep           # redshift
@@ -203,6 +207,8 @@ in
     slurp                     # screenshot functionality
     wl-clipboard
     bemenu
+    dfeet                     # dbus debugger
+    wpa_supplicant_gui        # wpa_gui
   ] ++ hostSpecificVariables.packages;
 
 
@@ -345,6 +351,8 @@ in
 
   };
 
+  # make sure pixbuf has access to an svg loader
+  services.xserver.gdk-pixbuf.modulePackages = [ pkgs.librsvg ];
 
   # enable sway window manager
   programs.sway = {
