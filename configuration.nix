@@ -189,7 +189,7 @@ in
     aspell
     aspellDicts.en
     (pass.withExtensions (exts: [exts.pass-otp]))
-    python38
+    (python38.withPackages ( p : [ p.dbus-python ]))
     nix-serve
     steam
     nmap
@@ -206,6 +206,7 @@ in
     grim                      # screenshot functionality
     slurp                     # screenshot functionality
     wl-clipboard
+    mako                      # FreeDesktop notifications
     bemenu
     dfeet                     # dbus debugger
     wpa_supplicant_gui        # wpa_gui
