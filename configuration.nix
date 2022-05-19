@@ -329,7 +329,6 @@ in
           "Liberation Mono"
           "Liberation Serif"
           "Liberation Sans"
-          "Unifont"
           "DejaVu Serif"
           "DejaVu Serif"
           "Liberation Serif"
