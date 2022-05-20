@@ -128,7 +128,7 @@ bindsym $mod+Return exec $term
 bindsym $mod+d exec $menu
 
 # Start control panels
-bindsym $mod+Shift+d exec wpa_gui; exec pavucontrol; exec blueman-manager
+bindsym $mod+Shift+d exec iwgtk; exec pavucontrol; exec blueman-manager
 
 bindsym $mod+c exec grim  -g "$(slurp)" /tmp/$(date +'%H:%M:%S.png')
 

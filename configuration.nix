@@ -5,9 +5,6 @@
 { config, pkgs, lib, ... }:
 
 let
-  # currently just a set of network wpa passwords
-  secrets = import ./secrets/secrets.nix;
-
   # set host specific variables. Looks like this:
   # {pkgs, ...}:
   #
@@ -105,14 +102,11 @@ in
     hostName = hostSpecificVariables.hostName;
     wireless.iwd = {
       enable = true;
-
-      settings.Settings = {
-        AutoConnect = true;
-        EnableNetworkConfiguration = true;
-      };
-
     };
 
+    # The global useDHCP flag is deprecated, therefore explicitly set to false here.
+    # Per-interface useDHCP will be mandatory in the future, so this generated config
+    # replicates the default behaviour.
     useDHCP = false;
 
     interfaces."wlan0".useDHCP = true;
@@ -134,7 +128,7 @@ in
   environment.systemPackages = with pkgs; [
 
     # packages from overlays and local nixpkgs
-    # pkgsEmacsOverlay.emacsPgtk
+    pkgsEmacsOverlay.emacsPgtk
     (pkgsLocal.android-studio.override { tiling_wm = true;})
     (pkgsLocal.wpa_supplicant.override { wheelDbusAccess = true;})
 
@@ -189,7 +183,6 @@ in
     mako                      # FreeDesktop notifications
     bemenu
     dfeet                     # dbus debugger
-    wpa_supplicant_gui        # wpa_gui
   ] ++ hostSpecificVariables.packages;
 
 
