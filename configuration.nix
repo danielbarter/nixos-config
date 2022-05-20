@@ -10,7 +10,6 @@ let
   #
   # {
   #   hostName = ...;
-  #   wirelessInterface = ...;
   #   initialVersion = ...;
   #   packages = ...;
   # }

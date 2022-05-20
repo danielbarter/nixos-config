@@ -12,7 +12,6 @@ let calibrate-display = pkgs.writeTextFile {
 in
 {
   hostName = "jasper";
-  wirelessInterface = "wlp170s0";
   initialVersion = "21.11";
   packages = with pkgs; [
     light # control backlight

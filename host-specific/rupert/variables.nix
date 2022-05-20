@@ -21,7 +21,6 @@ let initializeNvidia = pkgs.writeTextFile {
 in
 {
   hostName = "rupert";
-  wirelessInterface = "wlp36s0";
   initialVersion = "20.09";
   packages = [ pkgs.linuxPackages.nvidia_x11 initializeNvidia pkgs.virt-manager ];
 }
