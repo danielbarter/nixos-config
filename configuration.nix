@@ -109,6 +109,14 @@ in
     useDHCP = false;
 
     interfaces."wlan0".useDHCP = true;
+
+
+    # Open ports in the firewall.
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [ 22 8080 ];
+      allowedUDPPorts = [ 22 ];
+    };
   };
 
   # needed for users to use non standard caches
