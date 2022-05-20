@@ -103,42 +103,19 @@ in
 
   networking = {
     hostName = hostSpecificVariables.hostName;
+    wireless.iwd = {
+      enable = true;
 
-    wireless = {
-      enable = true;  # Enables wireless support via wpa_supplicant.
+      settings.Settings = {
+        AutoConnect = true;
+        EnableNetworkConfiguration = true;
+      };
 
-      # let users directly control wpa_supplicant
-      userControlled.enable = true;
-
-      # make sure wpa_supplicant attempts to use the correct interface
-      interfaces = [ hostSpecificVariables.wirelessInterface ];
-
-
-      networks = secrets.networks;
     };
 
-    # The global useDHCP flag is deprecated, therefore explicitly set to false here.
-    # Per-interface useDHCP will be mandatory in the future, so this generated config
-    # replicates the default behaviour.
     useDHCP = false;
 
-    # this is a desktop computer configuration
-    # we are always going to be using DHCP on some wireless interface
-    # that interface changes from machine to machine
-    interfaces.${hostSpecificVariables.wirelessInterface}.useDHCP = true;
-
-
-    # Configure network proxy if necessary
-    # proxy.default = "http://user:password@proxy:port/";
-    # proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-    # Open ports in the firewall.
-    firewall = {
-      enable = true;
-      allowedTCPPorts = [ 22 8080 ];
-      allowedUDPPorts = [ 22 ];
-    };
-
+    interfaces."wlan0".useDHCP = true;
   };
 
   # needed for users to use non standard caches
@@ -157,11 +134,13 @@ in
   environment.systemPackages = with pkgs; [
 
     # packages from overlays and local nixpkgs
-    pkgsEmacsOverlay.emacsPgtk
+    # pkgsEmacsOverlay.emacsPgtk
     (pkgsLocal.android-studio.override { tiling_wm = true;})
     (pkgsLocal.wpa_supplicant.override { wheelDbusAccess = true;})
 
 
+    iwgtk
+    wirelesstools
     nix-index           # nix-locate
     alacritty           # gpu accelerated terminal
     pulseaudioFull      # pactl
