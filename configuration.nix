@@ -130,11 +130,10 @@ in
     # packages from overlays and local nixpkgs
     pkgsEmacsOverlay.emacsPgtk
     (pkgsLocal.android-studio.override { tiling_wm = true;})
-    (pkgsLocal.wpa_supplicant.override { wheelDbusAccess = true;})
 
 
     iwgtk
-    wirelesstools
+    wirelesstools       # iwconfig
     nix-index           # nix-locate
     alacritty           # gpu accelerated terminal
     pulseaudioFull      # pactl
@@ -234,7 +233,6 @@ in
   # printing and others.
   services.dbus = {
     enable = true;
-    packages = [ pkgsLocal.wpa_supplicant ];
   };
 
   xdg.portal = {
