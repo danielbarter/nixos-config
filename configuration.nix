@@ -139,6 +139,7 @@ in
     # packages from overlays and local nixpkgs
     pkgsEmacsOverlay.emacsPgtk
     (pkgsLocal.android-studio.override { tiling_wm = true;})
+    pkgsLocal.jetbrains.idea-community
 
 
     iwgtk
