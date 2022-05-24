@@ -1,4 +1,5 @@
 source ~/.vimrc
 
-map <Leader>rr <Action>(Run)
-map <Leader>rd <Action>(Debug)
+map <Leader>er <Action>(Run)
+map <Leader>es <Action>(Stop)
+map <Leader>ed <Action>(Debug)
