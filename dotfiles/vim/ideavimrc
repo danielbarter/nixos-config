@@ -1,1 +1,4 @@
 source ~/.vimrc
+
+map <Leader>rr <Action>(Run)
+map <Leader>rd <Action>(Debug)
