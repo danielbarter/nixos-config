@@ -1,5 +1,6 @@
 map <Space> <Leader>
 
+map U :redo<Return>
 map <Leader>bb :buffers<Return>
 
 map <Leader>fs :w<Return>
