@@ -3,3 +3,4 @@ source ~/.vimrc
 map <Leader>er <Action>(Run)
 map <Leader>es <Action>(Stop)
 map <Leader>ed <Action>(Debug)
+map <Leader>ec <Action>(Resume)
