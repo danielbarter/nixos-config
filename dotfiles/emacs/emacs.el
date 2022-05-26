@@ -81,23 +81,22 @@
 (or (file-exists-p package-user-dir) (package-refresh-contents))
 
 ;; list of packages to download from melpa
-(setq package-list '(
-
-                     evil
-                     evil-surround
-                     solarized-theme
-                     rainbow-delimiters
-                     flycheck
-                     company
-                     undo-fu
+(setq package-list '( evil
+                      evil-surround
+                      solarized-theme
+                      rainbow-delimiters
+                      flycheck
+                      company ;; completion boxes
+                      undo-fu
 
 
-                     haskell-mode
-                     rust-mode
-                     yaml-mode
-                     lsp-mode
-                     nix-mode
-                     markdown-mode
+                      haskell-mode
+                      rust-mode
+                      yaml-mode
+                      lsp-mode
+                      nix-mode
+                      markdown-mode
+                      gdscript-mode
                     ))
 
 
