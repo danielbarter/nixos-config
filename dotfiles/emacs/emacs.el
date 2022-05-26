@@ -89,7 +89,6 @@
                      rainbow-delimiters
                      flycheck
                      company
-                     yasnippet
                      undo-fu
 
 
@@ -99,8 +98,6 @@
                      lsp-mode
                      nix-mode
                      markdown-mode
-                     meson-mode
-                     kotlin-mode
                     ))
 
 
@@ -334,11 +331,6 @@
   (kbd "<localleader>e") 'eval-region
 
 )
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; kotlin mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(add-hook 'kotlin-mode-hook 'lsp)
-(add-hook 'kotlin-mode-hook 'yas-minor-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; c/c++ mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
