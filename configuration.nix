@@ -138,7 +138,7 @@ in
 
     # packages from overlays and local nixpkgs
     pkgsEmacsOverlay.emacsPgtk
-    (pkgsLocal.android-studio.override { tiling_wm = true;})
+    (android-studio.override { tiling_wm = true;})
     godot
     iwgtk
     wirelesstools       # iwconfig
