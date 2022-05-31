@@ -40,15 +40,17 @@
     :width 'normal
     :slant 'normal))
 
-(set-face-font
-   'mode-line-active
-   (font-spec
-    :family source-code-pro
-    :size my-font-size
-    :weight 'normal
-    :width 'normal
-    :slant 'normal))
-
+(if (>= emacs-major-version 29)
+  (set-face-font
+     'mode-line-active
+     (font-spec
+      :family source-code-pro
+      :size my-font-size
+      :weight 'normal
+      :width 'normal
+      :slant 'normal))
+  (message "no mode-line-active symbol on this version of emacs")
+)
 
 
 (set-fontset-font
