@@ -1,0 +1,68 @@
+{
+  "editor.formatOnType": false,
+  "editor.formatOnSave": true,
+
+  "workbench.colorTheme": "Cider Dark",
+
+  "vim.vimrc.enable": false,
+  "vim.leader": "<Space>",
+
+  "vim.normalModeKeyBindings": [
+    {
+      "before" : ["<Leader>","w","/"],
+      "commands" : ["workbench.action.splitEditor"]
+    },
+    {
+      "before" : ["<Leader>","w","-"],
+      "commands" : ["workbench.action.splitEditorOrthogonal"]
+    },
+    {
+      "before" : ["<Leader>","w","l"],
+      "commands" : ["workbench.action.navigateRight"]
+    },
+    {
+      "before" : ["<Leader>","w","h"],
+      "commands" : ["workbench.action.navigateLeft"]
+    },
+    {
+      "before" : ["<Leader>","w","k"],
+      "commands" : ["workbench.action.navigateUp"]
+    },
+    {
+      "before" : ["<Leader>","w","j"],
+      "commands" : ["workbench.action.navigateDown"]
+    },
+    {
+      "before" : ["<Leader>","w","d"],
+      "commands" : ["workbench.action.closeActiveEditor"]
+    },
+    {
+      "before" : ["<Leader>","w","m"],
+      "commands" : ["workbench.action.closeEditorsInOtherGroups"]
+    },
+    {
+      "before" : ["<Leader>","f","s"],
+      "commands" : ["workbench.action.files.save"]
+    },
+    {
+      "before" : ["<Leader>","f","f"],
+      "commands" : ["workbench.action.quickOpen"]
+    },
+    {
+      "before" : ["<Leader>","j","l"],
+      "commands" : ["workbench.action.gotoLine"]
+    },
+    {
+      "before" : ["<Leader>","j","t"],
+      "commands" : ["cursorTop"]
+    },
+    {
+      "before" : ["<Leader>","j","b"],
+      "commands" : ["cursorBottom"]
+    },
+    {
+      "before" : ["<Leader>","q","q"],
+      "commands" : ["workbench.action.closeAllEditors"]
+    }
+  ]
+}
