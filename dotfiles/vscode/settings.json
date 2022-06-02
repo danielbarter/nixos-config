@@ -61,8 +61,28 @@
       "commands" : ["cursorBottom"]
     },
     {
+      "before" : ["<Leader>","j","j"],
+      "commands" : ["scrollPageDown"]
+    },
+    {
+      "before" : ["<Leader>","j","k"],
+      "commands" : ["scrollPageUp"]
+    },
+    {
+      "before" : ["<Leader>","j","d"],
+      "commands" : ["editor.action.revealDefinition"]
+    },
+    {
       "before" : ["<Leader>","q","q"],
       "commands" : ["workbench.action.closeAllEditors"]
+    },
+    {
+      "before" : ["<Leader>","t","h"],
+      "commands" : ["workbench.action.previousEditor"]
+    },
+    {
+      "before" : ["<Leader>","t","l"],
+      "commands" : ["workbench.action.nextEditor"]
     }
   ]
 }
