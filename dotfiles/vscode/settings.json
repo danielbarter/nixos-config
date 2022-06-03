@@ -73,6 +73,10 @@
       "commands" : ["editor.action.revealDefinition"]
     },
     {
+      "before" : ["<Leader>","j","r"],
+      "commands" : ["editor.action.goToReferences"]
+    },
+    {
       "before" : ["<Leader>","q","q"],
       "commands" : ["workbench.action.closeAllEditors"]
     },
