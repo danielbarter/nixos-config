@@ -267,9 +267,6 @@ in
     opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
   };
 
-  # enable bluetooth
-  hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
 
   # build everything with pulseaudio support
   nixpkgs.config.pulseaudio = true;
