@@ -35,6 +35,16 @@
   # xpad messes up usb passthrough to windows for xbox controllers, so
   # disable it. Also disable all the bluetooth driver loading so we
   # can pass through to windows.
-  boot.blacklistedKernelModules = [ "nouveau" "nvidia_drm" "nvidia_modeset" "nvidia" "xpad" "btusb" "btrtl" "btbcm" "btintel" "bluetooth" ];
+  boot.blacklistedKernelModules = [
+    "nouveau"
+    "nvidia_drm"
+    "nvidia_modeset"
+    "nvidia"
+    "xpad"
+    "btusb"
+    "btrtl"
+    "btbcm"
+    "btintel"
+    "bluetooth" ];
 
 }
