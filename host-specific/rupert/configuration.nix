@@ -4,6 +4,7 @@
 
   boot.kernelModules = [ "kvm-amd" "vfio-pci" ];
 
+  # load vfio drivers for the nvidia pci devices
   boot.initrd.preDeviceCommands = ''
   DEVS="0000:10:00.0 0000:10:00.1"
   for DEV in $DEVS; do
@@ -31,8 +32,9 @@
     };
 
 
-  # xpad messes up usb passthrough to windows for xbox controllers, so disable it.
-  boot.blacklistedKernelModules = [ "nouveau" "nvidia_drm" "nvidia_modeset" "nvidia" "xpad" ];
-  boot.extraModulePackages = [ pkgs.linuxPackages.nvidia_x11 ];
+  # xpad messes up usb passthrough to windows for xbox controllers, so
+  # disable it. Also disable all the bluetooth driver loading so we
+  # can pass through to windows.
+  boot.blacklistedKernelModules = [ "nouveau" "nvidia_drm" "nvidia_modeset" "nvidia" "xpad" "btusb" "btrtl" "btbcm" "btintel" "bluetooth" ];
 
 }
