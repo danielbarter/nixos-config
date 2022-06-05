@@ -204,7 +204,6 @@ in
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
-    permitRootLogin = "yes";
     passwordAuthentication = false;
     authorizedKeysFiles = ["/etc/nixos/secrets/ssh/id_rsa.pub"];
   };
