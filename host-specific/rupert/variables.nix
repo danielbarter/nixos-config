@@ -22,5 +22,5 @@ in
 {
   hostName = "rupert";
   initialVersion = "20.09";
-  packages = [ pkgs.linuxPackages.nvidia_x11 initializeNvidia pkgs.virt-manager ];
+  packages = [ pkgs.linuxPackages.nvidia_x11 initializeNvidia ];
 }

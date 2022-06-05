@@ -190,6 +190,7 @@ in
     mako                      # FreeDesktop notifications
     bemenu
     dfeet                     # dbus debugger
+    virt-manager
   ] ++ hostSpecificVariables.packages;
 
 
