@@ -207,13 +207,14 @@ in
     enable = true;
     passwordAuthentication = false;
     authorizedKeysFiles = ["/etc/nixos/secrets/ssh/id_rsa.pub"];
+  };
 
     # warning: make sshd ignore file permissions.
     # this is unsafe for public facing machines, but
     # annoying to work around for devices that are only
     # accesible on a local network
-    extraConfig = "StrictHostKeyChecking=no";
-  };
+    programs.ssh.extraConfig = "StrictHostKeyChecking no";
+
 
   services.logind = {
     killUserProcesses = false;
