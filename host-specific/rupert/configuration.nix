@@ -50,7 +50,10 @@
 
   services.logind = {
     killUserProcesses = false;
-    extraConfig = "HandlePowerKey=ignore";
+    extraConfig = ''
+      HandlePowerKey=ignore
+      HandlePowerKeyLongPress=poweroff
+    '';
   };
 
 }
