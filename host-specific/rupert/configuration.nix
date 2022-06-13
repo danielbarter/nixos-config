@@ -47,4 +47,10 @@
     "btintel"
     "bluetooth" ];
 
+
+  services.logind = {
+    killUserProcesses = false;
+    extraConfig = "HandlePowerKey=ignore";
+  };
+
 }

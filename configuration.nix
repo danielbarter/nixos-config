@@ -217,13 +217,6 @@ in
 
   };
 
-
-  services.logind = {
-    killUserProcesses = false;
-    extraConfig = "HandlePowerKey=suspend";
-  };
-
-
   # RealtimeKit is a D-Bus system service that changes the scheduling
   # policy of user processes/threads to SCHED_RR (i.e. realtime scheduling
   # mode) on request. It is intended to be used as a secure mechanism to

@@ -33,4 +33,11 @@
   services.blueman.enable = true;
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  services.logind = {
+    killUserProcesses = false;
+    extraConfig = "HandlePowerKey=suspend";
+  };
+
+
 }
