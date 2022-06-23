@@ -342,7 +342,6 @@
 (setq lsp-clients-clangd-args
     '("--header-insertion=never"))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; rust mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
