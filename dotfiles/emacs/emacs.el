@@ -96,7 +96,6 @@
                       rust-mode
                       yaml-mode
                       lsp-mode
-                      lsp-java
                       nix-mode
                       markdown-mode
                       gdscript-mode
@@ -343,8 +342,6 @@
 (setq lsp-clients-clangd-args
     '("--header-insertion=never"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; java mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-hook 'java-mode-hook 'lsp)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; rust mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
