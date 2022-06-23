@@ -1,6 +1,3 @@
-# needed to make java apps play nice with tiling wm
-export _JAVA_AWT_WM_NONREPARENTING=1
-
 prompts=(🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍈 🍒 🥭 🍍 🥥 🥝 🍅 🍆 🥑 🥦 🥬 🥒 🫑 🌽 🥕 🫒 🧄)
 size=${#prompts[@]}
 index=$(($RANDOM % $size))

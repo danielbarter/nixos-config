@@ -55,8 +55,9 @@ set $dblue             #003f5e
 set $cyan              #2aa198
 set $green             #859900
 
-
-set $menu bemenu-run \
+# _JAVA_AWT_WM_NONREPARENTING=1 needed to make java apps
+# play nice with tiling wm
+set $menu _JAVA_AWT_WM_NONREPARENTING=1 bemenu-run \
           --fn "SourceCodePro Regular 11" \
           --line-height=25 \
           --tb=$base02 \
