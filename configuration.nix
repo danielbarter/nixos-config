@@ -192,10 +192,15 @@ in
     bemenu
     dfeet                     # dbus debugger
     virt-manager
+    xkeyboard_config          # useful man pages for sway
   ] ++ hostSpecificVariables.packages;
 
 
-  documentation.dev.enable = true;
+  documentation = {
+    dev.enable = true;
+    enable = true;
+    man.enable = true;
+  };
 
   environment.etc = {
     "sway/config".source = "/etc/nixos/dotfiles/sway/config";

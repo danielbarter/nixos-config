@@ -113,10 +113,10 @@ input type:touchpad {
     natural_scroll enabled
 }
 
-
+# xkb_options can be found in man 7 xkeyboard-config
 input type:keyboard {
     xkb_layout us
-    xkb_options caps:swapescape
+    xkb_options caps:swapescape,altwin:prtsc_rwin
 #   xkb_options caps:swapescape,altwin:swap_alt_win
 
 }
