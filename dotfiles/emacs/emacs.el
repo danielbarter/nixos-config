@@ -96,6 +96,7 @@
                       rust-mode
                       yaml-mode
                       lsp-mode
+                      lsp-pyright ;; https://github.com/microsoft/pyright
                       nix-mode
                       markdown-mode
                       gdscript-mode
@@ -344,16 +345,19 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; rust mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
 (add-hook 'rust-mode-hook 'lsp)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; godot mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; python mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(add-hook 'python-mode-hook 'lsp)
+;; disable pyright type checking
+(setq lsp-pyright-typechecking-mode "off")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; godot mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-hook 'gdscript-mode-hook 'lsp)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; lsp mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 
 ;; stop lsp-mode from looking for yasnippet
 (setq lsp-enable-snippet nil)
