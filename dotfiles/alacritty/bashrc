@@ -4,3 +4,7 @@ index=$(($RANDOM % $size))
 prompt=${prompts[$index]}
 PROMPT_COMMAND='echo -ne "\033]0;$(whoami)@$(hostname):$(pwd) ${prompt}\007"'
 PS1="${prompt} "
+
+fuzzy_history() {
+  history | awk '{$1=""; print;}' | awk '{$1=$1; print;}' | fzf
+}
