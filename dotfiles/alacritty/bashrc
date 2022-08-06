@@ -6,5 +6,5 @@ PROMPT_COMMAND='echo -ne "\033]0;$(whoami)@$(hostname):$(pwd) ${prompt}\007"'
 PS1="${prompt} "
 
 fuzzy_history() {
-  history | awk '{$1=""; print;}' | awk '{$1=$1; print;}' | fzf
+    history | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}' | fzf
 }
