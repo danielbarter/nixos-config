@@ -19,5 +19,6 @@ ln /etc/nixos/dotfiles/vim/ideavimrc /home/danielbarter/.ideavimrc
 
 ln -s /etc/nixos/dotfiles/alacritty/alacritty.yml /home/danielbarter/.alacritty.yml
 ln -s /etc/nixos/dotfiles/alacritty/bashrc /home/danielbarter/.bashrc
+ln -s /etc/nixos/dotfiles/alacritty/bash_profile /home/danielbarter/.bash_profile
 
 git clone git@github.com:danielbarter/password_store.git /home/danielbarter/.password-store
