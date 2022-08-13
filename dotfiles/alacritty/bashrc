@@ -4,6 +4,7 @@ index=$(($RANDOM % $size))
 prompt=${prompts[$index]}
 PROMPT_COMMAND='echo -ne "\033]0;$(whoami)@$(hostname):$(pwd) ${prompt}\007"'
 PS1="${prompt} "
+TERM=xterm-color
 
 fuzzy_history() {
     history | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}' | fzf
