@@ -2,15 +2,15 @@ fuzzy_history() {
     history | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}' | fzf
 }
 
-# determine if shell is being rendered on GPU.
-is_shell_gpu_rendered() {
-    ls -l /proc/$$/fd | grep dri > /dev/null
+# determine if shell is pseudoterminal
+is_pseudoterminal() {
+    ls -l /proc/$$/fd | grep pts > /dev/null
 }
 
 
 prompts=(🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍈 🍒 🥭 🍍 🥥 🥝 🍅 🍆 🥑 🥦 🥬 🥒 🫑 🌽 🥕 🫒 🧄)
 
-if is_shell_gpu_rendered
+if is_pseudoterminal
 then
     size=${#prompts[@]}
     index=$(($RANDOM % $size))
