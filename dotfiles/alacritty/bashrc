@@ -1,12 +1,25 @@
-prompts=(🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍈 🍒 🥭 🍍 🥥 🥝 🍅 🍆 🥑 🥦 🥬 🥒 🫑 🌽 🥕 🫒 🧄)
-size=${#prompts[@]}
-index=$(($RANDOM % $size))
-prompt=${prompts[$index]}
-PROMPT_COMMAND='echo -ne "\033]0;$(whoami)@$(hostname):$(pwd) ${prompt}\007"'
-PS1="${prompt} "
-export TERM=xterm-color
-export COLORTERM=truecolor
-
 fuzzy_history() {
     history | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}' | fzf
 }
+
+# determine if shell is being rendered on GPU.
+is_shell_gpu_rendered() {
+    ls -l /proc/$$/fd | grep dri > /dev/null
+}
+
+
+prompts=(🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍈 🍒 🥭 🍍 🥥 🥝 🍅 🍆 🥑 🥦 🥬 🥒 🫑 🌽 🥕 🫒 🧄)
+
+if is_shell_gpu_rendered
+then
+    size=${#prompts[@]}
+    index=$(($RANDOM % $size))
+    prompt=${prompts[$index]}
+    PROMPT_COMMAND='echo -ne "\033]0;$(whoami)@$(hostname):$(pwd) ${prompt}\007"'
+    PS1="${prompt} "
+fi
+
+# set TERM variables so we can use emacs on remote machines without jacked colors
+export TERM=xterm-color
+export COLORTERM=truecolor
+
