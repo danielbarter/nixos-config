@@ -171,7 +171,6 @@ in
     aspell
     aspellDicts.en
     (pass.withExtensions (exts: [exts.pass-otp]))
-    (python38.withPackages ( p : [ p.dbus-python ]))
     nix-serve
     steam
     nmap
