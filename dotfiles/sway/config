@@ -84,9 +84,6 @@ client.urgent             $red       $red         $base3   $green   $red
 #
 
 
-# This will lock your screen after 300 seconds of inactivity, then turn off
-# your displays after another 300 seconds, and turn your screens back on when
-# resumed. It will also lock your screen before your computer goes to sleep.
 
 ### Input configuration
 #
@@ -301,6 +298,10 @@ exec dbus-sway-environment
 
 # lock keybind
 bindsym $mod+F1 exec 'swaylock -f -c 000000'
+
+# This will lock your screen after 300 seconds of inactivity, then turn off
+# your displays after another 300 seconds, and turn your screens back on when
+# resumed. It will also lock your screen before your computer goes to sleep.
 
 exec swayidle -w \
          timeout 300 'swaylock -f -c 000000' \
