@@ -299,6 +299,9 @@ bar {
 # Import the WAYLAND_DISPLAY env var from sway into the systemd user session.
 exec dbus-sway-environment
 
+# lock keybind
+bindsym $mod+F1 exec 'swaylock -f -c 000000'
+
 exec swayidle -w \
          timeout 300 'swaylock -f -c 000000' \
          timeout 600 'swaymsg "output * dpms off"' \
