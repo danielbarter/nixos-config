@@ -336,8 +336,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; c/c++ mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun no-indent-namespace ()
+   (c-set-offset 'innamespace [0]))
+
 (add-hook 'c-mode-hook 'lsp)
 (add-hook 'c++-mode-hook 'lsp)
+(add-hook 'c++-mode-hook 'no-indent-namespace)
 (setq c-default-style "linux"
       c-basic-offset 4)
 (setq lsp-clients-clangd-args
