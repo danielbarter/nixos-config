@@ -135,7 +135,6 @@ in
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-
     # packages from overlays and local nixpkgs
     pkgsEmacsOverlay.emacsPgtk
     (android-studio.override { tiling_wm = true;})
@@ -156,13 +155,14 @@ in
     dbus-sway-environment
     configure-gtk
     wayland
-    man-pages
+    stdman              # c++ stdlib man pages
+    man-pages           # linux programmers man pages
+    man-pages-posix     # posix man pages
+    xkeyboard_config    # useful man pages for sway
     file
     strace
     pueue               # task management
     pciutils            # lspci
-    man-pages
-    man-pages-posix
     wget
     htop
     firefox-wayland
@@ -192,7 +192,6 @@ in
     bemenu
     dfeet                     # dbus debugger
     virt-manager
-    xkeyboard_config          # useful man pages for sway
   ] ++ hostSpecificVariables.packages;
 
 
