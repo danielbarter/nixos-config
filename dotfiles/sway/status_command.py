@@ -53,7 +53,7 @@ def get_ssid_and_link_quality(interface):
     wifi_display = []
     iwconfig_output = check_output(['iwconfig',interface]).decode(encoding='ascii')
     ifconfig_output = check_output(['ifconfig',interface]).decode(encoding='ascii')
-    ssid_regex = re.compile('ESSID:"[a-zA-Z0-9\-\_]*"')
+    ssid_regex = re.compile('ESSID:".*"')
     maybe_ssid_match = ssid_regex.search(iwconfig_output)
     if maybe_ssid_match:
         wifi_display.append(maybe_ssid_match.group(0)[7:-1])
