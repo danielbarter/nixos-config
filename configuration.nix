@@ -137,7 +137,11 @@ in
   environment.systemPackages = with pkgs; [
     # packages from overlays and local nixpkgs
     pkgsEmacsOverlay.emacsPgtk
-    cmake               # cmake autocomplete and emacs mode
+
+    # cmake autocomplete and emacs mode. Remove cmake binary so it
+    # doesn't interfere with local environments
+    ( cmake.overrideAttrs (finalAttrs: previousAttrs: { postInstall = "rm $out/bin/cmake";}))
+
     (android-studio.override { tiling_wm = true;})
     jetbrains.idea-community
     godot
