@@ -137,6 +137,7 @@ in
   environment.systemPackages = with pkgs; [
     # packages from overlays and local nixpkgs
     pkgsEmacsOverlay.emacsPgtk
+    cmake               # cmake autocomplete and emacs mode
     (android-studio.override { tiling_wm = true;})
     jetbrains.idea-community
     godot

@@ -103,6 +103,8 @@
                     ))
 
 
+;; cmake mode is bundled with the cmake system package
+(require 'cmake-mode)
 
 ;; install the missing melpa packages
 (dolist (package package-list)
