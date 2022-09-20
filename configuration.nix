@@ -103,7 +103,7 @@ in
       enable = true;
     };
 
-    useNetworkd = true;
+    nameservers = [ "8.8.8.8" "1.1.1.1" ];
 
     # The global useDHCP flag is deprecated, therefore explicitly set to false here.
     # Per-interface useDHCP will be mandatory in the future, so this generated config

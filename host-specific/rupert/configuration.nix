@@ -2,13 +2,21 @@
 
 {
 
-  networking.interfaces."wlan0".useDHCP = false;
-  networking.interfaces."wlan0".ipv4.addresses = [
-    { address = "192.168.2.1";
-      prefixLength = 24;
-    }
-  ];
 
+  networking = {
+    useNetworkd = false;
+    defaultGateway = "192.168.1.1";
+
+    interfaces."wlan0" = {
+      useDHCP = false;
+      ipv4.addresses = [
+        {
+          address = "192.168.1.2";
+          prefixLength = 24;
+        }
+      ];
+    };
+  };
 
   boot.kernelModules = [ "kvm-amd" "vfio-pci" ];
 

@@ -2,7 +2,10 @@
 
 {
 
-  networking.interfaces."wlan0".useDHCP = true;
+  networking = {
+    useNetworkd = true;
+    interfaces."wlan0".useDHCP = true;
+  };
 
   services.logind.lidSwitch = "suspend";
 
