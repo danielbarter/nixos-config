@@ -110,9 +110,6 @@ in
     # replicates the default behaviour.
     useDHCP = false;
 
-    interfaces."wlan0".useDHCP = true;
-
-
     # Open ports in the firewall.
     firewall = {
       enable = true;

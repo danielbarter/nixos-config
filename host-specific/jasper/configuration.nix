@@ -2,6 +2,8 @@
 
 {
 
+  networking.interfaces."wlan0".useDHCP = true;
+
   services.logind.lidSwitch = "suspend";
 
   # make udev rules for backlight
@@ -17,6 +19,7 @@
     killUserProcesses = false;
     extraConfig = "HandlePowerKey=suspend";
   };
+
 
 
 }
