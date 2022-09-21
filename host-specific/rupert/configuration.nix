@@ -4,7 +4,7 @@
 
 
   networking = {
-    useNetworkd = false;
+
     defaultGateway = "192.168.1.1";
 
     interfaces."wlan0" = {

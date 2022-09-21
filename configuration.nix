@@ -99,6 +99,8 @@ in
 
   networking = {
     hostName = hostSpecificVariables.hostName;
+    useNetworkd = true;
+
     wireless.iwd = {
       enable = true;
     };
