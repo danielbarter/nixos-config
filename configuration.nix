@@ -196,6 +196,7 @@ in
     slurp                     # screenshot functionality
     wl-clipboard
     mako                      # FreeDesktop notifications
+    wf-recorder               # screen recording
     bemenu
     dfeet                     # dbus debugger
     virt-manager
