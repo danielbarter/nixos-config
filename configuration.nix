@@ -99,7 +99,7 @@ in
   nix = {
     settings = {
       substituters = [
-        "rupert"
+        "http://rupert:5000"
         "https://cache.nixos.org/"
       ];
 
