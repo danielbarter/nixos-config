@@ -1,6 +1,18 @@
 {pkgs, ...}:
 
 {
+  nix = {
+    settings = {
+      substituters = [
+        "http://rupert:5000"
+        "https://cache.nixos.org/"
+      ];
+
+      trusted-public-keys = [
+        (builtins.readFile "/etc/nixos/secrets/binary-cache/cache-pub-key.pem")
+      ];
+    };
+  };
 
   networking.interfaces."wlan0".useDHCP = true;
 
