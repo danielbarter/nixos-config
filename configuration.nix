@@ -100,6 +100,10 @@ in
   networking = {
     hostName = hostSpecificVariables.hostName;
     useNetworkd = true;
+    extraHosts = ''
+    192.168.1.1 router
+    192.168.1.2 rupert
+    '';
 
     wireless.iwd = {
       enable = true;
