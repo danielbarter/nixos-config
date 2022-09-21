@@ -96,6 +96,18 @@ in
     };
   };
 
+  nix = {
+    settings = {
+      substituters = [
+        "rupert"
+        "https://cache.nixos.org/"
+      ];
+
+      truster-public-keys = [
+        (builtins.readFile "/etc/nixos/secrets/binary-cache/cache-pub-key.pem")
+      ];
+    };
+  };
 
   networking = {
     hostName = hostSpecificVariables.hostName;
@@ -119,7 +131,7 @@ in
     # Open ports in the firewall.
     firewall = {
       enable = true;
-      allowedTCPPorts = [ 22 8080 ];
+      allowedTCPPorts = [ 22 8080 5000 ];
       allowedUDPPorts = [ 22 ];
     };
   };

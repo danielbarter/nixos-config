@@ -3,6 +3,12 @@
 {
 
 
+  services.nix-serve = {
+    enable = true;
+    port = 5000;
+    secretKeyFile = "/etc/nixos/secrets/binary-cache/cache-priv-key.pem";
+  };
+
   networking = {
 
     defaultGateway = "192.168.1.1";
