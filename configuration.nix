@@ -103,7 +103,7 @@ in
         "https://cache.nixos.org/"
       ];
 
-      truster-public-keys = [
+      trusted-public-keys = [
         (builtins.readFile "/etc/nixos/secrets/binary-cache/cache-pub-key.pem")
       ];
     };
