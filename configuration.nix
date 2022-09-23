@@ -179,7 +179,6 @@ in
     aspellDicts.en
     (pass.withExtensions (exts: [exts.pass-otp]))
     python3
-    nix-serve
     steam
     nmap
     zip
