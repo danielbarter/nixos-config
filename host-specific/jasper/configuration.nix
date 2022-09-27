@@ -32,7 +32,7 @@
     extraConfig = "HandlePowerKey=suspend";
   };
 
-  # gammastep systemd service
+  # kanshi systemd service
   systemd.user.services.kanshi = {
     description = "kanshi daemon";
     serviceConfig = {
