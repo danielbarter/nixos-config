@@ -123,10 +123,7 @@ in
     };
   };
 
-  # needed for users to use non standard caches
-  nix.settings.trusted-users = ["danielbarter" "root"];
-
-  # Select internationalisation properties.
+    # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
 
   # Set your time zone.
