@@ -14,7 +14,6 @@ in
   hostName = "jasper";
   initialVersion = "21.11";
   packages = with pkgs; [
-    light # control backlight
     sway-host-specific-hook
     powertop
   ];

@@ -149,6 +149,7 @@ in
     nix-index           # nix-locate
     alacritty           # gpu accelerated terminal
     pulseaudioFull      # pactl
+    light               # control backlight
     pavucontrol         # pulseaudio control volume
     helvum              # pipewire patchbay
     gammastep           # redshift
