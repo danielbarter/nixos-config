@@ -1,12 +1,12 @@
 {pkgs, ...}:
 
-let calibrate-display = pkgs.writeTextFile {
-    name = "calibrate_display";
-    destination = "/bin/calibrate_display";
+let sway-host-specific-hook = pkgs.writeTextFile {
+    name = "sway-host-specific-hook";
+    destination = "/bin/sway-host-specific-hook";
     executable = true;
     text = ''
-      #! ${pkgs.bash}/bin/bash
-       swaymsg output eDP-1 scale 1.5
+         systemctl --user start kanshi.service
+         systemctl --user start gammastep.service
       '';
     };
 in
@@ -15,7 +15,7 @@ in
   initialVersion = "21.11";
   packages = with pkgs; [
     light # control backlight
-    calibrate-display
+    sway-host-specific-hook
     powertop
   ];
 }

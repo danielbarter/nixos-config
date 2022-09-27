@@ -193,6 +193,7 @@ in
     slurp                     # screenshot functionality
     wl-clipboard
     mako                      # FreeDesktop notifications
+    kanshi                    # sway hotplug functionality
     wf-recorder               # screen recording
     bemenu
     dfeet                     # dbus debugger
@@ -369,13 +370,6 @@ in
   # gammastep systemd service
   systemd.user.services.gammastep = {
     description = "gammastep daemon";
-    documentation = [ "man gammastep" ];
-    bindsTo = [ "graphical-session.target" ];
-    wants = [ "graphical-session-pre.target" ];
-    after = [ "graphical-session-pre.target" ];
-    wantedBy = [ "graphical-session.target" ];
-    # parameterize service over WAYLAND_DISPLAY
-    # environment = { WAYLAND_DISPLAY = "wayland-1";};
     serviceConfig = {
       Type = "simple";
       ExecStart = '' ${pkgs.gammastep}/bin/gammastep -O 4000 '';
