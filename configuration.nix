@@ -171,6 +171,7 @@ in
     htop
     firefox-wayland
     chromium
+    fractal
     zathura
     aspell
     aspellDicts.en
