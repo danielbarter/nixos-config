@@ -7,7 +7,6 @@ let sway-host-specific-hook = pkgs.writeTextFile {
     text = ''
          sleep 5
          systemctl --user start kanshi.service
-         systemctl --user start gammastep.service
       '';
     };
 in
