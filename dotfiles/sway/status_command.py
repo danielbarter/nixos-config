@@ -2,7 +2,7 @@ import re
 
 from os.path import isfile
 from time import localtime, strftime
-from subprocess import check_output
+from subprocess import check_output, run
 from glob import glob
 
 to_display = []
@@ -99,7 +99,7 @@ if isfile(battery_capacity_path):
         battery_icon = '🔋'
 
     if (battery_status != 'Charging' and int(battery_capacity) < 5):
-        check_output(
+        run(
             ['swaynag', '--message', 'low battery!', '-f', 'SourceCodePro Regular 11'])
 
     battery_bar = battery_icon + battery_capacity + '%'
