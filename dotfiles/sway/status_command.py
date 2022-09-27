@@ -98,6 +98,10 @@ if isfile(battery_capacity_path):
     else:
         battery_icon = '🔋'
 
+    if (battery_status != 'Charging' and int(battery_capacity) < 10):
+        check_output(
+            ['swaynag', '--message', 'low battery!', '-f', 'SourceCodePro Regular 11'])
+
     battery_bar = battery_icon + battery_capacity + '%'
     to_display.append(battery_bar)
 
