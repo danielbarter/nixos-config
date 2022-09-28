@@ -201,6 +201,8 @@ in
     virt-manager
   ] ++ hostSpecificVariables.packages;
 
+  # make udev rules for backlight
+  programs.light.enable = true;
 
   documentation = {
     dev.enable = true;
