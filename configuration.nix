@@ -96,6 +96,10 @@ in
     };
   };
 
+  # dnssec randomly failing sometimes
+  # with DNSSEC validation failed: no-signature
+  services.resolved.dnssec = "false";
+
   networking = {
     hostName = hostSpecificVariables.hostName;
     useNetworkd = true;
