@@ -177,7 +177,6 @@ in
     firefox-wayland
     chromium
     fractal             # matrix client
-    weechat             # irc client
     zathura
     aspell
     aspellDicts.en
