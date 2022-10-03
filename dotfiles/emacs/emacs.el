@@ -406,8 +406,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; erc mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun start-irc (password)
-  "Connect to IRC"
+(defun join-hackint (password)
+  "Connect to hackint"
   (interactive "sPassword: ")
   (erc-tls :server "irc.hackint.org"
            :port 6697
@@ -416,7 +416,15 @@
            :password password
            ))
 
-
+(defun join-liberaChat (password)
+  "Connect to libera.chat"
+  (interactive "sPassword: ")
+  (erc-tls :server "irc.libera.chat"
+           :port 6697
+           :nick "markrudiger"
+           :full-name "markrudiger"
+           :password password
+           ))
 
 ;; elisp function for generating list of seeds
 ;; (defun insert-numbers (start end)
