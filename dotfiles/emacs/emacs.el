@@ -214,7 +214,7 @@
 ;; root = rev-parse --show-toplevel
 
 (defun project-grep (regex)
-  (interactive "s")
+  (interactive "sRegex: ")
   (let ((project-grep-buffer-name "*project grep*"))
     (when (get-buffer project-grep-buffer-name)
       (kill-buffer project-grep-buffer-name))
@@ -402,6 +402,19 @@
 ;;     stack-ghci
 (setq haskell-process-type 'cabal-new-repl)
 (setq haskell-interactive-popup-errors nil)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; erc mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun start-irc (password)
+  "Connect to IRC"
+  (interactive "sPassword: ")
+  (erc-tls :server "irc.hackint.org"
+           :port 6697
+           :nick "markrudiger"
+           :full-name "markrudiger"
+           :password password
+           ))
 
 
 
