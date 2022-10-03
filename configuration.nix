@@ -122,7 +122,7 @@ in
     # Open ports in the firewall.
     firewall = {
       enable = true;
-      allowedTCPPorts = [ 22 8080 5000 ];
+      allowedTCPPorts = [ 22 8080 5000 6697 ];
       allowedUDPPorts = [ 22 ];
     };
   };
@@ -176,7 +176,8 @@ in
     htop
     firefox-wayland
     chromium
-    fractal
+    fractal             # matrix client
+    weechat             # irc client
     zathura
     aspell
     aspellDicts.en
