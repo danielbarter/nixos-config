@@ -70,7 +70,7 @@ let
     # amoung other things.
     overlays = [
       (import (builtins.fetchTarball {
-        url = https://github.com/nix-community/emacs-overlay/archive/0dd2d05b103931f7192ab62c9e7a4b5950155c17.tar.gz;
+        url = https://github.com/nix-community/emacs-overlay/archive/a28b388b022a5fb6f8700ba04eb4d57d2e36abb6.tar.gz;
       }))
     ];
   };
@@ -122,7 +122,7 @@ in
     # Open ports in the firewall.
     firewall = {
       enable = true;
-      allowedTCPPorts = [ 22 8080 5000 6697 ];
+      allowedTCPPorts = [ 22 8080 5000 ];
       allowedUDPPorts = [ 22 ];
     };
   };
