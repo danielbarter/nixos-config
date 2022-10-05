@@ -368,7 +368,14 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; javascript + typescript ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(add-hook 'js-mode-hook 'lsp)
+
+;; json-mode extends js-mode, so make sure we don't activate lsp mode for json files
+(add-hook 'js-mode-hook
+          (lambda ()
+            (when (eq major-mode 'js-mode)
+              (add-hook 'js-mode-hook 'lsp))))
+
+
 (add-hook 'typescript-mode-hook 'lsp)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; lsp mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
