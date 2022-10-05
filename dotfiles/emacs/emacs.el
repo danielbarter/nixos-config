@@ -90,9 +90,11 @@
                       flycheck
                       company ;; completion boxes
                       undo-fu
-
+                      tree-sitter
+                      tree-sitter-langs
 
                       haskell-mode
+                      typescript-mode
                       rust-mode
                       yaml-mode
                       lsp-mode
@@ -363,7 +365,13 @@
 
 (add-hook 'gdscript-mode-hook 'lsp)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; lsp mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; javascript + typescript ;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(add-hook 'js-mode-hook 'lsp)
+(add-hook 'typescript-mode-hook 'lsp)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; lsp mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; stop lsp-mode from looking for yasnippet
 (setq lsp-enable-snippet nil)
@@ -385,6 +393,14 @@
 
 ;; stop lsp-mode from auto formatting
 (setq lsp-enable-on-type-formatting nil)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; tree sitter mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; enable tree sitter mode for all supported langs
+(global-tree-sitter-mode)
+
+;; use tree-sitter-highligting when possible
+(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; haskell mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
