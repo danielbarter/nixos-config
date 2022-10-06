@@ -112,6 +112,8 @@ in
       enable = true;
     };
 
+    # The list of nameservers.
+    # It can be left empty if it is auto-detected through DHCP.
     nameservers = [ "8.8.8.8" "1.1.1.1" ];
 
     # The global useDHCP flag is deprecated, therefore explicitly set to false here.
