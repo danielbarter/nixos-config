@@ -11,13 +11,13 @@
 
   networking = {
 
-    defaultGateway = "192.168.1.1";
+    defaultGateway = "192.168.1.2";
 
     interfaces."wlan0" = {
       useDHCP = false;
       ipv4.addresses = [
         {
-          address = "192.168.1.2";
+          address = "192.168.1.3";
           prefixLength = 24;
         }
       ];

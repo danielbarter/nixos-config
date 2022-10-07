@@ -104,8 +104,9 @@ in
     hostName = hostSpecificVariables.hostName;
     useNetworkd = true;
     extraHosts = ''
-    192.168.1.1 router
-    192.168.1.2 rupert
+    192.168.1.1 router_second_bedroom
+    192.168.1.2 router_living_room
+    192.168.1.3 rupert
     '';
 
     wireless.iwd = {
