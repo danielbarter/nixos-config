@@ -106,7 +106,7 @@ in
     extraHosts = ''
     192.168.1.1 router_second_bedroom
     192.168.1.2 router_living_room
-    192.168.1.3 rupert
+    192.168.1.10 rupert
     '';
 
     wireless.iwd = {
