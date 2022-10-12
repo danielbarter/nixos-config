@@ -179,7 +179,7 @@ in
     htop
     firefox-wayland
     chromium
-    fractal             # matrix client
+    element-desktop-wayland    # matrix client
     zathura
     aspell
     aspellDicts.en
