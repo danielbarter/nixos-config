@@ -412,7 +412,7 @@ in
 
     danielbarter = {
       isNormalUser = true;
-      extraGroups = [ "wheel" "video" "audio" "adbusers" "libvirtd"];
+      extraGroups = [ "wheel" "video" "audio" "adbusers" "libvirtd" "docker"];
     };
 
     annasavage = {
