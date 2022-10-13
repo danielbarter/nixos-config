@@ -406,6 +406,8 @@ in
   # enable android debug bridge
   programs.adb.enable = true;
 
+  virtualisation.docker.enable = true;
+
   users.users = {
 
     danielbarter = {
