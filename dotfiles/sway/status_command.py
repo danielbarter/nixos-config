@@ -52,7 +52,7 @@ def get_wireless_interface_names():
 def get_ssid_and_link_quality(interface):
     wifi_display = []
     iwconfig_output = check_output(['iwconfig',interface]).decode(encoding='ascii')
-    ifconfig_output = check_output(['ifconfig',interface]).decode(encoding='ascii')
+    ipaddr_output = check_output(['ip','addr','show','dev',interface]).decode(encoding='ascii')
     ssid_regex = re.compile('ESSID:".*"')
     maybe_ssid_match = ssid_regex.search(iwconfig_output)
     if maybe_ssid_match:
@@ -63,8 +63,8 @@ def get_ssid_and_link_quality(interface):
     if maybe_link_quality_match:
         wifi_display.append(maybe_link_quality_match.group(0)[13:])
 
-    local_ipv4_regex = re.compile('inet \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
-    maybe_ipv4_match = local_ipv4_regex.search(ifconfig_output)
+    local_ipv4_regex = re.compile('inet \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}')
+    maybe_ipv4_match = local_ipv4_regex.search(ipaddr_output)
     if maybe_ipv4_match:
         wifi_display.append(maybe_ipv4_match.group(0)[5:])
     to_display.append(' '.join(wifi_display))
@@ -73,7 +73,6 @@ wireless_interfaces = get_wireless_interface_names()
 
 if wireless_interfaces:
     # hopefully there aren't two active wireless interfaces....
-    # TODO: extract useful info from ifconfig interface and iwconfig interface
     first_interface = wireless_interfaces[0]
     get_ssid_and_link_quality(first_interface)
 
