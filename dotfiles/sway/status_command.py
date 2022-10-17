@@ -51,17 +51,23 @@ def get_wireless_interface_names():
 
 def get_ssid_and_link_quality(interface):
     wifi_display = []
-    iwconfig_output = check_output(['iwconfig',interface]).decode(encoding='ascii')
-    ipaddr_output = check_output(['ip','addr','show','dev',interface]).decode(encoding='ascii')
-    ssid_regex = re.compile('ESSID:".*"')
-    maybe_ssid_match = ssid_regex.search(iwconfig_output)
-    if maybe_ssid_match:
-        wifi_display.append(maybe_ssid_match.group(0)[7:-1])
 
-    link_quality_regex = re.compile('Link Quality=[0-9]*/[0-9]*')
-    maybe_link_quality_match = link_quality_regex.search(iwconfig_output)
+    iwlink_output = check_output(['iw','dev',interface,'link']).decode(encoding='ascii')
+    ipaddr_output = check_output(['ip','addr','show','dev',interface]).decode(encoding='ascii')
+
+    ssid_regex = re.compile('SSID: .*')
+    maybe_ssid_match = ssid_regex.search(iwlink_output)
+    if maybe_ssid_match:
+        wifi_display.append(maybe_ssid_match.group(0)[5:])
+
+    link_quality_regex = re.compile('signal: .*')
+    maybe_link_quality_match = link_quality_regex.search(iwlink_output)
     if maybe_link_quality_match:
-        wifi_display.append(maybe_link_quality_match.group(0)[13:])
+        signal_strength_dBm = int(maybe_link_quality_match.group(0)[8:11])
+
+        # assumimg that min signal power is -95 dBm and max signal power is -25 dBm
+        signal_strength_percent = int(100 * ( signal_strength_dBm + 95 ) / 70)
+        wifi_display.append(str(signal_strength_percent) + '%')
 
     local_ipv4_regex = re.compile('inet \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}')
     maybe_ipv4_match = local_ipv4_regex.search(ipaddr_output)

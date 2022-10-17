@@ -152,7 +152,7 @@ in
     jetbrains.idea-community
     godot
     iwgtk
-    wirelesstools       # iwconfig
+    iw                  # linux tool for managing wireless networks
     nix-index           # nix-locate
     alacritty           # gpu accelerated terminal
     pulseaudioFull      # pactl
