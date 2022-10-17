@@ -363,6 +363,9 @@ in
     wrapperFeatures.gtk = true;
   };
 
+  # useful program for printing keypresses
+  programs.wshowkeys.enable = true;
+
   # cool simple batch system
   systemd.user.services.pueued = {
     description = "pueued daemon";
