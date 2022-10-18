@@ -83,17 +83,6 @@ def get_ssid_and_link_quality(interface):
     if maybe_ipv4_match:
         wifi_display.append(maybe_ipv4_match.group(0)[5:])
 
-    tx_rate_regex = re.compile('tx bitrate: .* MBit/s')
-    rx_rate_regex = re.compile('rx bitrate: .* MBit/s')
-    maybe_tx_rate_match = tx_rate_regex.search(iwlink_output)
-    maybe_rx_rate_match = rx_rate_regex.search(iwlink_output)
-
-    if ( maybe_tx_rate_match and maybe_rx_rate_match ):
-        tx_rate = maybe_tx_rate_match.group(0)[12:-7]
-        rx_rate = maybe_rx_rate_match.group(0)[12:-7]
-        wifi_display.append('⬆️' + tx_rate)
-        wifi_display.append('⬇️' + rx_rate )
-
     to_display.append(' '.join(wifi_display))
 
 wireless_interfaces = get_wireless_interface_names()
