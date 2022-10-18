@@ -14,7 +14,7 @@ def get_load_average():
     load_average_per_five_min =  load_average_output[-2][0:-1]
     load_average_per_fifteen_min = load_average_output[-1][0:-1]
 
-    to_display.append('load average: {} {} {}'.format(
+    to_display.append('la:{} {} {}'.format(
         load_average_per_min,
         load_average_per_five_min,
         load_average_per_fifteen_min))
@@ -27,7 +27,7 @@ def get_ram_stats():
     mem_line = [s for s in free_output[1].split(' ') if s != '']
     total = mem_line[1]
     used = mem_line[2]
-    ram_bar = str(used) + 'M' + '/' + str(total) + 'M'
+    ram_bar = '💾' + str(int(int(used) * 100 / int(total))) + '%'
     to_display.append(ram_bar)
 
 get_ram_stats()
