@@ -14,7 +14,7 @@ def get_load_average():
     load_average_per_five_min =  load_average_output[-2][0:-1]
     load_average_per_fifteen_min = load_average_output[-1][0:-1]
 
-    to_display.append('la:{} {} {}'.format(
+    to_display.append('{} {} {}'.format(
         load_average_per_min,
         load_average_per_five_min,
         load_average_per_fifteen_min))
@@ -60,10 +60,17 @@ def get_ssid_and_link_quality(interface):
     if maybe_link_quality_match:
         signal_strength_dBm = int(maybe_link_quality_match.group(0)[8:11])
 
-        # assumimg that min signal power is -95 dBm and max signal power is -25 dBm
-        signal_strength_percent = int(100 * ( signal_strength_dBm + 95 ) / 70)
+        min_signal_power_dBm = -100
+        max_signal_power_dBm = -20
+        signal_power_range = max_signal_power_dBm - min_signal_power_dBm
+        signal_strength_percent = 100 * ( signal_strength_dBm - min_signal_power_dBm ) / signal_power_range
 
-        signal_strength_icon = ['🔴','🟠','🟢'][int(signal_strength_percent / 33)]
+        signal_strength_icon = '🔴'
+        if signal_strength_percent > 33:
+            signal_strength_icon = '🟠'
+        if signal_strength_percent > 66:
+            signal_strength_icon = '🟢'
+
         wifi_display.append(signal_strength_icon)
 
     ssid_regex = re.compile('SSID: .*')
@@ -75,6 +82,18 @@ def get_ssid_and_link_quality(interface):
     maybe_ipv4_match = local_ipv4_regex.search(ipaddr_output)
     if maybe_ipv4_match:
         wifi_display.append(maybe_ipv4_match.group(0)[5:])
+
+    tx_rate_regex = re.compile('tx bitrate: .* MBit/s')
+    rx_rate_regex = re.compile('rx bitrate: .* MBit/s')
+    maybe_tx_rate_match = tx_rate_regex.search(iwlink_output)
+    maybe_rx_rate_match = rx_rate_regex.search(iwlink_output)
+
+    if ( maybe_tx_rate_match and maybe_rx_rate_match ):
+        tx_rate = maybe_tx_rate_match.group(0)[12:-7]
+        rx_rate = maybe_rx_rate_match.group(0)[12:-7]
+        wifi_display.append('⬆️' + tx_rate)
+        wifi_display.append('⬇️' + rx_rate )
+
     to_display.append(' '.join(wifi_display))
 
 wireless_interfaces = get_wireless_interface_names()
