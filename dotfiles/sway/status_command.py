@@ -55,10 +55,10 @@ def get_ssid_and_link_quality(interface):
     iwlink_output = check_output(['iw','dev',interface,'link']).decode(encoding='ascii')
     ipaddr_output = check_output(['ip','addr','show','dev',interface]).decode(encoding='ascii')
 
-    link_quality_regex = re.compile('signal: .*')
+    link_quality_regex = re.compile('signal: .*dBm')
     maybe_link_quality_match = link_quality_regex.search(iwlink_output)
     if maybe_link_quality_match:
-        signal_strength_dBm = int(maybe_link_quality_match.group(0)[8:11])
+        signal_strength_dBm = int(maybe_link_quality_match.group(0)[8:-4])
 
         min_signal_power_dBm = -100
         max_signal_power_dBm = -20
