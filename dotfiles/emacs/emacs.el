@@ -87,21 +87,17 @@
                       evil-surround
                       solarized-theme
                       rainbow-delimiters
+                      eglot
                       flycheck
                       company ;; completion boxes
-                      undo-fu
                       tree-sitter
                       tree-sitter-langs
 
-                      haskell-mode
-                      typescript-mode
+                      ;; language modes
                       rust-mode
-                      yaml-mode
-                      lsp-mode
-                      lsp-pyright ;; https://github.com/microsoft/pyright
                       nix-mode
+                      yaml-mode
                       markdown-mode
-                      gdscript-mode
                     ))
 
 
@@ -195,9 +191,7 @@
 (evil-set-leader 'visual (kbd ",") t)
 
 
-;; once Emacs28 hits, will be able to use undo-redo which is built in
-;; when that happens, remove unfo-fu from package installs
-(evil-set-undo-system 'undo-fu)
+(evil-set-undo-system 'undo-redo)
 
 ;; setup recentf
 (require 'recentf)
@@ -251,11 +245,17 @@
         (replace-regexp "\\([A-Z]\\)" "_\\1" nil (1+ start) end)
         (downcase-region start (cdr (bounds-of-thing-at-point 'symbol)))))))
 
+(defun ide-mode ()
+  "enable ide related modes"
+  (interactive)
+  (call-interactively 'eglot)
+  (call-interactively 'company-mode))
 
 ;; general key bindings
 (evil-define-key 'normal 'global
+  (kbd "<leader>ide") 'ide-mode
 
-  (kbd "<leader>t") 'toggle-camelcase-underscores
+  (kbd "<leader>tc") 'toggle-camelcase-underscores
 
   (kbd "<leader>!") 'shell-command
 
@@ -286,6 +286,11 @@
   (kbd "<leader>ws") 'window-swap-states
 
   (kbd "<leader>jl") 'goto-line
+  (kbd "<leader>jd") 'xref-find-definitions
+  (kbd "<leader>jr") 'xref-find-references
+  (kbd "<leader>je") 'flymake-goto-next-error
+  (kbd "<leader>jE") 'flymake-goto-prev-error
+
 
   (kbd "<leader>rp") 'insert-register
 
@@ -341,90 +346,21 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; c/c++ mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun no-indent-namespace ()
+  "don't indent c++ namespaces"
    (c-set-offset 'innamespace [0]))
 
-(add-hook 'c-mode-hook 'lsp)
-(add-hook 'c++-mode-hook 'lsp)
 (add-hook 'c++-mode-hook 'no-indent-namespace)
 (setq c-default-style "linux"
       c-basic-offset 4)
-(setq lsp-clients-clangd-args
-    '("--header-insertion=never"))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; rust mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(add-hook 'rust-mode-hook 'lsp)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; python mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(add-hook 'python-mode-hook 'lsp)
-;; disable pyright type checking
-(setq lsp-pyright-typechecking-mode "off")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; godot mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(add-hook 'gdscript-mode-hook 'lsp)
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; javascript + typescript ;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-;; json-mode extends js-mode, so make sure we don't activate lsp mode for json files
-(add-hook 'js-mode-hook
-          (lambda ()
-            (when (eq major-mode 'js-mode)
-              (add-hook 'js-mode-hook 'lsp))))
-
-
-(add-hook 'typescript-mode-hook 'lsp)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; lsp mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; stop lsp-mode from looking for yasnippet
-(setq lsp-enable-snippet nil)
-
-;; remove the lsp headline
-(setq lsp-headerline-breadcrumb-enable nil)
-
-;; disable inline lsp buttons
-(setq lsp-lens-enable nil)
-
-;; When using lsp-mode most of the features depend on server capabilities.
-;; lsp-mode provides default bindings which are dynamically enabled/disabled
-;; based on the server functionality. all the commands are in lsp-command-map,
-;; to which we bind localleader
-(with-eval-after-load 'lsp-mode
-  (evil-define-key '(normal visual) 'lsp-mode
-    (kbd "<localleader>") lsp-command-map))
-
-
-;; stop lsp-mode from auto formatting
-(setq lsp-enable-on-type-formatting nil)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; tree sitter mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; enable tree sitter mode for all supported langs
 (global-tree-sitter-mode)
 
 ;; use tree-sitter-highligting when possible
 (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; haskell mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; setting up haskell mode
-(require 'haskell-interactive-mode)
-(require 'haskell-process)
-(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-
-;; Here is a list of available process types:
-;;     ghci
-;;     cabal-repl
-;;     cabal-new-repl
-;;     cabal-dev
-;;     cabal-ghci
-;;     stack-ghci
-(setq haskell-process-type 'cabal-new-repl)
-(setq haskell-interactive-popup-errors nil)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; erc mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -449,8 +385,9 @@
            :password password
            ))
 
-;; elisp function for generating list of seeds
-;; (defun insert-numbers (start end)
-;;   (interactive "nStart: \nnEnd: ")
-;;   (dolist (ind (number-sequence start end))
-;;     (insert (format "%d\n" ind))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; misc functions ;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun insert-numbers (start end)
+  (interactive "nStart: \nnEnd: ")
+  (dolist (ind (number-sequence start end))
+    (insert (format "%d\n" ind))))

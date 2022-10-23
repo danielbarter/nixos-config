@@ -62,15 +62,11 @@ let
 
   pkgsEmacsOverlay =  import <nixpkgs> {
 
+    # overlay for cutting edge emacs
     config = config.nixpkgs.config;
-    # emacs overlay to get pureGTK emacs
-    # current mainline emacs isn't wayland native
-    # this is a problem if you are using multiple screens with different resolutions
-    # this community overlay adds developer versions of emacs with wayland support
-    # amoung other things.
     overlays = [
       (import (builtins.fetchTarball {
-        url = https://github.com/nix-community/emacs-overlay/archive/a28b388b022a5fb6f8700ba04eb4d57d2e36abb6.tar.gz;
+        url = https://github.com/nix-community/emacs-overlay/archive/92c3c295daea9e71578b2e4f0cbe9906013c1adc.tar.gz;
       }))
     ];
   };
