@@ -177,8 +177,9 @@
 (require 'evil)
 (evil-mode 1)
 
-;; enable evil motion state for completion list mode
+;; enable evil motion state for various modes
 (add-to-list 'evil-motion-state-modes 'completion-list-mode)
+(add-to-list 'evil-motion-state-modes 'xref--xref-buffer-mode)
 
 ;; enable evil surround
 (require 'evil-surround)
@@ -313,14 +314,16 @@
 
 ;; return should select a buffer in the buffer-menu
 (evil-define-key 'motion Buffer-menu-mode-map
-  (kbd "RET") 'Buffer-menu-this-window
-  )
+  (kbd "RET") 'Buffer-menu-this-window)
+
+;; return to jump from xref buffer
+(evil-define-key 'motion xref--xref-buffer-mode-map
+  (kbd "RET") 'xref-quit-and-goto-xref)
 
 ;; fill out motion map for completion lists
 (evil-add-hjkl-bindings completion-list-mode-map 'motion
   (kbd "TAB") 'next-completion
-  (kbd "RET") 'choose-completion
-)
+  (kbd "RET") 'choose-completion)
 
 ;; set keybindings for indent-rigidly. ?char gives the ascii code
 (setq indent-rigidly-map
