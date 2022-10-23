@@ -88,7 +88,6 @@
                       solarized-theme
                       rainbow-delimiters
                       eglot
-                      flycheck
                       company ;; completion boxes
                       tree-sitter
                       tree-sitter-langs
