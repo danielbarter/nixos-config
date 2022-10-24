@@ -177,10 +177,6 @@
 (require 'evil)
 (evil-mode 1)
 
-;; enable evil motion state for various modes
-(add-to-list 'evil-motion-state-modes 'completion-list-mode)
-(add-to-list 'evil-motion-state-modes 'xref--xref-buffer-mode)
-
 ;; enable evil surround
 (require 'evil-surround)
 (global-evil-surround-mode 1)
@@ -313,14 +309,17 @@
   )
 
 ;; return should select a buffer in the buffer-menu
+(add-to-list 'evil-motion-state-modes 'Buffer-menu-mode-map)
 (evil-define-key 'motion Buffer-menu-mode-map
   (kbd "RET") 'Buffer-menu-this-window)
 
 ;; return to jump from xref buffer
+(add-to-list 'evil-motion-state-modes 'xref--xref-buffer-mode)
 (evil-define-key 'motion xref--xref-buffer-mode-map
   (kbd "RET") 'xref-quit-and-goto-xref)
 
 ;; fill out motion map for completion lists
+(add-to-list 'evil-motion-state-modes 'completion-list-mode)
 (evil-add-hjkl-bindings completion-list-mode-map 'motion
   (kbd "TAB") 'next-completion
   (kbd "RET") 'choose-completion)
