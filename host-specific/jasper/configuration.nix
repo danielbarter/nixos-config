@@ -14,7 +14,8 @@
     };
   };
 
-  networking.interfaces."wlan0".useDHCP = true;
+  networking.interfaces."wlan0".useDHCP = false;
+  systemd.network.networks."wlan0".DHCP = "yes";
 
   services.logind.lidSwitch = "suspend";
 

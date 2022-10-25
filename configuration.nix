@@ -98,32 +98,17 @@ in
 
   networking = {
     hostName = hostSpecificVariables.hostName;
-    useNetworkd = true;
-    extraHosts = ''
-    192.168.1.1 router_second_bedroom
-    192.168.1.2 router_living_room
-    192.168.1.10 rupert
-    '';
 
+    # disable various default nixos networking components
+    dhcpcd.enable = false;
+    firewall.enable = false;
+    useDHCP = false;
+
+    useNetworkd = true;
     wireless.iwd = {
       enable = true;
     };
-
-    # The list of nameservers.
-    # It can be left empty if it is auto-detected through DHCP.
-    nameservers = [ "8.8.8.8" "1.1.1.1" ];
-
-    # The global useDHCP flag is deprecated, therefore explicitly set to false here.
-    # Per-interface useDHCP will be mandatory in the future, so this generated config
-    # replicates the default behaviour.
-    useDHCP = false;
-
-    # Open ports in the firewall.
-    firewall = {
-      enable = true;
-      allowedTCPPorts = [ 22 8080 5000 ];
-      allowedUDPPorts = [ 22 ];
-    };
+   };
   };
 
     # Select internationalisation properties.
