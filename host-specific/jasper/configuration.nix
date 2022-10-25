@@ -14,8 +14,19 @@
     };
   };
 
-  networking.interfaces."wlan0".useDHCP = false;
-  systemd.network.networks."wlan0".DHCP = "yes";
+  systemd.network = {
+    networks = {
+      "40-wlan0" = {
+        matchConfig = {
+          Name = "wlan0";
+        };
+
+        networkConfig = {
+          DHCP = "yes";
+        };
+      };
+    };
+  };
 
   services.logind.lidSwitch = "suspend";
 

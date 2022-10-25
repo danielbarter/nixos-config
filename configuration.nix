@@ -96,6 +96,10 @@ in
   # with DNSSEC validation failed: no-signature
   services.resolved.dnssec = "false";
 
+  # enable systemd networking for all hosts
+  # actual networkd config is host specific
+  systemd.network.enable = true;
+
   networking = {
     hostName = hostSpecificVariables.hostName;
 
