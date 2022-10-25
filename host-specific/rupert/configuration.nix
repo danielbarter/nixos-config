@@ -1,26 +1,25 @@
 {pkgs, ...}:
 
 {
-
-
   services.nix-serve = {
     enable = true;
     port = 5000;
     secretKeyFile = "/etc/nixos/secrets/binary-cache/cache-priv-key.pem";
   };
 
-  networking = {
+  systemd.network = {
+    networks = {
+      "40-wlan0" = {
+        matchConfig = {
+          Name = "wlan0";
+        };
 
-    defaultGateway = "192.168.1.2";
-
-    interfaces."wlan0" = {
-      useDHCP = false;
-      ipv4.addresses = [
-        {
-          address = "192.168.1.10";
-          prefixLength = 24;
-        }
-      ];
+        networkConfig = {
+          DHCP = "no";
+          Address = "192.168.1.10/24";
+          Gateway = "192.168.1.1";
+        };
+      };
     };
   };
 

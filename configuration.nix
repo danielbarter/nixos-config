@@ -112,6 +112,16 @@ in
     wireless.iwd = {
       enable = true;
     };
+
+    # these get put into /etc/resolved.conf
+    nameservers = [ "1.1.1.1" "8.8.8.8" ];
+
+    # these get put into /etc/hosts
+    hosts = {
+      "192.168.1.1" = [ "asus1" ];
+      "192.168.1.2" = [ "netgear" ];
+      "192.168.1.10" = [ "rupert" ];
+    };
    };
 
     # Select internationalisation properties.
