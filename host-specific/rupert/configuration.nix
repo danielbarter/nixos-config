@@ -17,7 +17,24 @@
         networkConfig = {
           DHCP = "no";
           Address = "192.168.1.10/24";
-          Gateway = "192.168.1.1";
+        };
+
+        routes = [
+          { routeConfig = { Gateway = "192.168.1.1"; Metric = 1024;}; }
+        ];
+      };
+
+      # configure ethernet interface on laptop so we can connect if wireless goes down
+      # ip link set <eth-interface> up
+      # ip addr add 192.168.2.9/24 dev <eth-interface>
+      "40-enp37s0" = {
+        matchConfig = {
+          Name = "enp37s0";
+        };
+
+        networkConfig = {
+          DHCP = "no";
+          Address = " 192.168.2.10/24";
         };
       };
     };
