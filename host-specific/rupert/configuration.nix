@@ -16,14 +16,16 @@
 
         networkConfig = {
           DHCP = "no";
-          Address = "192.168.1.10/24";
         };
 
+        addresses = [
+          # TODO: we should be able to specify RouteMetric in addressConfig
+          # { addressConfig = { Address = "192.168.1.10/24"; RouteMetric = 1024;};
+          { addressConfig = { Address = "192.168.1.10/24";}; }
+        ];
+
         routes = [
-          # default route
           { routeConfig = { Gateway = "192.168.1.1"; Metric = 1024;}; }
-          # local subnet route
-          { routeConfig = { Destination = "192.168.1.0/24"; Metric = 1024;}; }
         ];
       };
 
