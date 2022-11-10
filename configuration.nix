@@ -141,10 +141,6 @@ in
     # cmake autocomplete and emacs mode. Remove cmake binary so it
     # doesn't interfere with local environments
     ( cmake.overrideAttrs (finalAttrs: previousAttrs: { postInstall = "rm $out/bin/*";}))
-
-    (android-studio.override { tiling_wm = true;})
-    jetbrains.idea-community
-    godot
     iwgtk
     iw                  # linux tool for managing wireless networks
     nix-index           # nix-locate
@@ -173,13 +169,11 @@ in
     htop
     firefox-wayland
     chromium
-    element-desktop-wayland    # matrix client
     zathura
     aspell
     aspellDicts.en
     (pass.withExtensions (exts: [exts.pass-otp]))
     python3
-    steam
     nmap
     zip
     unzip

@@ -16,6 +16,11 @@ in
   packages = with pkgs; [
     sway-host-specific-hook
     powertop
+    (android-studio.override { tiling_wm = true;})
+    jetbrains.idea-community
+    godot
+    element-desktop-wayland    # matrix client
+    steam
   ];
 }
 
