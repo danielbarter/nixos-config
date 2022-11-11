@@ -377,11 +377,14 @@ in
     };
   };
 
-  # This enables “lingering” for danielbarter.
-  # see man loginctl
-  # see https://github.com/NixOS/nixpkgs/issues/3702
-  # hopefully one day this will be a user option
+
+
+  # allow processes to persist after logout
+  services.logind.killUserProcesses = false;
   system.activationScripts = {
+
+    # equivalent to loginctl enable-linger danielbarter
+    # which doesn't like nixos filesystem flags
     enableLingering = ''
       # remove all existing lingering users
       rm -r /var/lib/systemd/linger
