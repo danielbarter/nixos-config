@@ -91,6 +91,7 @@
                       company ;; completion boxes
                       tree-sitter
                       tree-sitter-langs
+                      direnv
 
                       ;; language modes
                       rust-mode
@@ -103,6 +104,7 @@
 
 ;; cmake mode is bundled with the cmake system package
 (require 'cmake-mode)
+
 
 ;; install the missing melpa packages
 (dolist (package package-list)
@@ -242,11 +244,14 @@
         (replace-regexp "\\([A-Z]\\)" "_\\1" nil (1+ start) end)
         (downcase-region start (cdr (bounds-of-thing-at-point 'symbol)))))))
 
+;; hook company mode to eglot mode
+(add-hook 'eglot-managed-mode-hook 'company-mode)
+
 (defun ide-mode ()
   "enable ide related modes"
   (interactive)
-  (call-interactively 'eglot)
-  (call-interactively 'company-mode))
+  (call-interactively 'direnv-mode)
+  (call-interactively 'eglot))
 
 ;; general key bindings
 (evil-define-key 'normal 'global

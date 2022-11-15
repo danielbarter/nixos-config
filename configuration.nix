@@ -194,6 +194,7 @@ in
     bemenu
     dfeet                     # dbus debugger
     virt-manager
+    direnv
   ] ++ hostSpecificVariables.packages;
 
   # make udev rules for backlight
