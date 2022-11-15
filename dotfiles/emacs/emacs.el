@@ -246,11 +246,12 @@
 
 ;; hook company mode to eglot mode
 (add-hook 'eglot-managed-mode-hook 'company-mode)
+;; start direnv mode on init
+(direnv-mode)
 
 (defun ide-mode ()
-  "enable ide related modes"
+  "start eglot mode"
   (interactive)
-  (call-interactively 'direnv-mode)
   (call-interactively 'eglot))
 
 ;; general key bindings
