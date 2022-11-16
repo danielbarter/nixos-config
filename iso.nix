@@ -10,6 +10,8 @@
   ];
 
   services.resolved.dnssec = "false";
+  systemd.services.iwd.serviceConfig.ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
+
 
   systemd.network = {
     enable = true;

@@ -100,6 +100,9 @@ in
   # actual networkd config is host specific
   systemd.network.enable = true;
 
+  # give wireless cards time to turn on
+  systemd.services.iwd.serviceConfig.ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
+
   networking = {
     hostName = hostSpecificVariables.hostName;
 
