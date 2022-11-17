@@ -195,7 +195,6 @@ in
     kanshi                    # sway hotplug functionality
     wf-recorder               # screen recording
     bemenu
-    dfeet                     # dbus debugger
     virt-manager
     direnv
   ] ++ hostSpecificVariables.packages;
