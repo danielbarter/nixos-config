@@ -102,7 +102,7 @@ in
 
   # better networkd wait-online defaults for PCs
   # man systemd-networkd-wait-online 8
-  systemd.network.wait-online.extraArgs = [ "--any" ];
+  systemd.network.wait-online.anyInterface = true;
   systemd.network.wait-online.timeout = 0;
 
   # give wireless cards time to turn on

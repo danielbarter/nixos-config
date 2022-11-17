@@ -12,7 +12,7 @@
   services.resolved.dnssec = "false";
   systemd.services.iwd.serviceConfig.ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
 
-  systemd.network.wait-online.extraArgs = [ "--any" ];
+  systemd.network.wait-online.anyInterface = true;
   systemd.network.wait-online.timeout = 0;
 
   systemd.network = {
