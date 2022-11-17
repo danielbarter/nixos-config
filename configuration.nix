@@ -100,6 +100,11 @@ in
   # actual networkd config is host specific
   systemd.network.enable = true;
 
+  # better networkd wait-online defaults for PCs
+  # man systemd-networkd-wait-online 8
+  systemd.network.wait-online.extraArgs = [ "--any" ];
+  systemd.network.wait-online.timeout = 0;
+
   # give wireless cards time to turn on
   systemd.services.iwd.serviceConfig.ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
 
