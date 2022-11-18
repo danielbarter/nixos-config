@@ -309,5 +309,5 @@ exec swayidle -w \
 # set gtk settings
 exec configure-gtk
 
-# host specific hook
-exec sway-host-specific-hook
+# run kanshi which handles display hotswapping
+exec_always "pkill kanshi; kanshi -c /etc/nixos/dotfiles/sway/config_kanshi"
