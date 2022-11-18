@@ -2,3 +2,4 @@ hardware-configuration.nix
 host-specific-configuration.nix
 host-specific-variables.nix
 secrets
+dotfiles/sway/config_kanshi
