@@ -19,9 +19,7 @@
         };
 
         addresses = [
-          # TODO: we should be able to specify RouteMetric in addressConfig
-          # { addressConfig = { Address = "192.168.1.10/24"; RouteMetric = 1024;};
-          { addressConfig = { Address = "192.168.1.10/24";}; }
+          { addressConfig = { Address = "192.168.1.10/24"; RouteMetric = 1024;}; }
         ];
 
         routes = [

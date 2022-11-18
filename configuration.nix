@@ -175,7 +175,7 @@ in
     pciutils            # lspci
     wget
     htop
-    firefox-wayland
+    firefox
     chromium
     zathura
     aspell
@@ -265,9 +265,6 @@ in
   xdg.portal = {
     enable = true;
     wlr.enable = true;
-    # gtk portal needed to make firefox happy
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    gtkUsePortal = true;
   };
 
   hardware = {
