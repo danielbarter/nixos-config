@@ -51,7 +51,8 @@ let
         gnome_schema=org.gnome.desktop.interface
         wm_schema=org.gnome.desktop.wm.preferences
 
-        gsettings set $gnome_schema gtk-theme 'SolArc-Dark'
+        gsettings set $gnome_schema gtk-theme 'Dracula'
+        gsettings set $gnome_schema icon-theme 'Dracula'
         gsettings set $gnome_schema document-font-name "Source Sans Pro 11"
         gsettings set $gnome_schema font-name "Source Sans Pro 11"
         gsettings set $gnome_schema monospace-font-name "Source Code Pro 11"
@@ -189,7 +190,7 @@ in
     fzf                       # fuzzy searcher
     zbar                      # QRcode reader
     glib                      # gsettings
-    solarc-gtk-theme          # gtk theme
+    dracula-theme             # gtk theme
     gnome3.adwaita-icon-theme # default gnome icons
     swaylock
     swayidle

@@ -85,7 +85,7 @@
 ;; list of packages to download from melpa
 (setq package-list '( evil
                       evil-surround
-                      solarized-theme
+                      dracula-theme
                       rainbow-delimiters
                       eglot
                       company ;; completion boxes
@@ -111,47 +111,7 @@
   (unless (package-installed-p package)
     (package-install package)))
 
-
-;; enable solarized theme
-
-
-(require 'solarized-palettes)
-
-(defun my-dark-theme ()
-  (load-theme 'solarized-dark t)
-
-  ;; remove underline from mode-line and set color
-  (setq mode-line-active-color
-        (cdr (assq 'blue-2bg solarized-dark-color-palette-alist)))
-  (setq mode-line-inactive-color
-        (cdr (assq 'base02 solarized-dark-color-palette-alist)))
-
-  (custom-set-faces
-   `(mode-line
-     ((t (:underline nil :overline nil :background ,mode-line-active-color))))
-   `(mode-line-inactive
-     ((t (:underline nil :overline nil :background ,mode-line-inactive-color)))))
-)
-
-(defun my-light-theme ()
-  (load-theme 'solarized-light t)
-
-  ;; remove underline from mode-line and set color
-  (setq mode-line-active-color
-        (cdr (assq 'green-2bg solarized-light-color-palette-alist)))
-  (setq mode-line-inactive-color
-        (cdr (assq 'base2 solarized-light-color-palette-alist)))
-
-  (custom-set-faces
-   `(mode-line
-     ((t (:underline nil :overline nil :background ,mode-line-active-color))))
-   `(mode-line-inactive
-     ((t (:underline nil :overline nil :background ,mode-line-inactive-color)))))
-)
-
-
-(my-dark-theme)
-
+(load-theme 'dracula t)
 
 ;; enable rainbow-delimiters
 (require 'rainbow-delimiters)

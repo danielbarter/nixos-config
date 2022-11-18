@@ -33,53 +33,42 @@ set $term alacritty
 
 ### colors
 
-
-set $base03            #002b36
-set $base02            #073642
-set $base01            #586e75
-set $base00            #657b83
-set $base0             #839496
-set $base1             #93a1a1
-set $base2             #eee8d5
-set $base3             #fdf6e3
-set $yellow            #b58900
-set $orange            #cb4b16
-set $red               #dc322f
-set $magenta           #d33682
-set $violet            #6c71c4
-set $blue              #268bd2
-set $dblue             #003f5e
-set $cyan              #2aa198
-set $green             #859900
+set $Background        #282a36
+set $CurrentLine       #44475a
+set $Foreground        #f8f8f2
+set $Comment           #6272a4
+set $Cyan              #8be9fd
+set $Green             #50fa7b
+set $Orange            #ffb86c
+set $Pink              #ff79c6
+set $Purple            #bd93f9
+set $Red               #ff5555
+set $Yellow            #f1fa8c
 
 # _JAVA_AWT_WM_NONREPARENTING=1 needed to make java apps
 # play nice with tiling wm
 set $menu _JAVA_AWT_WM_NONREPARENTING=1 bemenu-run \
           --fn "SourceCodePro Regular 11" \
           --line-height=25 \
-          --tb=$base02 \
-          --tf=$base1 \
-          --fb=$base02 \
-          --ff=$base1 \
-          --nb=$base02 \
-          --nf=$base1 \
-          --hb=$blue \
-          --hf=$base2 \
-          --sb=$blue
+          --tb=$Background \
+          --tf=$Foreground \
+          --fb=$Background \
+          --ff=$Purple \
+          --nb=$Background \
+          --nf=$Foreground \
+          --hb=$Background \
+          --hf=$Purple \
+          --sb=$Background \
+          --ab=$Background \
+          --af=$Foreground
 
 
-output * bg $base02 solid_color
+output * bg $Background solid_color
 
-client.focused            $blue      $blue        $base3   $green   $blue
-client.focused_inactive   $base02    $base02      $base1   $base02  $base02
-client.unfocused          $base02    $base02      $base1   $base02  $base02
-client.urgent             $red       $red         $base3   $green   $red
-
-### Idle configuration
-#
-# Example configuration:
-#
-
+client.focused            $CurrentLine   $CurrentLine     $Foreground   $Purple       $CurrentLine
+client.focused_inactive   $Background    $Background      $Comment      $Background   $Background
+client.unfocused          $Background    $Background      $Comment      $Background   $Background
+client.urgent             $Red           $Red             $Foreground   $Purple       $Red
 
 
 ### Input configuration
@@ -282,11 +271,11 @@ bar {
     status_command while python /etc/nixos/dotfiles/sway/status_command.py; do sleep 5; done
     height 25
     colors {
-        background $base02
-        statusline $base1
-        focused_workspace $blue $blue $base3
-        urgent_workspace $red $red $base3
-        inactive_workspace $base02 $base02 $base1
+        background $Background
+        statusline $Comment
+        focused_workspace $Purple $Purple $Foreground
+        urgent_workspace $Red $Red $Foreground
+        inactive_workspace $Background $Background $Comment
     }
 }
 
@@ -310,4 +299,4 @@ exec swayidle -w \
 exec configure-gtk
 
 # run kanshi which handles display hotswapping
-exec kanshi -c /etc/nixos/host_specific_config_kanshi
+exec_always "pkill kanshi; kanshi -c /etc/nixos/host_specific_config_kanshi"
