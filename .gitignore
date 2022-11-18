@@ -1,5 +1,5 @@
 hardware-configuration.nix
 host-specific-configuration.nix
 host-specific-variables.nix
+host_specific_config_kanshi
 secrets
-dotfiles/sway/config_kanshi

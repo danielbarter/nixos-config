@@ -310,4 +310,4 @@ exec swayidle -w \
 exec configure-gtk
 
 # run kanshi which handles display hotswapping
-exec_always "pkill kanshi; kanshi -c /etc/nixos/dotfiles/sway/config_kanshi"
+exec_always "pkill kanshi; kanshi -c /etc/nixos/host_specific_config_kanshi"
