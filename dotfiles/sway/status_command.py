@@ -115,7 +115,8 @@ if isfile(battery_capacity_path):
 
     if (battery_status != 'Charging' and int(battery_capacity) < 5):
         run(
-            ['swaynag', '--message', 'low battery!', '-f', 'SourceCodePro Regular 11'])
+            ['notify-send', '--urgency=critical', '--expire-time=2500', 'low battery!']
+        )
 
     battery_bar = battery_icon + battery_capacity + '%'
     to_display.append(battery_bar)
