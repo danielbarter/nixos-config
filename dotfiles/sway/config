@@ -66,8 +66,8 @@ set $menu _JAVA_AWT_WM_NONREPARENTING=1 bemenu-run \
 output * bg $Background solid_color
 
 client.focused            $CurrentLine   $CurrentLine     $Foreground   $Purple       $CurrentLine
-client.focused_inactive   $Background    $Background      $Comment      $Background   $Background
-client.unfocused          $Background    $Background      $Comment      $Background   $Background
+client.focused_inactive   $Background    $Background      $Foreground   $Background   $Background
+client.unfocused          $Background    $Background      $Foreground   $Background   $Background
 client.urgent             $Red           $Red             $Foreground   $Purple       $Red
 
 
@@ -272,10 +272,10 @@ bar {
     height 25
     colors {
         background $Background
-        statusline $Comment
+        statusline $Foreground
         focused_workspace $Purple $Purple $Foreground
         urgent_workspace $Red $Red $Foreground
-        inactive_workspace $Background $Background $Comment
+        inactive_workspace $Background $Background $Foreground
     }
 }
 
