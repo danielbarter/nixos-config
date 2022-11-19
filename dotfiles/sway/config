@@ -35,6 +35,7 @@ set $term alacritty
 
 set $Background        #282a36
 set $CurrentLine       #44475a
+set $Selection         #44475a
 set $Foreground        #f8f8f2
 set $Comment           #6272a4
 set $Cyan              #8be9fd
