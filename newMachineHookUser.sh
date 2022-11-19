@@ -21,4 +21,7 @@ ln -s /etc/nixos/dotfiles/alacritty/alacritty.yml /home/danielbarter/.alacritty.
 ln -s /etc/nixos/dotfiles/alacritty/bashrc /home/danielbarter/.bashrc
 ln -s /etc/nixos/dotfiles/alacritty/bash_profile /home/danielbarter/.bash_profile
 
+mkdir -p /home/danielbarter/.config/mako
+ln -s /etc/nixos/dotfiles/sway/config_mako /home/danielbarter/.config/mako/config
+
 git clone git@github.com:danielbarter/password_store.git /home/danielbarter/.password-store
