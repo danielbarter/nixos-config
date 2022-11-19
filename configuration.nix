@@ -198,6 +198,7 @@ in
     slurp                     # screenshot functionality
     wl-clipboard
     mako                      # FreeDesktop notifications
+    libnotify                 # notify-send
     kanshi                    # sway hotplug functionality
     wf-recorder               # screen recording
     bemenu
