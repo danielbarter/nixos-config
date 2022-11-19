@@ -1,3 +1,9 @@
 background-color=#44475a
 text-color=#f8f8f2
 border-color=#282a36
+
+[urgency=normal]
+border-color=#f1fa8c
+
+[urgency=high]
+border-color=#ff5555
