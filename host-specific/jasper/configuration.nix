@@ -39,6 +39,9 @@
     opengl.enable = true;
     opengl.driSupport32Bit = true;
     opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
+
+    # lets steam interact with hardware
+    steam-hardware.enable = true;
   };
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
