@@ -34,7 +34,17 @@
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
+  hardware = {
+    # steam client needs 32 bit video/audio drivers to start
+    opengl.enable = true;
+    opengl.driSupport32Bit = true;
+    opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
+  };
+
   boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  # kernel module for switch pro controller
+  boot.kernelModules = [ "hid-nintendo" ];
 
   services.logind = {
     extraConfig = "HandlePowerKey=suspend";
