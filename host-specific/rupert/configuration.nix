@@ -7,6 +7,13 @@
     secretKeyFile = "/etc/nixos/secrets/binary-cache/cache-priv-key.pem";
   };
 
+  # these get put into /etc/hosts
+  networking.hosts = {
+    "192.168.1.1" = [ "asus1" ];
+    "192.168.1.2" = [ "netgear" ];
+    "192.168.1.10" = [ "rupert" ];
+  };
+
   systemd.network = {
     networks = {
       "40-wlan0" = {
