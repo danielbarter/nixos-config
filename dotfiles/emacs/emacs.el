@@ -206,8 +206,6 @@
 
 ;; hook company mode to eglot mode
 (add-hook 'eglot-managed-mode-hook 'company-mode)
-;; start direnv mode on init
-(direnv-mode)
 
 (defun ide-mode ()
   "start eglot mode"
@@ -217,6 +215,7 @@
 ;; general key bindings
 (evil-define-key 'normal 'global
   (kbd "<leader>ide") 'ide-mode
+  (kbd "<leader>env") 'direnv-update-environment
 
   (kbd "<leader>tc") 'toggle-camelcase-underscores
 
