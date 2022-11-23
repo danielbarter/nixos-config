@@ -3,7 +3,12 @@
 
 {pkgs, modulesPath, lib, ... }: {
 
-
+  environment.systemPackages = with pkgs; [
+    vim
+    git
+    gpg
+    ssh
+  ];
 
   imports = [
       "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"

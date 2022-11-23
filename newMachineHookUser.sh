@@ -25,4 +25,5 @@ ln -s /etc/nixos/dotfiles/alacritty/bash_profile /home/danielbarter/.bash_profil
 mkdir -p /home/danielbarter/.config/mako
 ln -s /etc/nixos/dotfiles/sway/config_mako /home/danielbarter/.config/mako/config
 
+# grab passwords or create a new password repo
 git clone git@github.com:danielbarter/password_store.git /home/danielbarter/.password-store

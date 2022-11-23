@@ -7,5 +7,3 @@ chown -R danielbarter /etc/nixos
 chgrp -R users /etc/nixos
 chmod 600 /etc/nixos/secrets/gpg/*
 chmod 600 /etc/nixos/secrets/ssh/*
-
-ln -s /etc/nixos/secrets/ssh /root/.ssh
