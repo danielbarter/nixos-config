@@ -64,11 +64,7 @@ $ gpg --output privkey.asc --armor --export-secret-key <email>
 $ ssh-keygen
 ```
 
-
-
+finish the install:
 ```
 $ nixos-install
 ```
-
-
-
