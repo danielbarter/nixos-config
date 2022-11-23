@@ -218,14 +218,6 @@ in
     enable = true;
     passwordAuthentication = false;
     authorizedKeysFiles = ["/etc/nixos/secrets/ssh/id_rsa.pub"];
-
-    # warning: make sshd ignore file permissions.
-    # this is unsafe for public facing machines, but
-    # annoying to work around for devices that are only
-    # accesible on a local network when you are logging in
-    # as users and root
-    extraConfig = "StrictModes no";
-
   };
 
   # RealtimeKit is a D-Bus system service that changes the scheduling
