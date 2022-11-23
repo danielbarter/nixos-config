@@ -48,12 +48,12 @@ $ ln -s /mnt/etc/nixos/host-specific/<hostname>/config_kanshi.nix /mnt/etc/nixos
 
 # Generate gpg keys and ssh keys. They should be stored as follows:
 # /mnt/etc/nixos/secrets/
-#                      ├── gpg
-#                      │   ├── privkey.asc
-#                      │   └── public.asc
-#                      └── ssh
-#                          ├── id_rsa
-#                          ├── id_rsa.pub
+# ├── gpg
+# │   ├── privkey.asc
+# │   └── public.asc
+# └── ssh
+#     ├── id_rsa
+#     ├── id_rsa.pub
 
 $ mkdir -p /mnt/etc/nixos/secrets/gpg
 $ mkdir -p /mnt/etc/nixos/secrets/ssh
