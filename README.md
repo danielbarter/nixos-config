@@ -35,10 +35,10 @@ $ mount /dev/disk/by-label/boot /mnt/boot
 Setup nixos configuration.
 Configuration is parameterized over the files in `host-specific`. They need to be symlinked into the root of this repo:
 ```
-$ nixos-generate-config --root /mnt
-$ mv /mnt/etc/nixos /tmp/nixos
+$ nixos-generate-config --dir /tmp/nixos
 $ git clone https://github.com/danielbarter/nixos-config /mnt/etc/nixos
 $ cp /tmp/nixos/hardware-configuration.nix /mnt/etc/nixos
+$ cp -r /mnt/etc/nixos/host-specific/generic-laptop /mnt/etc/nixos/host-specific/<hostname>
 
 $ ln -s /mnt/etc/nixos/host-specific/<hostname>/configuration.nix /mnt/etc/nixos/host-specific-configuration.nix
 $ ln -s /mnt/etc/nixos/host-specific/<hostname>/variables.nix /mnt/etc/nixos/host-specific-variables.nix
@@ -61,7 +61,7 @@ $ cd /mnt/etc/nixos/secrets/gpg
 $ gpg --full-generate-key
 $ gpg --output public.asc --armor --export <email>
 $ gpg --output privkey.asc --armor --export-secret-key <email>
-$ ssh-keygen -o
+$ ssh-keygen
 ```
 
 
