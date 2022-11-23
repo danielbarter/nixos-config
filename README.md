@@ -57,7 +57,8 @@ $ ln -s /mnt/etc/nixos/host-specific/<hostname>/config_kanshi.nix /mnt/etc/nixos
 
 $ mkdir -p /mnt/etc/nixos/secrets/gpg
 $ mkdir -p /mnt/etc/nixos/secrets/ssh
-$ cd /mnt/etc/nixos/secrets/gpg
+
+# do this from ~ and then move into place
 $ gpg --full-generate-key
 $ gpg --output public.asc --armor --export <email>
 $ gpg --output privkey.asc --armor --export-secret-key <email>
