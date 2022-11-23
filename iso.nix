@@ -6,9 +6,11 @@
   environment.systemPackages = with pkgs; [
     vim
     git
-    gpg
-    ssh
+    gnupg
   ];
+
+  # enable gpg
+  programs.gnupg.agent.enable = true;
 
   imports = [
       "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
@@ -54,8 +56,7 @@
 
   };
 
-
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # boot.kernelPackages = pkgs.linuxPackages_latest;
 
   security.sudo.wheelNeedsPassword = false;
 }
