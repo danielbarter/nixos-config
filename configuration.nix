@@ -67,7 +67,7 @@ let
     config = config.nixpkgs.config;
     overlays = [
       (import (builtins.fetchTarball {
-        url = https://github.com/nix-community/emacs-overlay/archive/92c3c295daea9e71578b2e4f0cbe9906013c1adc.tar.gz;
+        url = https://github.com/nix-community/emacs-overlay/archive/89f2e82fec9f7c2dde0381976266a245f0072217.tar.gz;
       }))
     ];
   };
