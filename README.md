@@ -35,10 +35,11 @@ $ mount /dev/disk/by-label/boot /mnt/boot
 Setup nixos configuration.
 Configuration is parameterized over the files in `host-specific`. They need to be symlinked into the root of this repo:
 ```
-$ nixos-generate-config --dir /tmp/nixos
 $ git clone https://github.com/danielbarter/nixos-config /mnt/etc/nixos
-$ cp /tmp/nixos/hardware-configuration.nix /mnt/etc/nixos
 $ cp -r /mnt/etc/nixos/host-specific/generic-laptop /mnt/etc/nixos/host-specific/<hostname>
+$ nixos-generate-config --dir /tmp/nixos
+
+# add the relevent configuration from /tmp/nixos/hardware-configuration.nix to host specific configuration
 
 $ ln -s /mnt/etc/nixos/host-specific/<hostname>/configuration.nix /mnt/etc/nixos/host-specific-configuration.nix
 $ ln -s /mnt/etc/nixos/host-specific/<hostname>/variables.nix /mnt/etc/nixos/host-specific-variables.nix

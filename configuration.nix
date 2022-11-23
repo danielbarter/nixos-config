@@ -78,9 +78,7 @@ let
 in
 {
   imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-
+    [
       # include hardware specific configuration
       ./host-specific-configuration.nix
     ];
