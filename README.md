@@ -33,7 +33,7 @@ $ mount /dev/disk/by-label/boot /mnt/boot
 ```
 
 Setup nixos configuration.
-Configuration is parameterized over the files in `host-specific`. They need to be symlinked into the root of this repo:
+Configuration is parameterized over the files in `host-specific`. They need to be linked into the root of this repo:
 ```
 $ git clone https://github.com/danielbarter/nixos-config /mnt/etc/nixos
 $ cp -r /mnt/etc/nixos/host-specific/generic-laptop /mnt/etc/nixos/host-specific/<hostname>
