@@ -217,7 +217,6 @@ in
   services.openssh = {
     enable = true;
     passwordAuthentication = false;
-    authorizedKeysFiles = ["/etc/nixos/secrets/ssh/id_rsa.pub"];
   };
 
   # RealtimeKit is a D-Bus system service that changes the scheduling
@@ -391,6 +390,9 @@ in
     danielbarter = {
       isNormalUser = true;
       extraGroups = [ "wheel" "video" "audio" "adbusers" "libvirtd" "docker"];
+      openssh.authorizedKeys.keyFiles = [
+        "/etc/nixos/secrets/ssh/id_rsa.pub"
+      ];
     };
   };
 
