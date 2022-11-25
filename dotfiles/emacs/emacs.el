@@ -250,6 +250,7 @@
   (kbd "<leader>jl") 'goto-line
   (kbd "<leader>jd") 'xref-find-definitions
   (kbd "<leader>jr") 'xref-find-references
+  (kbd "<leader>jh") 'eldoc-doc-buffer
   (kbd "<leader>je") 'flymake-goto-next-error
   (kbd "<leader>jE") 'flymake-goto-prev-error
 
