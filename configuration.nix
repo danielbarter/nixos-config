@@ -67,7 +67,7 @@ let
     config = config.nixpkgs.config;
     overlays = [
       (import (builtins.fetchTarball {
-        url = https://github.com/nix-community/emacs-overlay/archive/89f2e82fec9f7c2dde0381976266a245f0072217.tar.gz;
+        url = https://github.com/nix-community/emacs-overlay/archive/d39052346c5fbb66c8210c263b0c8db8afd9fed2.tar.gz;
       }))
     ];
   };
@@ -94,6 +94,9 @@ in
   # dnssec randomly failing sometimes
   # with DNSSEC validation failed: no-signature
   services.resolved.dnssec = "false";
+
+  # more reliable replacement for nscd
+  services.nscd.enableNsncd = true;
 
   # enable systemd networking for all hosts
   # actual networkd config is host specific
