@@ -16,8 +16,8 @@
 
   # these get put into /etc/hosts
   networking.hosts = {
-    "192.168.1.1" = [ "asus_main" ];
-    "192.168.1.2" = [ "asus_aux" ];
+    "192.168.1.1" = [ "asusmain" ];
+    "192.168.1.2" = [ "asusaux" ];
     "192.168.1.10" = [ "rupert" ];
   };
 
