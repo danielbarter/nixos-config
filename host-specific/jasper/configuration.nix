@@ -16,11 +16,10 @@
 
   # these get put into /etc/hosts
   networking.hosts = {
-    "192.168.1.1" = [ "asus1" ];
-    "192.168.1.2" = [ "netgear" ];
+    "192.168.1.1" = [ "asus_main" ];
+    "192.168.1.2" = [ "asus_aux" ];
     "192.168.1.10" = [ "rupert" ];
   };
-
 
   systemd.network = {
     networks = {
