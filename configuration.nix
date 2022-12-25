@@ -386,13 +386,11 @@ in
   # enable android debug bridge
   programs.adb.enable = true;
 
-  virtualisation.docker.enable = true;
-
   users.users = {
 
     danielbarter = {
       isNormalUser = true;
-      extraGroups = [ "wheel" "video" "audio" "adbusers" "libvirtd" "docker"];
+      extraGroups = [ "wheel" "video" "audio" "adbusers" "libvirtd"];
       openssh.authorizedKeys.keyFiles = [
         "/etc/nixos/secrets/ssh/id_rsa.pub"
       ];
