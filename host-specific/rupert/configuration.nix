@@ -12,6 +12,7 @@
     "192.168.1.1" = [ "asusmain" ];
     "192.168.1.2" = [ "asusaux" ];
     "192.168.1.10" = [ "rupert" ];
+    "192.168.1.11" = [ "rupertwlan" ];
   };
 
   systemd.network = {
@@ -26,7 +27,7 @@
         };
 
         addresses = [
-          { addressConfig = { Address = "192.168.1.10/24"; RouteMetric = 1024;}; }
+          { addressConfig = { Address = "192.168.1.11/24"; RouteMetric = 1024;}; }
         ];
 
         routes = [
@@ -34,9 +35,6 @@
         ];
       };
 
-      # configure ethernet interface on laptop so we can connect if wireless goes down
-      # ip link set <eth-interface> up
-      # ip addr add 192.168.2.9/24 dev <eth-interface>
       "40-enp37s0" = {
         matchConfig = {
           Name = "enp37s0";
@@ -44,9 +42,17 @@
 
         networkConfig = {
           DHCP = "no";
-          Address = " 192.168.2.10/24";
         };
+
+        addresses = [
+          { addressConfig = { Address = "192.168.1.10/24"; RouteMetric = 512;}; }
+        ];
+
+        routes = [
+          { routeConfig = { Gateway = "192.168.1.1"; Metric = 512;}; }
+        ];
       };
+
     };
   };
 
