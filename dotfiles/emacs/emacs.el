@@ -13,6 +13,8 @@
 ;; disable splash screen
 (setq inhibit-startup-message t)
 
+;; show column numbers
+(setq column-number-mode t)
 
 ;; store all backup and autosave files in the tmp dir
 (setq backup-directory-alist
