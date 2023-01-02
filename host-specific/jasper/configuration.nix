@@ -9,7 +9,7 @@
       ];
 
       trusted-public-keys = [
-        (builtins.readFile "/etc/nixos/secrets/binary-cache/cache-pub-key.pem")
+        (builtins.readFile ./secrets/binary-cache/cache-pub-key.pem)
       ];
     };
   };
