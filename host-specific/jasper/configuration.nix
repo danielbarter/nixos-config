@@ -38,6 +38,9 @@
 
   services.logind.lidSwitch = "suspend";
 
+  # enable android debug bridge
+  programs.adb.enable = true;
+
   # enable bluetooth
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;

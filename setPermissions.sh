@@ -1,4 +1,4 @@
-# set permissions for secrets
+# set permissions
 
 chown -R danielbarter /etc/nixos
 chgrp -R wheel /etc/nixos

@@ -380,13 +380,25 @@ in
       # enable for danielbarter
       touch /var/lib/systemd/linger/danielbarter
     '';
+
+    homeSetup = ''
+      # symlink emacs and vim config into home
+      ln -sf /etc/nixos/dotfiles/emacs/emacs.el /home/danielbarter/.emacs.el
+      ln -sf /etc/nixos/dotfiles/vim/vimrc /home/danielbarter/.vimrc
+
+      # symlink shell config files into home
+      ln -sf /etc/nixos/dotfiles/alacritty/alacritty.yml /home/danielbarter/.alacritty.yml
+      ln -sf /etc/nixos/dotfiles/alacritty/bashrc /home/danielbarter/.bashrc
+      ln -sf /etc/nixos/dotfiles/alacritty/bash_profile /home/danielbarter/.bash_profile
+
+      # installing mako config so we can let it be managed by dbus activation
+      mkdir -p /home/danielbarter/.config/mako
+      ln -sf /etc/nixos/dotfiles/sway/config_mako /home/danielbarter/.config/mako/config
+    '';
   };
 
   # enable gpg
   programs.gnupg.agent.enable = true;
-
-  # enable android debug bridge
-  programs.adb.enable = true;
 
   users.users = {
 
