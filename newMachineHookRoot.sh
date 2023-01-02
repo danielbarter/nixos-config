@@ -8,8 +8,11 @@ chown -R danielbarter /etc/nixos
 chgrp -R wheel /etc/nixos
 
 # LAN cache private key needs to be owned by nix-serve
-chown nix-serve /etc/nixos/secrets/binary-cache/cache-priv-key.pem
-chgrp nix-serve /etc/nixos/secrets/binary-cache/cache-priv-key.pem
+if id nix-serve
+then
+    chown nix-serve /etc/nixos/secrets/binary-cache/cache-priv-key.pem
+    chgrp nix-serve /etc/nixos/secrets/binary-cache/cache-priv-key.pem
+fi
 
 for file in $(find /etc/nixos/secrets -type f)
 do
