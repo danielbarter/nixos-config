@@ -215,12 +215,14 @@ in
     "gitconfig".source = ./dotfiles/git/gitconfig;
   };
 
-
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
     passwordAuthentication = false;
+    permitRootLogin = "no";
   };
+
+  programs.ssh.extraConfig = builtins.readFile ./dotfiles/ssh/config;
 
   # RealtimeKit is a D-Bus system service that changes the scheduling
   # policy of user processes/threads to SCHED_RR (i.e. realtime scheduling
