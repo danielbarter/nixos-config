@@ -41,7 +41,7 @@ $ nixos-generate-config --dir /tmp/nixos
 
 # add the relevent configuration from /tmp/nixos/hardware-configuration.nix to host specific configuration
 
-# these are hard links because we are going to be changing root soon
+# these need to be hard links because the evaluation of a nix expression depends on its location in the file system
 $ ln /mnt/etc/nixos/host-specific/<hostname>/configuration.nix /mnt/etc/nixos/host-specific-configuration.nix
 $ ln /mnt/etc/nixos/host-specific/<hostname>/variables.nix /mnt/etc/nixos/host-specific-variables.nix
 $ ln /mnt/etc/nixos/host-specific/<hostname>/config_kanshi.nix /mnt/etc/nixos/host_specific_config_kanshi
