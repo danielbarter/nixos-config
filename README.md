@@ -47,24 +47,6 @@ $ ln /mnt/etc/nixos/host-specific/<hostname>/variables.nix /mnt/etc/nixos/host-s
 $ ln /mnt/etc/nixos/host-specific/<hostname>/config_kanshi.nix /mnt/etc/nixos/host_specific_config_kanshi
 
 # set hostname and initial version in host-specific-variables.nix.
-
-# Generate gpg keys and ssh keys. They should be stored as follows:
-# /mnt/etc/nixos/secrets/
-# ├── gpg
-# │   ├── privkey.asc
-# │   └── public.asc
-# └── ssh
-#     ├── id_rsa
-#     ├── id_rsa.pub
-
-$ mkdir -p /mnt/etc/nixos/secrets/gpg
-$ mkdir -p /mnt/etc/nixos/secrets/ssh
-
-# do this from ~ and then move into place
-$ gpg --full-generate-key
-$ gpg --output public.asc --armor --export <email>
-$ gpg --output privkey.asc --armor --export-secret-key <email>
-$ ssh-keygen
 ```
 
 finish the install:
