@@ -211,8 +211,8 @@ in
   };
 
   environment.etc = {
-    "sway/config".source = "/etc/nixos/dotfiles/sway/config";
-    "gitconfig".source = "/etc/nixos/dotfiles/git/gitconfig";
+    "sway/config".source = ./dotfiles/sway/config;
+    "gitconfig".source = ./dotfiles/git/gitconfig;
   };
 
 
@@ -391,8 +391,8 @@ in
     danielbarter = {
       isNormalUser = true;
       extraGroups = [ "wheel" "video" "audio" "adbusers" "libvirtd"];
-      openssh.authorizedKeys.keyFiles = [
-        "/etc/nixos/secrets/ssh/id_rsa.pub"
+      openssh.authorizedKeys.keys = [
+        (builtins.readFile ./secrets/ssh/id_rsa.pub)
       ];
     };
   };
