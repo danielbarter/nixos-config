@@ -1,8 +1,4 @@
-# setting up root home directory
-# run as root
-# run before newMachineHookUser.sh as it sets a bunch of permissions
-
-
+# set permissions for secrets
 
 chown -R danielbarter /etc/nixos
 chgrp -R wheel /etc/nixos
