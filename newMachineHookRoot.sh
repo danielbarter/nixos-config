@@ -22,5 +22,5 @@ done
 
 for file in $(find /etc/nixos/secrets -type d)
 do
-    chmod 700 $file
+    chmod 755 $file
 done
