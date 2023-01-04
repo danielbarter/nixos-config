@@ -58,9 +58,9 @@
 
   boot.kernelModules = [ "kvm-amd" "vfio-pci" ];
 
-  # load vfio drivers for the nvidia pci devices
+  # load vfio drivers for the amd pci devices
   boot.initrd.preDeviceCommands = ''
-  DEVS="0000:10:00.0 0000:10:00.1"
+  DEVS="0000:12:00.0 0000:12:00.1"
   for DEV in $DEVS; do
     echo "vfio-pci" > /sys/bus/pci/devices/$DEV/driver_override
   done
@@ -90,10 +90,6 @@
   # disable it. Also disable all the bluetooth driver loading so we
   # can pass through to windows.
   boot.blacklistedKernelModules = [
-    "nouveau"
-    "nvidia_drm"
-    "nvidia_modeset"
-    "nvidia"
     "xpad"
     "btusb"
     "btrtl"
