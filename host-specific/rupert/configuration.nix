@@ -58,7 +58,7 @@
 
   boot.kernelModules = [ "kvm-amd" "vfio-pci" ];
 
-  # load vfio drivers for the amd pci devices
+  # load vfio drivers for the amd gpu pci devices
   boot.initrd.preDeviceCommands = ''
   DEVS="0000:12:00.0 0000:12:00.1"
   for DEV in $DEVS; do
