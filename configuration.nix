@@ -372,10 +372,10 @@ in
       ln -sf /etc/nixos/dotfiles/vim/vimrc /home/danielbarter/.vimrc
 
       # symlink shell config files into home
-      ln -sf /etc/nixos/dotfiles/alacritty/alacritty.yml /home/danielbarter/.alacritty.yml
-      ln -sf /etc/nixos/dotfiles/alacritty/bashrc /home/danielbarter/.bashrc
-      ln -sf /etc/nixos/dotfiles/alacritty/bash_profile /home/danielbarter/.bash_profile
-      ln -sf /etc/nixos/dotfiles/alacritty/tmux.conf /home/danielbarter/.tmux.conf
+      ln -sf /etc/nixos/dotfiles/shell/alacritty.yml /home/danielbarter/.alacritty.yml
+      ln -sf /etc/nixos/dotfiles/shell/bashrc /home/danielbarter/.bashrc
+      ln -sf /etc/nixos/dotfiles/shell/bash_profile /home/danielbarter/.bash_profile
+      ln -sf /etc/nixos/dotfiles/shell/tmux.conf /home/danielbarter/.tmux.conf
 
       # sway config
       ln -sf /etc/nixos/dotfiles/sway/config /home/danielbarter/.config/sway/config
