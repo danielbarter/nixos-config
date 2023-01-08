@@ -168,7 +168,6 @@ in
     xkeyboard_config    # useful man pages for sway
     file
     strace
-    pueue               # task management
     pciutils            # lspci
     wget
     htop
@@ -341,20 +340,6 @@ in
 
   # useful program for printing keypresses
   programs.wshowkeys.enable = true;
-
-  # cool simple batch system
-  systemd.user.services.pueued = {
-    description = "pueued daemon";
-    bindsTo = [ "default.target" ];
-    wants = [ "default.target" ];
-    after = [ "default.target" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = '' ${pkgs.pueue}/bin/pueued'';
-    };
-  };
-
 
   # gammastep systemd service
   systemd.user.services.gammastep = {
