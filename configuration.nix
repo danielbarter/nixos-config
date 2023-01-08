@@ -211,7 +211,6 @@ in
   };
 
   environment.etc = {
-    "sway/config".source = ./dotfiles/sway/config;
     "gitconfig".source = ./dotfiles/git/gitconfig;
   };
 
@@ -391,9 +390,13 @@ in
       ln -sf /etc/nixos/dotfiles/alacritty/bashrc /home/danielbarter/.bashrc
       ln -sf /etc/nixos/dotfiles/alacritty/bash_profile /home/danielbarter/.bash_profile
 
+      # sway config
+      ln -sf /etc/nixos/dotfiles/sway/config /home/danielbarter/.config/sway/config
+
       # installing mako config so we can let it be managed by dbus activation
       mkdir -p /home/danielbarter/.config/mako
       ln -sf /etc/nixos/dotfiles/sway/config_mako /home/danielbarter/.config/mako/config
+
     '';
   };
 
