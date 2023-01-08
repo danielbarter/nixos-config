@@ -149,6 +149,7 @@ in
     iw                  # linux tool for managing wireless networks
     nix-index           # nix-locate
     alacritty           # gpu accelerated terminal
+    tmux
     pulseaudioFull      # pactl
     light               # control backlight
     pavucontrol         # pulseaudio control volume
@@ -389,6 +390,7 @@ in
       ln -sf /etc/nixos/dotfiles/alacritty/alacritty.yml /home/danielbarter/.alacritty.yml
       ln -sf /etc/nixos/dotfiles/alacritty/bashrc /home/danielbarter/.bashrc
       ln -sf /etc/nixos/dotfiles/alacritty/bash_profile /home/danielbarter/.bash_profile
+      ln -sf /etc/nixos/dotfiles/alacritty/tmux.conf /home/danielbarter/.tmux.conf
 
       # sway config
       ln -sf /etc/nixos/dotfiles/sway/config /home/danielbarter/.config/sway/config

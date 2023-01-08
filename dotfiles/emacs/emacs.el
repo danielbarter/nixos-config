@@ -263,6 +263,10 @@
   (kbd "U") 'evil-redo
 )
 
+;; we use C-SPC as the prefix key for tmux. previously bound to
+;; set-mark-command
+(define-key global-map (kbd "C-SPC") nil)
+
 ;; stop evil from aliasing C-n and C-p for company in insert mode
 (with-eval-after-load 'evil
   (with-eval-after-load 'company
