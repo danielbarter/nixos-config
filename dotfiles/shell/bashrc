@@ -7,8 +7,24 @@ is_pseudoterminal() {
     ls -l /proc/$$/fd | grep pts > /dev/null
 }
 
+SHOW_PWD='no'
+
+toggle_pwd() {
+    if [ $SHOW_PWD == no ]
+    then
+        SHOW_PWD=yes
+    else
+        SHOW_PWD=no
+    fi
+}
+
 prompt_command() {
-    echo -ne "\033]0;$(whoami)@$(hostname):$(pwd) ${prompt}\007"
+    if [ $SHOW_PWD == yes ]
+    then
+        echo -ne "\033]0;$(whoami)@$(hostname):$(pwd)\007"
+    else
+        echo -ne "\033]0;$(whoami)@$(hostname)\007"
+    fi
 }
 
 prompts=(🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍈 🍒 🥭 🍍 🥥 🥝 🍅 🍆 🥑 🥦 🥬 🥒 🫑 🌽 🥕 🫒 🧄)
