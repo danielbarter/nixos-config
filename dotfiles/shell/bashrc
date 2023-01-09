@@ -7,6 +7,9 @@ is_pseudoterminal() {
     ls -l /proc/$$/fd | grep pts > /dev/null
 }
 
+prompt_command() {
+    echo -ne "\033]0;$(whoami)@$(hostname):$(pwd) ${prompt}\007"
+}
 
 prompts=(🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍈 🍒 🥭 🍍 🥥 🥝 🍅 🍆 🥑 🥦 🥬 🥒 🫑 🌽 🥕 🫒 🧄)
 
@@ -15,7 +18,7 @@ then
     size=${#prompts[@]}
     index=$(($RANDOM % $size))
     prompt=${prompts[$index]}
-    PROMPT_COMMAND='echo -ne "\033]0;$(whoami)@$(hostname):$(pwd) ${prompt}\007"'
+    PROMPT_COMMAND='prompt_command'
     PS1="${prompt} "
 fi
 
