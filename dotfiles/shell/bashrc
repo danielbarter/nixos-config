@@ -19,8 +19,4 @@ then
     PS1="${prompt} "
 fi
 
-# set TERM variables so we can use emacs on remote machines without jacked colors
-export TERM=xterm-color
-export COLORTERM=truecolor
-
 eval "$(direnv hook bash)"
