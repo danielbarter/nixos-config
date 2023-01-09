@@ -374,6 +374,7 @@ in
       # symlink shell config files into home
       ln -sf /etc/nixos/dotfiles/shell/alacritty.yml /home/danielbarter/.alacritty.yml
       ln -sf /etc/nixos/dotfiles/shell/bashrc /home/danielbarter/.bashrc
+      ln -sf /etc/nixos/dotfiles/shell/bash_profile /home/danielbarter/.bash_profile
       ln -sf /etc/nixos/dotfiles/shell/tmux.conf /home/danielbarter/.tmux.conf
 
       # sway config
