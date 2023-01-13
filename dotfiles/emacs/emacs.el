@@ -209,6 +209,11 @@
 ;; hook company mode to eglot mode
 (add-hook 'eglot-managed-mode-hook 'company-mode)
 
+;; we always want to run typescript LSP through npx
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(typescript-ts-mode . ("npx" "typescript-language-server" "--stdio"))))
+
 (defun ide-mode ()
   "start eglot mode"
   (interactive)
