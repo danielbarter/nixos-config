@@ -178,6 +178,7 @@ in
     aspellDicts.en
     (pass.withExtensions (exts: [exts.pass-otp]))
     python3
+    nodejs
     nmap
     zip
     unzip
