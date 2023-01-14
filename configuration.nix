@@ -149,7 +149,7 @@ in
     iw                  # linux tool for managing wireless networks
     nix-index           # nix-locate
     alacritty           # gpu accelerated terminal
-    tmux
+    tmux                # terminal multiplexer
     pulseaudioFull      # pactl
     light               # control backlight
     pavucontrol         # pulseaudio control volume
@@ -208,10 +208,6 @@ in
     dev.enable = true;
     enable = true;
     man.enable = true;
-  };
-
-  environment.etc = {
-    "gitconfig".source = ./dotfiles/git/gitconfig;
   };
 
   # Enable the OpenSSH daemon.
@@ -351,7 +347,6 @@ in
   };
 
 
-
   # allow processes to persist after logout
   services.logind.killUserProcesses = false;
   system.activationScripts = {
@@ -376,6 +371,9 @@ in
       ln -sf /etc/nixos/dotfiles/shell/bashrc /home/danielbarter/.bashrc
       ln -sf /etc/nixos/dotfiles/shell/bash_profile /home/danielbarter/.bash_profile
       ln -sf /etc/nixos/dotfiles/shell/tmux.conf /home/danielbarter/.tmux.conf
+
+      # git config
+      ln -sf /etc/nixos/dotfiles/git/gitconfig /home/danielbarter/.gitconfig
 
       # sway config
       ln -sf /etc/nixos/dotfiles/sway/config /home/danielbarter/.config/sway/config
