@@ -61,13 +61,14 @@ let
   };
 
 
+
   pkgsEmacsOverlay =  import <nixpkgs> {
 
     # overlay for cutting edge emacs
     config = config.nixpkgs.config;
     overlays = [
       (import (builtins.fetchTarball {
-        url = https://github.com/nix-community/emacs-overlay/archive/d39052346c5fbb66c8210c263b0c8db8afd9fed2.tar.gz;
+        url = https://github.com/nix-community/emacs-overlay/archive/800685a0ad5dfa94d6e3fffb5ffa1a208ad8c76a.tar.gz;
       }))
     ];
   };
@@ -140,7 +141,9 @@ in
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     # packages from overlays and local nixpkgs
-    pkgsEmacsOverlay.emacsPgtk
+    (pkgsEmacsOverlay.emacsGit.override {
+      withPgtk = true;
+    })
 
     # cmake autocomplete and emacs mode. Remove cmake binary so it
     # doesn't interfere with local environments
