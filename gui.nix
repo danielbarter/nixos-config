@@ -81,11 +81,6 @@ in
   # make udev rules for backlight
   programs.light.enable = true;
 
-  # RealtimeKit is a D-Bus system service that changes the scheduling
-  # policy of user processes/threads to SCHED_RR (i.e. realtime scheduling
-  # mode) on request. It is intended to be used as a secure mechanism to
-  # allow real-time scheduling to be used by normal user processes.
-  security.rtkit.enable = true;
   services.pipewire = {
 
     config.pipewire = {
@@ -105,10 +100,6 @@ in
   # (/org/freedesktop/portal/desktop).
   # The portal interfaces include APIs for file access, opening URIs,
   # printing and others.
-  services.dbus = {
-    enable = true;
-  };
-
   xdg.portal = {
     enable = true;
     wlr.enable = true;
