@@ -6,13 +6,13 @@ let
     executable = true;
     text = ''
          export LIBVIRT_DEFAULT_URI=qemu:///system
-         if [ $1 == "start" ]
+         if [ $1 -eq "start" ]
          then
            ${pkgs.libvirt}/bin/virsh start win10
            exit
          fi
 
-         if [ $1 == "status" ]
+         if [ $1 -eq "status" ]
          then
            ${pkgs.libvirt}/bin/virsh list --all
            exit
