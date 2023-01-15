@@ -5,18 +5,6 @@
 { config, pkgs, lib, ... }:
 
 let
-  # set host specific variables. Looks like this:
-  # {pkgs, ...}:
-  #
-  # {
-  #   hostName = ...;
-  #   initialVersion = ...;
-  #   packages = ...;
-  # }
-  #
-  hostSpecificVariables = import ./host-specific-variables.nix {inherit pkgs;};
-
-
   # bash script to let dbus know about important env variables and propogate them to
   # relevent services
   # run at the end of sway config
@@ -73,9 +61,6 @@ let
     ];
   };
 
-  # local nixpkgs
-  pkgsLocal = import /home/danielbarter/nixpkgs { config = config.nixpkgs.config; };
-
 in
 {
   imports =
@@ -112,8 +97,6 @@ in
   systemd.services.iwd.serviceConfig.ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
 
   networking = {
-    hostName = hostSpecificVariables.hostName;
-
     # disable various default nixos networking components
     dhcpcd.enable = false;
     firewall.enable = false;
@@ -203,7 +186,9 @@ in
     bemenu
     virt-manager
     direnv
-  ] ++ hostSpecificVariables.packages;
+    element-desktop-wayland    # matrix client
+    steam
+  ];
 
   # make udev rules for backlight
   programs.light.enable = true;
@@ -402,13 +387,5 @@ in
       ];
     };
   };
-
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = hostSpecificVariables.initialVersion;  # Did you read the comment?
 
 }
