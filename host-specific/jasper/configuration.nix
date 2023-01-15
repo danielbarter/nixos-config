@@ -1,6 +1,9 @@
 {config, pkgs, ...}:
 
 {
+
+  imports = [ ./gui.nix ];
+
   nix = {
     settings = {
       substituters = [
