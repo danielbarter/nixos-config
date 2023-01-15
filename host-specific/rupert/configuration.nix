@@ -1,6 +1,19 @@
 {config, pkgs, ...}:
-
+let
+  windows = pkgs.writeToFile {
+    name = "windows";
+    destination = "/bin/windows";
+    executable = true;
+    text = ''
+         export LIBVIRT_DEFAULT_URI=qemu:///system
+         ${libvirt}/bin/virsh start win10
+    '';
+  };
+  in
 {
+
+  environment.systemPackages = [ windows ];
+
   services.nix-serve = {
     enable = true;
     port = 5000;
