@@ -39,7 +39,6 @@ $ git clone https://github.com/danielbarter/nixos-config /mnt/etc/nixos
 $ nixos-generate-config --dir /tmp/nixos
 
 # add the relevent configuration from /tmp/nixos/hardware-configuration.nix to host specific configuration
-
 # these need to be hard links because the evaluation of a nix expression depends on its location in the file system
 $ ln /mnt/etc/nixos/host-specific/<hostname>/configuration.nix /mnt/etc/nixos/host-specific-configuration.nix
 
@@ -47,13 +46,16 @@ $ ln /mnt/etc/nixos/host-specific/<hostname>/configuration.nix /mnt/etc/nixos/ho
 
 # Generate gpg keys and ssh keys. They should be stored as follows:
 # /mnt/etc/nixos/secrets/
+# ├── binary-cache
+# │   ├── cache-priv-key.pem
+# │   └── cache-pub-key.pem
 # ├── gpg
 # │   ├── privkey.asc
 # │   └── public.asc
 # └── ssh
 #     ├── id_rsa
-#     ├── id_rsa.pub
-
+#     └── id_rsa.pub
+# make sure all the leaves have permissions 600, with appropriate user and group
 $ mkdir -p /mnt/etc/nixos/secrets/gpg
 $ mkdir -p /mnt/etc/nixos/secrets/ssh
 
