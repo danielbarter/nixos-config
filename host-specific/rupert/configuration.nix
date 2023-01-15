@@ -1,6 +1,6 @@
 {config, pkgs, ...}:
 let
-  windows = pkgs.writeToFile {
+  windows = pkgs.writeTextFile {
     name = "windows";
     destination = "/bin/windows";
     executable = true;
