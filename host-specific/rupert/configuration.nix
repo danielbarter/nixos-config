@@ -6,7 +6,19 @@ let
     executable = true;
     text = ''
          export LIBVIRT_DEFAULT_URI=qemu:///system
-         ${pkgs.libvirt}/bin/virsh start win10
+         if [ $1 == "start" ]
+         then
+           ${pkgs.libvirt}/bin/virsh start win10
+           exit
+         fi
+
+         if [ $1 == "status" ]
+         then
+           ${pkgs.libvirt}/bin/virsh list --all
+           exit
+         fi
+
+         echo "usage: windows start|status"
     '';
   };
   in
