@@ -43,7 +43,6 @@ $ nixos-generate-config --dir /tmp/nixos
 
 # these need to be hard links because the evaluation of a nix expression depends on its location in the file system
 $ ln /mnt/etc/nixos/host-specific/<hostname>/configuration.nix /mnt/etc/nixos/host-specific-configuration.nix
-$ ln /mnt/etc/nixos/host-specific/<hostname>/variables.nix /mnt/etc/nixos/host-specific-variables.nix
 $ ln /mnt/etc/nixos/host-specific/<hostname>/config_kanshi /mnt/etc/nixos/host_specific_config_kanshi
 
 # set hostname and initial version in host-specific-variables.nix.
