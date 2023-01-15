@@ -51,6 +51,6 @@
   # mode) on request. It is intended to be used as a secure mechanism to
   # allow real-time scheduling to be used by normal user processes.
   security.rtkit.enable = true;
-  services.dbusenable = true;
+  services.dbus.enable = true;
 
 }
