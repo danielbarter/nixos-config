@@ -110,6 +110,15 @@ in
     wlr.enable = true;
   };
 
+  hardware = {
+    # steam client needs 32 bit video/audio drivers to start
+    opengl.enable = true;
+    opengl.driSupport32Bit = true;
+    opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
+
+    # lets steam interact with hardware
+    steam-hardware.enable = true;
+  };
 
   # build everything with pulseaudio support
   nixpkgs.config.pulseaudio = true;

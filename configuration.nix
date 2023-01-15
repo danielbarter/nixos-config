@@ -8,14 +8,13 @@
       ./emacs.nix
       ./users.nix
       ./lingering.nix
+      ./pass.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
-  boot = {
-    loader = {
+  boot.loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
-    };
   };
 
   # Select internationalisation properties.
@@ -37,20 +36,13 @@
     strace
     pciutils            # lspci
     htop
-    (pass.withExtensions (exts: [exts.pass-otp]))
     python3
     nodejs
     nmap
     zip
     unzip
     radare2
-    fzf                       # fuzzy searcher
-    zbar                      # QRcode reader
+    fzf                 # fuzzy searcher
     direnv
   ];
-
-  # enable gpg
-  programs.gnupg.agent.enable = true;
-
-
 }
