@@ -74,6 +74,10 @@ in
     steam
   ];
 
+  # enable bluetooth
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+
   # make udev rules for backlight
   programs.light.enable = true;
 
@@ -119,6 +123,9 @@ in
     # lets steam interact with hardware
     steam-hardware.enable = true;
   };
+
+  # kernel module for switch pro controller
+  boot.kernelModules = [ "hid-nintendo" ];
 
   # build everything with pulseaudio support
   nixpkgs.config.pulseaudio = true;

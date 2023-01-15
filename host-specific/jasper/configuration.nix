@@ -34,23 +34,14 @@
   };
 
   services.logind.lidSwitch = "suspend";
-
-  # enable android debug bridge
-  programs.adb.enable = true;
-
-  # enable bluetooth
-  hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
-
-
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-
-  # kernel module for switch pro controller
-  boot.kernelModules = [ "hid-nintendo" "kvm-intel" ];
-
   services.logind = {
     extraConfig = "HandlePowerKey=suspend";
   };
+
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  boot.kernelModules = [ "kvm-intel" ];
+
 
   hardware.enableRedistributableFirmware =  true;
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];

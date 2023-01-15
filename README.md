@@ -36,7 +36,6 @@ Setup nixos configuration.
 Configuration is parameterized over the modules in `host-specific`. They need to be linked into the root of this repo:
 ```
 $ git clone https://github.com/danielbarter/nixos-config /mnt/etc/nixos
-$ cp -r /mnt/etc/nixos/host-specific/generic-laptop /mnt/etc/nixos/host-specific/<hostname>
 $ nixos-generate-config --dir /tmp/nixos
 
 # add the relevent configuration from /tmp/nixos/hardware-configuration.nix to host specific configuration
