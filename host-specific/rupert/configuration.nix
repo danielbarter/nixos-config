@@ -6,7 +6,7 @@ let
     executable = true;
     text = ''
          export LIBVIRT_DEFAULT_URI=qemu:///system
-         ${libvirt}/bin/virsh start win10
+         ${pkgs.libvirt}/bin/virsh start win10
     '';
   };
   in
