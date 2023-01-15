@@ -33,7 +33,7 @@ $ mount /dev/disk/by-label/boot /mnt/boot
 ```
 
 Setup nixos configuration.
-Configuration is parameterized over the files in `host-specific`. They need to be linked into the root of this repo:
+Configuration is parameterized over the modules in `host-specific`. They need to be linked into the root of this repo:
 ```
 $ git clone https://github.com/danielbarter/nixos-config /mnt/etc/nixos
 $ cp -r /mnt/etc/nixos/host-specific/generic-laptop /mnt/etc/nixos/host-specific/<hostname>
@@ -43,9 +43,8 @@ $ nixos-generate-config --dir /tmp/nixos
 
 # these need to be hard links because the evaluation of a nix expression depends on its location in the file system
 $ ln /mnt/etc/nixos/host-specific/<hostname>/configuration.nix /mnt/etc/nixos/host-specific-configuration.nix
-$ ln /mnt/etc/nixos/host-specific/<hostname>/config_kanshi /mnt/etc/nixos/host_specific_config_kanshi
 
-# set hostname and initial version in host-specific-variables.nix.
+# set hostname and initial version in host-specific-configuration.nix.
 
 # Generate gpg keys and ssh keys. They should be stored as follows:
 # /mnt/etc/nixos/secrets/

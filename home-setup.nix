@@ -16,8 +16,8 @@
 
       # sway config
       ln -sf /etc/nixos/dotfiles/sway/config /home/danielbarter/.config/sway/config
-
-      # installing mako config so we can let it be managed by dbus activation
+      mkdir -p /home/danielbarter/.config/kanshi
+      ln -sf /etc/nixos/dotfiles/sway/config_kanshi /home/danielbarter/.config/kanshi/config
       mkdir -p /home/danielbarter/.config/mako
       ln -sf /etc/nixos/dotfiles/sway/config_mako /home/danielbarter/.config/mako/config
     '';

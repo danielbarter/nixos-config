@@ -3,7 +3,6 @@
 {
   imports =
     [
-      # include hardware specific configuration
       ./host-specific-configuration.nix
       ./networking.nix
       ./emacs.nix
@@ -19,11 +18,12 @@
     };
   };
 
-    # Select internationalisation properties.
+  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
 
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
+
 
   nixpkgs.config.allowUnfree = true;
 
@@ -33,9 +33,6 @@
     tmux                # terminal multiplexer
     git
     vim
-    stdman              # c++ stdlib man pages
-    man-pages           # linux programmers man pages
-    man-pages-posix     # posix man pages
     file
     strace
     pciutils            # lspci
@@ -54,12 +51,6 @@
 
   # enable gpg
   programs.gnupg.agent.enable = true;
-
-  documentation = {
-    dev.enable = true;
-    enable = true;
-    man.enable = true;
-  };
 
 
 }

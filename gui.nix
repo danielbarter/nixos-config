@@ -47,13 +47,13 @@ in
 {
   environment.systemPackages = with pkgs; [
     iwgtk
-    alacritty           # gpu accelerated terminal
-    pavucontrol         # pulseaudio control volume
-    gammastep           # redshift
+    alacritty                 # gpu accelerated terminal
+    pavucontrol               # pulseaudio control volume
+    gammastep                 # redshift
     dbus-sway-environment
     configure-gtk
     wayland
-    xkeyboard_config    # useful man pages for sway
+    xkeyboard_config          # useful man pages for sway
     firefox
     chromium
     zathura
@@ -71,7 +71,6 @@ in
     wf-recorder               # screen recording
     bemenu
     virt-manager
-    element-desktop-wayland    # matrix client
     steam
   ];
 
