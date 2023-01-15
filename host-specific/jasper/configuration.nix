@@ -17,16 +17,7 @@
     };
   };
 
-  # these get put into /etc/hosts
-  networking = {
-    hostName = "jasper";
-    hosts = {
-    "192.168.1.1" = [ "asusmain" ];
-    "192.168.1.2" = [ "asusaux" ];
-    "192.168.1.10" = [ "rupert" ];
-    "192.168.1.11" = [ "rupertwlan" ];
-    };
-  };
+  networking.hostName = "jasper";
 
   systemd.network = {
     networks = {

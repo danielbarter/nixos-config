@@ -7,16 +7,7 @@
     secretKeyFile = "/etc/nixos/secrets/binary-cache/cache-priv-key.pem";
   };
 
-  # these get put into /etc/hosts
-  networking = {
-    hostName = "rupert";
-    hosts = {
-    "192.168.1.1" = [ "asusmain" ];
-    "192.168.1.2" = [ "asusaux" ];
-    "192.168.1.10" = [ "rupert" ];
-    "192.168.1.11" = [ "rupertwlan" ];
-    };
-  };
+  networking.hostName = "rupert";
 
   systemd.network = {
     networks = {
