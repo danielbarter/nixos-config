@@ -9,7 +9,7 @@
 
     danielbarterPhone = {
       isNormalUser = true;
-      extraGroups = [ "libvirtd" "wheel" ];
+      extraGroups = [ "libvirtd" ];
       openssh.authorizedKeys.keys = [ "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCz2BYy9cwbZsAdNP3UI6Dwl7aP12gNm5PMFetuvf8EXd8LGpiI3FJkUi7KS9FwYuPIZHU/IrKZ4/O852uk0EvVZfG70BNdAbfc60sZswQCFuh8ugMGvVUzySqLVm7eTlWmDaDIvE/ITCKwfJt4uG974h7FQCRBDnOJbtpN5wuDvevrKuR9+1SsTY21egAKN9/qFjIaRtcE0hb4ogKmnYqJG9+Odiubg28VPa3JZZ7VFNBn+RqAnnKct8HrLnNFqeEuoR8tGvir1dljVmlLMpJPCF9FmL8JkLig++vM/7pw1HtGEv7FNXm8g4NznAoeU6iolIaw2R7B9F5HFL91Wx+5 phone" ];
   };
 
