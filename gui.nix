@@ -82,15 +82,10 @@ in
   programs.light.enable = true;
 
   services.pipewire = {
-
-    config.pipewire = {
-      "log.level" = 4;  # https://docs.pipewire.org/page_daemon.html
-    };
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # jack.enable = true;
   };
 
 
@@ -117,9 +112,6 @@ in
 
   # kernel module for switch pro controller
   boot.kernelModules = [ "hid-nintendo" ];
-
-  # build everything with pulseaudio support
-  nixpkgs.config.pulseaudio = true;
 
   fonts = {
     enableDefaultFonts = true;
