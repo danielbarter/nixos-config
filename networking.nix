@@ -1,15 +1,17 @@
 { config, pkgs, ... }:
 
 {
-  # use resolved for dns management
-  services.resolved.enable = true;
+  services.resolved = {
+    # use resolved for dns management
+    enable = true;
 
-  # dnssec randomly failing sometimes
-  # with DNSSEC validation failed: no-signature
-  services.resolved.dnssec = "false";
+    # dnssec randomly failing sometimes
+    # with DNSSEC validation failed: no-signature
+    dnssec = "false";
 
-  # if not set, resolved defaults to its own list
-  services.resolved.fallbackDns = [ "1.1.1.1" "8.8.8.8" ];
+    # if not set, resolved defaults to its own list
+    fallbackDns = [ "1.1.1.1" "8.8.8.8" ];
+  };
 
   # more reliable replacement for nscd
   services.nscd.enableNsncd = true;
