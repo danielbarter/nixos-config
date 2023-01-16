@@ -1,9 +1,15 @@
 { config, pkgs, ... }:
 
 {
+  # use resolved for dns management
+  services.resolved.enable = true;
+
   # dnssec randomly failing sometimes
   # with DNSSEC validation failed: no-signature
   services.resolved.dnssec = "false";
+
+  # if not set, resolved defaults to its own list
+  services.resolved.fallbackDns = [ "1.1.1.1" "8.8.8.8" ];
 
   # more reliable replacement for nscd
   services.nscd.enableNsncd = true;
@@ -40,8 +46,7 @@
       enable = true;
     };
 
-    # these get picked up by systemd-resolved
-    # check dns status with resolvectl status
+    # DNS used by resolved. resolvectl status
     nameservers = [ "1.1.1.1" "8.8.8.8" ];
 
   };
