@@ -40,7 +40,8 @@
       enable = true;
     };
 
-    # these get put into /etc/resolved.conf
+    # these get picked up by systemd-resolved
+    # check dns status with resolvectl status
     nameservers = [ "1.1.1.1" "8.8.8.8" ];
 
   };
