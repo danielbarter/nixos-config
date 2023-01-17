@@ -11,11 +11,6 @@
 
     # if not set, resolved defaults to its own list
     fallbackDns = [ "1.1.1.1" "8.8.8.8" ];
-
-    # don't run a local DNS server on 127.0.0.53
-    extraConfig = ''
-      DNSStubListener=no
-    '';
   };
 
   # more reliable replacement for nscd
