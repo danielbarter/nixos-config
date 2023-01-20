@@ -64,8 +64,6 @@
     :width 'normal
     :slant 'normal))
 
-;; use ssh configuration from ~/.ssh/config
-(customize-set-variable 'tramp-use-ssh-controlmaster-options nil)
 
 ;; load package.el
 (require 'package)
