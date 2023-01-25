@@ -24,6 +24,16 @@ let
   in
 {
 
+
+  systemd.services.windows-control-server = {
+    after = [ "network.target" ];
+
+    serviceConfig = {
+      ExecStart = "${pkgs.python310Packages.gunicorn}/bin/gunicorn -w 1 -b 0.0.0.0:80 /etc/nixos/utils/windows_control_server:run";
+      Restart = "always";
+    };
+  };
+
   environment.systemPackages = [ windows ];
 
   services.nix-serve = {
