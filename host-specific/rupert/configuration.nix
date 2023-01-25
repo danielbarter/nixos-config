@@ -5,6 +5,7 @@ let
     destination = "/bin/windows";
     executable = true;
     text = ''
+         #!${pkgs.bash}/bin/bash
          export LIBVIRT_DEFAULT_URI=qemu:///system
          if [ "$1" = "start" ]
          then
@@ -27,11 +28,11 @@ let
 
   systemd.services.windows-control-server = {
     after = [ "network.target" ];
-    path = [ pkgs.python310Packages.gunicorn ];
+    path = [ windows ];
 
     serviceConfig = {
       WorkingDirectory="/etc/nixos/utils/windows_control_server";
-      ExecStart = "gunicorn -w 1 -b 0.0.0.0:80 windows_control_server:run";
+      ExecStart = "${pkgs.python310Packages.gunicorn}/bin/gunicorn -w 1 -b 0.0.0.0:80 windows_control_server:run";
     };
   };
 
