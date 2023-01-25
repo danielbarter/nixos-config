@@ -27,12 +27,11 @@ let
 
   systemd.services.windows-control-server = {
     after = [ "network.target" ];
+    path = [ pkgs.python310Packages.gunicorn ];
 
     serviceConfig = {
-      ExecStart = ''
-        cd /etc/nixos/utils/windows_control_server;
-        ${pkgs.python310Packages.gunicorn}/bin/gunicorn -w 1 -b 0.0.0.0:80 windows_control_server:run
-        '';
+      WorkingDirectory="/etc/nixos/utils/windows_control_server";
+      ExecStart = "gunicorn -w 1 -b 0.0.0.0:80 windows_control_server:run";
     };
   };
 
