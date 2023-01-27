@@ -25,6 +25,20 @@ let
   in
 {
 
+  nix = {
+    settings = {
+      substituters = [
+        # "http://punky:5000"
+        "https://cache.nixos.org/"
+      ];
+
+      trusted-public-keys = [
+        (builtins.readFile ./secrets/binary-cache/cache-pub-key.pem)
+      ];
+    };
+  };
+
+
 
   systemd.services.windows-control-server = {
     after = [ "network.target" ];
