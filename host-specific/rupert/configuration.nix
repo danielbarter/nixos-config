@@ -28,6 +28,9 @@ let
 
   systemd.services.windows-control-server = {
     after = [ "network.target" ];
+
+    # require service at boot time
+    wantedBy = [ "multi-user.target" ];
     path = [ windows ];
 
     serviceConfig = {
