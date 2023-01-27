@@ -30,14 +30,6 @@
 
   networking = {
 
-    # these get put into /etc/hosts
-    hosts = {
-      "192.168.1.1" = [ "asusmain" ];
-      "192.168.1.2" = [ "asusaux" ];
-      "192.168.1.10" = [ "rupert" ];
-      "192.168.1.11" = [ "rupertwlan" ];
-    };
-
     # disable various default nixos networking components
     dhcpcd.enable = false;
     firewall.enable = false;
@@ -47,9 +39,6 @@
     wireless.iwd = {
       enable = true;
     };
-
-    # DNS used by resolved. resolvectl status
-    nameservers = [ "1.1.1.1" "8.8.8.8" ];
 
   };
 
@@ -61,7 +50,6 @@
   };
 
   programs.ssh.extraConfig = builtins.readFile ./dotfiles/ssh/config;
-
 
 
   environment.systemPackages = with pkgs; [

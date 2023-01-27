@@ -7,7 +7,7 @@
   nix = {
     settings = {
       substituters = [
-        # "http://rupert:5000"
+        # "http://punky:5000"
         "https://cache.nixos.org/"
       ];
 

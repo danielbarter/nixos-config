@@ -41,18 +41,6 @@ let
 
   environment.systemPackages = [ windows ];
 
-  services.nix-serve = {
-    enable = true;
-    port = 5000;
-    secretKeyFile = "/etc/nixos/secrets/binary-cache/cache-priv-key.pem";
-  };
-
-    # serve DNS stub on local network
-    services.resolved.extraConfig = ''
-      DNSStubListenerExtra=192.168.1.10
-    '';
-
-
   networking.hostName = "rupert";
 
   systemd.network = {
