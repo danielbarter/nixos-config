@@ -11,7 +11,7 @@
 
     # serve DNS stub on local network
   services.resolved.extraConfig = ''
-       DNSStubListenerExtra=192.168.1.10
+       DNSStubListenerExtra=192.168.1.12
   '';
 
 
