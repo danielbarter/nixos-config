@@ -19,6 +19,12 @@
 
   networking.hostName = "jasper";
 
+    # serve DNS stub on local network
+  services.resolved.extraConfig = ''
+       DNSStubListener=no
+  '';
+
+
   systemd.network = {
     networks = {
       "40-wlan0" = {
