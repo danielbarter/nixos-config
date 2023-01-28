@@ -56,8 +56,6 @@ $ ln /mnt/etc/nixos/host-specific/<hostname>/configuration.nix /mnt/etc/nixos/ho
 #     ├── id_rsa
 #     └── id_rsa.pub
 # make sure all the leaves have permissions 600, with appropriate user and group
-$ mkdir -p /mnt/etc/nixos/secrets/gpg
-$ mkdir -p /mnt/etc/nixos/secrets/ssh
 
 # do this from ~ and then move into place
 $ gpg --full-generate-key
