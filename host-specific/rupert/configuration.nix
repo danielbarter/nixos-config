@@ -38,13 +38,9 @@ let
     };
   };
 
-
-  # serve DNS stub on local network
   services.resolved.extraConfig = ''
        DNSStubListener=no
-       Cache=no
   '';
-
 
   systemd.services.windows-control-server = {
     after = [ "network.target" ];

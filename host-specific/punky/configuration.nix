@@ -7,10 +7,9 @@
     secretKeyFile = "/etc/nixos/secrets/binary-cache/cache-priv-key.pem";
   };
 
-    # serve DNS stub on local network
+  # serve DNS stub on local network
   services.resolved.extraConfig = ''
        DNSStubListenerExtra=192.168.1.12
-       Cache=no
   '';
 
 
