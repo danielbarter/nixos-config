@@ -25,7 +25,7 @@
         };
 
         addresses = [
-          { addressConfig = { Address = "192.168.1.11/24"; RouteMetric = 1024;}; }
+          { addressConfig = { Address = "192.168.1.13/24"; RouteMetric = 1024;}; }
         ];
 
         routes = [
@@ -35,7 +35,7 @@
 
       "40-enp88s0" = {
         matchConfig = {
-          Name = "enp37s0";
+          Name = "enp88s0";
         };
 
         networkConfig = {
@@ -43,7 +43,7 @@
         };
 
         addresses = [
-          { addressConfig = { Address = "192.168.1.10/24"; RouteMetric = 512;}; }
+          { addressConfig = { Address = "192.168.1.12/24"; RouteMetric = 512;}; }
         ];
 
         routes = [
