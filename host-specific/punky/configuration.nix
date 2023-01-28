@@ -62,12 +62,12 @@
     hostName = "punky";
 
     hosts = {
-      "192.168.1.1" = [ "asusmain" ];
-      "192.168.1.2" = [ "asusaux" ];
-      "192.168.1.10" = [ "rupert" ];
-      "192.168.1.11" = [ "rupertwireless" ];
-      "192.168.1.12" = [ "punky" ];
-      "192.168.1.13" = [ "punkywireless" ];
+      "192.168.1.1" = [ "asusmain.meow" ];
+      "192.168.1.2" = [ "asusaux.meow" ];
+      "192.168.1.10" = [ "rupert.meow" ];
+      "192.168.1.11" = [ "rupertwireless.meow" ];
+      "192.168.1.12" = [ "punky.meow" ];
+      "192.168.1.13" = [ "punkywireless.meow" ];
     };
 
     extraHosts = let
