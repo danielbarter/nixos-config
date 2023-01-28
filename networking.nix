@@ -9,6 +9,11 @@
     # with DNSSEC validation failed: no-signature
     dnssec = "false";
 
+    # protocol used to route single label names.
+    # doesn't work great on small home networks using only ipv4
+    # see man 8 systemd-resolved
+    llmnr = "false";
+
     # if not set, resolved defaults to its own list
     fallbackDns = [ "1.1.1.1" "8.8.8.8" ];
   };
