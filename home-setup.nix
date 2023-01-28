@@ -15,6 +15,9 @@
       ln -sf /etc/nixos/dotfiles/git/gitconfig /home/danielbarter/.gitconfig
 
       # sway config
+      mkdir -p /home/danielbarter/.config/sway
+      mkdir -p /home/danielbarter/.config/kanshi
+      mkdir -p /home/danielbarter/.config/mako
       ln -sf /etc/nixos/dotfiles/sway/config /home/danielbarter/.config/sway/config
       ln -sf /etc/nixos/dotfiles/sway/config_kanshi /home/danielbarter/.config/kanshi/config
       ln -sf /etc/nixos/dotfiles/sway/config_mako /home/danielbarter/.config/mako/config

@@ -9,6 +9,7 @@
       ./users.nix
       ./lingering.nix
       ./pass.nix
+      ./home-setup.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
