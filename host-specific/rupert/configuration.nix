@@ -42,6 +42,7 @@ let
   # serve DNS stub on local network
   services.resolved.extraConfig = ''
        DNSStubListener=no
+       Cache=no
   '';
 
 
