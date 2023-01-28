@@ -56,6 +56,7 @@ let
   environment.systemPackages = [ windows ];
 
   networking.hostName = "rupert";
+  networking.nameservers = [ "192.168.1.12" ];
 
   systemd.network = {
     networks = {
