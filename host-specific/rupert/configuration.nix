@@ -28,7 +28,7 @@ let
   nix = {
     settings = {
       substituters = [
-        # "http://punky:5000"
+        "http://punky.meow:5000"
         "https://cache.nixos.org/"
       ];
 

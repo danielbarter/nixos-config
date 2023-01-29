@@ -7,7 +7,7 @@ let
     config = config.nixpkgs.config;
     overlays = [
       (import (builtins.fetchTarball {
-        url = https://github.com/nix-community/emacs-overlay/archive/800685a0ad5dfa94d6e3fffb5ffa1a208ad8c76a.tar.gz;
+        url = https://github.com/nix-community/emacs-overlay/archive/d1ea6872b199edc680917a7248b596e532297538.tar.gz;
       }))
     ];
   };
@@ -18,9 +18,8 @@ in
     (pkgsEmacsOverlay.emacsGit.override {
       withPgtk = true;
     })
-    # cmake autocomplete and emacs mode. Remove cmake binary so it
-    # doesn't interfere with local environments
-    ( cmake.overrideAttrs (finalAttrs: previousAttrs: { postInstall = "rm $out/bin/*";}))
+    # cmake autocomplete and emacs mode.
+    cmake
     aspell
     aspellDicts.en
   ];
