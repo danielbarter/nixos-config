@@ -29,7 +29,6 @@ let
     settings = {
       substituters = [
         "http://punky.meow:5000"
-        "https://cache.nixos.org/"
       ];
 
       trusted-public-keys = [
