@@ -5,6 +5,7 @@
 
     nixosConfigurations = {
       jasper = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit nixpkgs; };
         system = "x86_64-linux";
         modules =
           [
@@ -21,6 +22,7 @@
       };
 
       punky = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit nixpkgs; };
         system = "x86_64-linux";
         modules =
           [
@@ -36,6 +38,7 @@
       };
 
       rupert = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit nixpkgs; };
         system = "x86_64-linux";
         modules =
           [

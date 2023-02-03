@@ -1,7 +1,7 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nixpkgs, ... }:
 let
 
-  pkgsEmacsOverlay =  import <nixpkgs> {
+  pkgsEmacsOverlay =  import nixpkgs {
 
     # overlay for cutting edge emacs
     config = config.nixpkgs.config;
