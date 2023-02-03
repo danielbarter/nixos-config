@@ -44,7 +44,7 @@
               ./pass.nix
               ./home-setup.nix
               ./punky.nix
-              hosts.nixosModule { networking.stevenBlackHosts.enable = true; };
+              hosts.nixosModule { networking.stevenBlackHosts.enable = true; }
             ];
         };
 
