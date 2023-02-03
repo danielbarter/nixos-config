@@ -1,7 +1,8 @@
 {
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
+  inputs.nixpkgs.url = github:NixOS/nixpkgs/nixos-22.11;
+  inputs.hosts.url = github:StevenBlack/hosts;
 
-  outputs = { self, nixpkgs }: {
+  outputs = { self, nixpkgs, hosts }: {
 
     nixosConfigurations = {
       jasper = nixpkgs.lib.nixosSystem {
@@ -34,6 +35,7 @@
             ./pass.nix
             ./home-setup.nix
             ./punky.nix
+            hosts.nixosModule { networking.stevenBlackHosts.enable = true; }
           ];
       };
 

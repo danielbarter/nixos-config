@@ -70,10 +70,6 @@
       "192.168.1.13" = [ "punkywireless.meow" ];
     };
 
-    extraHosts = let
-      hostsPath = https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts;
-      hostsFile = builtins.fetchurl hostsPath;
-    in builtins.readFile "${hostsFile}";
 
     # DNS used by resolved. resolvectl status
     nameservers = [ "1.1.1.1" "8.8.8.8" ];
