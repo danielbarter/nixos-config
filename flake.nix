@@ -7,16 +7,10 @@
 
   outputs = { self, nixpkgs, hosts, emacs-overlay }:
 
-    let pkgs-emacs-overlay =  config : import nixpkgs {
-          config = config.nixpkgs.config;
-          system = "x86_64-linux";
-          overlays = [ emacs-overlay.overlays.default ];
-        };
-
-    in {
+    {
       nixosConfigurations = {
         jasper = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit pkgs-emacs-overlay; };
+          specialArgs = { inherit nixpkgs emacs-overlay; };
           system = "x86_64-linux";
           modules =
             [
@@ -33,7 +27,7 @@
         };
 
         punky = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit pkgs-emacs-overlay; };
+          specialArgs = { inherit nixpkgs emacs-overlay; };
           system = "x86_64-linux";
           modules =
             [
@@ -50,7 +44,7 @@
         };
 
         rupert = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit pkgs-emacs-overlay; };
+          specialArgs = { inherit nixpkgs emacs-overlay; };
           system = "x86_64-linux";
           modules =
             [
