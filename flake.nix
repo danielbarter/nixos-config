@@ -12,7 +12,7 @@
           overlays = [ emacs-overlay.overlays.default ];
         };
 
-        hosts-black-list = hosts.nixosModule { networking.stevenBlackHosts.enable = true; }
+        hosts-black-list = hosts.nixosModule { networking.stevenBlackHosts.enable = true; };
 
     in {
       nixosConfigurations = {
