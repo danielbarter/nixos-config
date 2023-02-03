@@ -6,10 +6,14 @@
   };
 
   outputs = { self, nixpkgs, hosts, emacs-overlay }:
+
     let pkgs-emacs-overlay = import nixpkgs {
           system = "x86_64-linux";
           overlays = [ emacs-overlay.overlays.default ];
         };
+
+        hosts-black-list = hosts.nixosModule { networking.stevenBlackHosts.enable = true; }
+
     in {
       nixosConfigurations = {
         jasper = nixpkgs.lib.nixosSystem {
@@ -42,7 +46,7 @@
               ./pass.nix
               ./home-setup.nix
               ./punky.nix
-              hosts.nixosModule { networking.stevenBlackHosts.enable = true; }
+              hosts-black-list
             ];
         };
 
