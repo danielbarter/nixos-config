@@ -1,12 +1,9 @@
 { config, pkgs, system, nixpkgs, emacs-overlay, ... }:
 
-let pkgs-emacs-overlay-resolver = { nixpkgs, emacs-overlay, system }:
-      import nixpkgs {
-        inherit system;
-        overlays = [ emacs-overlay.overlays.default ];
-      };
-
-    emacs-pkgs = (pkgs-emacs-overlay-resolver {inherit nixpkgs emacs-overlay system;});
+let emacs-pkgs = import nixpkgs {
+      inherit system;
+      overlays = [ emacs-overlay.overlays.default ];
+    };
 
 in {
   environment.systemPackages = with pkgs; [
