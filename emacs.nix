@@ -1,7 +1,7 @@
 { config, pkgs, pkgs-emacs-overlay, ... }:
 {
   environment.systemPackages = with pkgs; [
-    (pkgs-emacs-overlay.emacsGit.override {
+    ((pkgs-emacs-overlay config).emacsGit.override {
       withPgtk = true;
     })
     # cmake autocomplete and emacs mode.

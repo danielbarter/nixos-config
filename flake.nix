@@ -7,7 +7,8 @@
 
   outputs = { self, nixpkgs, hosts, emacs-overlay }:
 
-    let pkgs-emacs-overlay = import nixpkgs {
+    let pkgs-emacs-overlay =  config : import nixpkgs {
+          config = config.nixpkgs.config;
           system = "x86_64-linux";
           overlays = [ emacs-overlay.overlays.default ];
         };
