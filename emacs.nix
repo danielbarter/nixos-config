@@ -6,9 +6,11 @@ let pkgs-emacs-overlay-resolver = { nixpkgs, emacs-overlay }:
         overlays = [ emacs-overlay.overlays.default ];
       };
 
+    emacs-pkgs = (pkgs-emacs-overlay-resolver {inherit nixpkgs emacs-overlay;});
+
 in {
   environment.systemPackages = with pkgs; [
-    ((pkgs-emacs-overlay-resolver {inherit nixpkgs emacs-overlay;}).emacsGit.override {
+    (emacs-pkgs.emacsGit.override {
       withPgtk = true;
     })
     # cmake autocomplete and emacs mode.
