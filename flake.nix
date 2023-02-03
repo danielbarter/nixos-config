@@ -9,11 +9,11 @@
 
     {
       nixosConfigurations = {
-        jasper = nixpkgs.lib.nixosSystem {
+        jasper = nixpkgs.lib.nixosSystem rec {
           # we pass in nixpkgs and emacs-overlay and do the actual
           # overlaying inside the emacs module, otherwise build artifacts
           # do not get cached correctly
-          specialArgs = { system = "x86_64-linux"; inherit nixpkgs emacs-overlay; };
+          specialArgs = { inherit system nixpkgs emacs-overlay; };
           system = "x86_64-linux";
           modules =
             [
@@ -29,8 +29,8 @@
             ];
         };
 
-        punky = nixpkgs.lib.nixosSystem {
-          specialArgs = { system = "x86_64-linux"; inherit nixpkgs emacs-overlay; };
+        punky = nixpkgs.lib.nixosSystem rec {
+          specialArgs = { inherit system nixpkgs emacs-overlay; };
           system = "x86_64-linux";
           modules =
             [
@@ -46,8 +46,8 @@
             ];
         };
 
-        rupert = nixpkgs.lib.nixosSystem {
-          specialArgs = { system = "x86_64-linux"; inherit nixpkgs emacs-overlay; };
+        rupert = nixpkgs.lib.nixosSystem rec {
+          specialArgs = { inherit system nixpkgs emacs-overlay; };
           system = "x86_64-linux";
           modules =
             [
