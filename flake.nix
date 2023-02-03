@@ -12,8 +12,6 @@
           overlays = [ emacs-overlay.overlays.default ];
         };
 
-        hosts-black-list = hosts.nixosModule { networking.stevenBlackHosts.enable = true; };
-
     in {
       nixosConfigurations = {
         jasper = nixpkgs.lib.nixosSystem {
@@ -46,7 +44,7 @@
               ./pass.nix
               ./home-setup.nix
               ./punky.nix
-              hosts-black-list
+              hosts.nixosModule { networking.stevenBlackHosts.enable = true; };
             ];
         };
 
