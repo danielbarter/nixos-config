@@ -18,7 +18,7 @@
       isNormalUser = true;
       extraGroups = [ "wheel" "video" "audio" "adbusers" "libvirtd"];
       openssh.authorizedKeys.keys = [
-        (builtins.readFile ./secrets/ssh/id_rsa.pub)
+        (builtins.readFile ./public/ssh/id_rsa.pub)
       ];
     };
   };

@@ -32,7 +32,7 @@ let
       ];
 
       trusted-public-keys = [
-        (builtins.readFile ./secrets/binary-cache/cache-pub-key.pem)
+        (builtins.readFile ./public/binary-cache/cache-pub-key.pem)
       ];
     };
   };
