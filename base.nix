@@ -1,16 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [
-      ./host-specific-configuration.nix
-      ./networking.nix
-      ./emacs.nix
-      ./users.nix
-      ./lingering.nix
-      ./pass.nix
-      ./home-setup.nix
-    ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader = {
