@@ -7,7 +7,16 @@
 
   outputs = { self, nixpkgs, hosts, emacs-overlay }:
 
-    {
+    let core-modules = [
+          ./base.nix
+          ./networking.nix
+          ./emacs.nix
+          ./users.nix
+          ./lingering.nix
+          ./pass.nix
+          ./home-setup.nix
+        ];
+    in {
       nixosConfigurations = {
         jasper = nixpkgs.lib.nixosSystem rec {
           # we pass in nixpkgs and emacs-overlay and do the actual
@@ -17,13 +26,6 @@
           system = "x86_64-linux";
           modules =
             [
-              ./base.nix
-              ./networking.nix
-              ./emacs.nix
-              ./users.nix
-              ./lingering.nix
-              ./pass.nix
-              ./home-setup.nix
               ./jasper.nix
               ./gui.nix
             ];
@@ -34,13 +36,6 @@
           system = "x86_64-linux";
           modules =
             [
-              ./base.nix
-              ./networking.nix
-              ./emacs.nix
-              ./users.nix
-              ./lingering.nix
-              ./pass.nix
-              ./home-setup.nix
               ./punky.nix
               hosts.nixosModule { networking.stevenBlackHosts.enable = true; }
             ];
@@ -51,13 +46,6 @@
           system = "x86_64-linux";
           modules =
             [
-              ./base.nix
-              ./networking.nix
-              ./emacs.nix
-              ./users.nix
-              ./lingering.nix
-              ./pass.nix
-              ./home-setup.nix
               ./rupert.nix
             ];
         };
