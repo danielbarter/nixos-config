@@ -24,7 +24,7 @@
           # do not get cached correctly
           specialArgs = { inherit system nixpkgs emacs-overlay; };
           system = "x86_64-linux";
-          modules =
+          modules = core-modules ++
             [
               ./jasper.nix
               ./gui.nix
@@ -34,7 +34,7 @@
         punky = nixpkgs.lib.nixosSystem rec {
           specialArgs = { inherit system nixpkgs emacs-overlay; };
           system = "x86_64-linux";
-          modules =
+          modules = core-modules ++
             [
               ./punky.nix
               hosts.nixosModule { networking.stevenBlackHosts.enable = true; }
@@ -44,7 +44,7 @@
         rupert = nixpkgs.lib.nixosSystem rec {
           specialArgs = { inherit system nixpkgs emacs-overlay; };
           system = "x86_64-linux";
-          modules =
+          modules = core-modules ++ 
             [
               ./rupert.nix
             ];
