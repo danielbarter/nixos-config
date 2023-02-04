@@ -44,7 +44,7 @@
         rupert = nixpkgs.lib.nixosSystem rec {
           specialArgs = { inherit system nixpkgs emacs-overlay; };
           system = "x86_64-linux";
-          modules = core-modules ++ 
+          modules = core-modules ++
             [
               ./rupert.nix
             ];
