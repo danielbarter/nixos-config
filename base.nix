@@ -1,8 +1,10 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nixpkgs, ... }:
 
 {
 
   nix.settings.experimental-features = "nix-command flakes";
+  # use our flake input for resolving <nixpkgs>
+  nix.nixPath = [ "nixpkgs=${nixpkgs.outPath}" ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader = {

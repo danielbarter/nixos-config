@@ -21,7 +21,8 @@
         jasper = nixpkgs.lib.nixosSystem rec {
           # we pass in nixpkgs and emacs-overlay and do the actual
           # overlaying inside the emacs module, otherwise build artifacts
-          # do not get cached correctly
+          # do not get cached correctly. We also use nixpkgs.outPath to
+          # set $NIX_PATH
           specialArgs = { inherit system nixpkgs emacs-overlay; };
           system = "x86_64-linux";
           modules = core-modules ++
