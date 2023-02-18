@@ -27,14 +27,20 @@ class WindowsControlServer:
 
         if environ['PATH_INFO'] == '/api/status':
             status = '200 OK'
-            response_headers = [('Content-type', 'application/json')]
+            response_headers = [
+                ('Content-type', 'application/json'),
+                ('Access-Control-Allow-Origin', 'http://rupert.meow')
+            ]
             start_response(status, response_headers)
             return [self.prepare_payload()]
 
 
         elif environ['PATH_INFO'] == '/api/start':
             status = '200 OK'
-            response_headers = [('Content-type', 'application/json')]
+            response_headers = [
+                ('Content-type', 'application/json'),
+                ('Access-Control-Allow-Origin', 'http://rupert.meow')
+            ]
             start_response(status, response_headers)
             try:
                 self.domain.create()
