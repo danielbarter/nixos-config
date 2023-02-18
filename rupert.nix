@@ -1,30 +1,5 @@
 {config, pkgs, ...}:
-let
-  windows = pkgs.writeTextFile {
-    name = "windows";
-    destination = "/bin/windows";
-    executable = true;
-    text = ''
-         #!${pkgs.bash}/bin/bash
-         export LIBVIRT_DEFAULT_URI=qemu:///system
-         if [ "$1" = "start" ]
-         then
-           ${pkgs.libvirt}/bin/virsh start win10
-           exit
-         fi
-
-         if [ "$1" = "status" ]
-         then
-           ${pkgs.libvirt}/bin/virsh list --all
-           exit
-         fi
-
-         echo "usage: windows start|status"
-    '';
-  };
-  in
 {
-
   nix = {
     settings = {
       substituters = [
@@ -41,20 +16,19 @@ let
        DNSStubListener=no
   '';
 
-  systemd.services.windows-control-server = {
+  systemd.services.windows-control-server = let
+    python-env = pkgs.python310.withPackages ( p: [ p.libvirt p.gunicorn ]);
+  in {
     after = [ "network.target" ];
 
     # require service at boot time
     wantedBy = [ "multi-user.target" ];
-    path = [ windows ];
 
     serviceConfig = {
       WorkingDirectory="/etc/nixos/utils/windows_control_server";
-      ExecStart = "${pkgs.python310Packages.gunicorn}/bin/gunicorn -w 1 -b 0.0.0.0:80 windows_control_server:run";
+      ExecStart = "${python-env}/bin/gunicorn -w 1 -b 0.0.0.0:80 windows_control_server:app";
     };
   };
-
-  environment.systemPackages = [ windows ];
 
   networking.hostName = "rupert";
   networking.nameservers = [ "192.168.1.12" ];
