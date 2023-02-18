@@ -36,7 +36,7 @@ in {
 
     serviceConfig = {
       WorkingDirectory="/etc/nixos/utils/windows_control_server";
-      ExecStart = "${python-env}/bin/gunicorn -w 1 -b 0.0.0.0:10001 windows_control_server:app";
+      ExecStart = "${python-env}/bin/gunicorn -b 0.0.0.0:10001 windows_control_server:app";
     };
   };
 

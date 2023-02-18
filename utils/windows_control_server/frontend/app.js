@@ -22,7 +22,7 @@ function update(data) {
 };
 
 function tick () {
-    fetch("http://rupert.meow:10001/api/status")
+    fetch("http://rupert.meow:10001/api/state")
 	.then((response) => response.json())
 	.then((data) => update(data));
 };
