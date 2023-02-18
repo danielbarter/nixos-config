@@ -10,7 +10,6 @@ error_cat = r"""
 class WindowsControlServer:
 
     def __init__(self, libvirt_uri, domain_name):
-        self.domain_name = domain_name
         self.connection = libvirt.open(libvirt_uri)
         self.domain = self.connection.lookupByName(domain_name)
         self.hit_count = 0
