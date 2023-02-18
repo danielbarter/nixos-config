@@ -8,47 +8,65 @@ error_cat = r"""
 """.encode()
 
 class WindowsControlServer:
+    """
+    state updating
+
+    state       isActive      updated state
+    down        0             down
+    starting    0             starting
+    up          0             down
+    down        1             up
+    starting    1             up
+    up          1             up
+    """
 
     def __init__(self, libvirt_uri, libvirt_domain_name, site_url):
         self.connection = libvirt.open(libvirt_uri)
         self.domain = self.connection.lookupByName(libvirt_domain_name)
         self.site_url = site_url
-        self.hit_count = 0
+        self.state = "down" # "down", "starting", "up"
+        self.counter = 0
 
+
+    def update_state(self):
+        isActive = self.domain.isActive()
+        if isActive == 1:
+            self.state = "up"
+
+        elif self.state == "up" and isActive == 0:
+            self.state = "down"
 
     def prepare_payload(self):
-        state = "shutdown"
-        if self.domain.isActive():
-           state = "running"
+        return json.dumps({
+            "counter" : str(self.counter),
+            "state" : self.state }).encode()
 
-        return json.dumps({ "hit_count" : self.hit_count, "state" : state }).encode()
+    def happy_response(self, start_response):
+        status = '200 OK'
+        response_headers = [
+            ('Content-type', 'application/json'),
+            ('Access-Control-Allow-Origin', self.site_url)
+        ]
+        start_response(status, response_headers)
+        return [self.prepare_payload()]
+
 
     def __call__(self, environ, start_response):
-        self.hit_count += 1
+        self.counter += 1
+        self.update_state()
 
-        if environ['PATH_INFO'] == '/api/status':
-            status = '200 OK'
-            response_headers = [
-                ('Content-type', 'application/json'),
-                ('Access-Control-Allow-Origin', self.site_url)
-            ]
-            start_response(status, response_headers)
-            return [self.prepare_payload()]
+        if environ['PATH_INFO'] == '/api/state':
 
+            return self.happy_response(start_response)
 
         elif environ['PATH_INFO'] == '/api/start':
-            status = '200 OK'
-            response_headers = [
-                ('Content-type', 'application/json'),
-                ('Access-Control-Allow-Origin', self.site_url)
-            ]
-            start_response(status, response_headers)
-            try:
-                self.domain.create()
-            except:
-                pass
 
-            return [json.dumps({}).encode()]
+            if self.state == "down":
+                self.domain.create()
+                self.state = "starting"
+
+            return self.happy_response(start_response)
+
 
         else:
             status = '400 Bad Request'

@@ -3,16 +3,23 @@
     flex-wrap: wrap;
 }
 
-.shutdown {
+.down {
     padding: 5%;
-    background-color: green;
+    background-color: red;
     border-radius: 10%;
     margin: 1%;
 }
 
-.running {
+.starting {
     padding: 5%;
-    background-color: gray;
+    background-color: orange;
+    border-radius: 10%;
+    margin: 1%;
+}
+
+.up {
+    padding: 5%;
+    background-color: green;
     border-radius: 10%;
     margin: 1%;
 }
