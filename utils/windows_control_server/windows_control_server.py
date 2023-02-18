@@ -65,6 +65,7 @@ class WindowsControlServer:
             ]
 
             if self.state == "down":
+                # currently, the call to create blocks which sucks
                 self.domain.create()
                 self.state = "starting"
 
