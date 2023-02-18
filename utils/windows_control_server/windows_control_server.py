@@ -41,7 +41,6 @@ class WindowsControlServer:
             "counter" : str(self.counter),
             "state" : self.state }).encode()
 
-    def happy_response(self, start_response):
 
     def __call__(self, environ, start_response):
         self.counter += 1
