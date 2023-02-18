@@ -9,14 +9,11 @@ error_cat = r"""
 
 class WindowsControlServer:
 
-    def __init__(self, libvirt_uri, domain_name, page_path):
+    def __init__(self, libvirt_uri, domain_name):
         self.domain_name = domain_name
         self.connection = libvirt.open(libvirt_uri)
         self.domain = self.connection.lookupByName(domain_name)
         self.hit_count = 0
-
-        with open(page_path,'rb') as f:
-            self.page = f.read()
 
 
     def prepare_payload(self):
@@ -28,14 +25,6 @@ class WindowsControlServer:
 
     def __call__(self, environ, start_response):
         self.hit_count += 1
-
-
-        if environ['PATH_INFO'] == '' or '/':
-            status = '200 OK'
-            response_headers = [('Content-type', 'text/html')]
-            start_response(status, response_headers)
-            return [self.page]
-
 
         if environ['PATH_INFO'] == '/api/status':
             status = '200 OK'
@@ -64,6 +53,5 @@ class WindowsControlServer:
 
 app = WindowsControlServer(
     libvirt_uri="qemu:///system",
-    domain_name = "win10",
-    page_path = 'app.html'
+    domain_name = "win10"
 )
