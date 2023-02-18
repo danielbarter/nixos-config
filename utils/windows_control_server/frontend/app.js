@@ -2,7 +2,7 @@ var button_container = document.getElementById("button_container");
 var counter_container = document.getElementById("counter_container");
 
 
-function render(data) {
+function update(data) {
     const state = data["state"];
 
     // update button
@@ -13,7 +13,7 @@ function render(data) {
     } else {
 	button_container.className = "running";
 	button_container.innerText = "windows running";
-	button_container.onclick = (() => {});
+	button_container.onclick = windows_running;
     }
 
     // update counter
@@ -23,7 +23,7 @@ function render(data) {
 function tick () {
     fetch("http://rupert.meow:10001/api/status")
 	.then((response) => response.json())
-	.then((data) => render(data));
+	.then((data) => update(data));
 };
 
 
@@ -32,6 +32,10 @@ function start_windows () {
     fetch("http://rupert.meow:10001/api/start")
 	.then((response) => response.json())
 	.then((data) => console.log("windows started"));
+};
+
+function windows_running () {
+    console.log("windows already running");
 };
 
 
