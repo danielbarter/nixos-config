@@ -1,0 +1,26 @@
+.app {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.shutdown {
+    padding: 5%;
+    background-color: green;
+    border-radius: 10%;
+    margin: 1%;
+}
+
+.running {
+    padding: 5%;
+    background-color: gray;
+    border-radius: 10%;
+    margin: 1%;
+}
+
+.counter {
+    padding: 5%;
+    background-color: gray;
+    border-radius: 10%;
+    margin: 1%;
+}
+}

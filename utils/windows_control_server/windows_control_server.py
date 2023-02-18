@@ -9,9 +9,10 @@ error_cat = r"""
 
 class WindowsControlServer:
 
-    def __init__(self, libvirt_uri, domain_name):
+    def __init__(self, libvirt_uri, libvirt_domain_name, site_url):
         self.connection = libvirt.open(libvirt_uri)
-        self.domain = self.connection.lookupByName(domain_name)
+        self.domain = self.connection.lookupByName(libvirt_domain_name)
+        self.site_url = site_url
         self.hit_count = 0
 
 
@@ -29,7 +30,7 @@ class WindowsControlServer:
             status = '200 OK'
             response_headers = [
                 ('Content-type', 'application/json'),
-                ('Access-Control-Allow-Origin', 'http://rupert.meow')
+                ('Access-Control-Allow-Origin', self.site_url)
             ]
             start_response(status, response_headers)
             return [self.prepare_payload()]
@@ -39,7 +40,7 @@ class WindowsControlServer:
             status = '200 OK'
             response_headers = [
                 ('Content-type', 'application/json'),
-                ('Access-Control-Allow-Origin', 'http://rupert.meow')
+                ('Access-Control-Allow-Origin', self.site_url)
             ]
             start_response(status, response_headers)
             try:
@@ -58,5 +59,6 @@ class WindowsControlServer:
 
 app = WindowsControlServer(
     libvirt_uri="qemu:///system",
-    domain_name = "win10"
+    libvirt_domain_name = "win10",
+    site_url="http://rupert.meow"
 )

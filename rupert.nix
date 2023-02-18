@@ -1,5 +1,7 @@
 {config, pkgs, ...}:
-{
+let
+  python-env = pkgs.python310.withPackages ( p: [ p.libvirt p.gunicorn ]);
+in {
   nix = {
     settings = {
       substituters = [
@@ -16,13 +18,21 @@
        DNSStubListener=no
   '';
 
-  systemd.services.windows-control-server = let
-    python-env = pkgs.python310.withPackages ( p: [ p.libvirt p.gunicorn ]);
-  in {
-    after = [ "network.target" ];
 
-    # require service at boot time
-    wantedBy = [ "multi-user.target" ];
+  systemd.services.windows-control-server-serve = {
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ]; # require service at boot time
+
+    serviceConfig = {
+      WorkingDirectory="/etc/nixos/utils/windows_control_server/frontend";
+      ExecStart = "${python-env}/bin/python -m http.server 80";
+    };
+
+  };
+
+  systemd.services.windows-control-server-api = {
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ]; # require service at boot time
 
     serviceConfig = {
       WorkingDirectory="/etc/nixos/utils/windows_control_server";
