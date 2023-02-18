@@ -34,7 +34,7 @@ function start_windows () {
 	.then((data) => update(data));
 };
 
-
+// on click start windows
 button_container.onclick = start_windows;
 
 // initial tick

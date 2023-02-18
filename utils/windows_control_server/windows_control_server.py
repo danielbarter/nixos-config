@@ -1,5 +1,6 @@
 import libvirt
 import json
+import concurrent.futures
 
 error_cat = r"""
  /\_/\
@@ -24,8 +25,18 @@ class WindowsControlServer:
         self.connection = libvirt.open(libvirt_uri)
         self.domain = self.connection.lookupByName(libvirt_domain_name)
         self.site_url = site_url
+
+        # since we are storing state in the worker, it is important
+        # that we only have one wsgi worker running. This is not an
+        # issue since this service will only ever be used on a local network
+        # by a very small number of people. It is not designed to scale.
+
         self.state = "down" # "down", "starting", "up"
         self.counter = 0
+
+
+        self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+        self.futures = []
 
 
     def update_state(self):
@@ -43,6 +54,7 @@ class WindowsControlServer:
 
 
     def __call__(self, environ, start_response):
+        self.futures = [ f for f in self.futures if not f.done() ]
         self.counter += 1
         self.update_state()
 
@@ -64,12 +76,16 @@ class WindowsControlServer:
                 ('Access-Control-Allow-Origin', self.site_url)
             ]
 
+            start_response(status, response_headers)
+
             if self.state == "down":
-                # currently, the call to create blocks which sucks
-                self.domain.create()
+                self.futures.append(self.executor.submit(
+                    lambda domain: domain.create(),
+                    self.domain
+                ))
+
                 self.state = "starting"
 
-            start_response(status, response_headers)
             return [self.prepare_payload()]
 
         else:
