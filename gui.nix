@@ -49,6 +49,7 @@ in
     iwgtk
     alacritty                 # gpu accelerated terminal
     pavucontrol               # pulseaudio control volume
+    pulseaudio                # pactl
     gammastep                 # redshift
     dbus-sway-environment
     configure-gtk
