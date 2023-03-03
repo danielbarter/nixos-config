@@ -32,19 +32,15 @@ $ mkdir -p /mnt/boot
 $ mount /dev/disk/by-label/boot /mnt/boot
 ```
 
-Setup nixos configuration.
-Configuration is parameterized over the modules in `host-specific`. They need to be linked into the root of this repo:
+Install Nixos
 ```
-$ git clone https://github.com/danielbarter/nixos-config /mnt/etc/nixos
-$ nixos-generate-config --dir /tmp/nixos
+$ nixos-generate-config --root /mnt
+$ nixos-install
+```
 
-# add the relevent configuration from /tmp/nixos/hardware-configuration.nix to host specific configuration
-# these need to be hard links because the evaluation of a nix expression depends on its location in the file system
-$ ln /mnt/etc/nixos/host-specific/<hostname>/configuration.nix /mnt/etc/nixos/host-specific-configuration.nix
-
-# set hostname and initial version in host-specific-configuration.nix.
-
-# Generate gpg keys and ssh keys. They should be stored as follows:
+Secrets
+```
+# Secrets are stored as follows:
 # /mnt/etc/nixos/secrets/
 # ├── binary-cache
 # │   ├── cache-priv-key.pem
@@ -57,14 +53,9 @@ $ ln /mnt/etc/nixos/host-specific/<hostname>/configuration.nix /mnt/etc/nixos/ho
 #     └── id_rsa.pub
 # make sure all the leaves have permissions 600, with appropriate user and group
 
-# do this from ~ and then move into place
+# secrets are generated as follows:
 $ gpg --full-generate-key
 $ gpg --output public.asc --armor --export <email>
 $ gpg --output privkey.asc --armor --export-secret-key <email>
 $ ssh-keygen
-```
-
-finish the install:
-```
-$ nixos-install
 ```
