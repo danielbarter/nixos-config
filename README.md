@@ -52,7 +52,7 @@ Secrets
 #     ├── id_rsa
 # make sure all the leaves have permissions 600, with appropriate user and group
 # corresponding public keys are stored as follows:
-# /mnt/etc/nixos/public
+# /mnt/etc/nixos/public/
 # ├── binary-cache
 # │   ├── cache-pub-key.pem
 # ├── gpg
