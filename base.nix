@@ -25,7 +25,6 @@
   environment.systemPackages = with pkgs; [
     tmux                # terminal multiplexer
     git
-    vim
     file
     strace
     pciutils            # lspci
