@@ -46,15 +46,19 @@ Secrets
 # /mnt/etc/nixos/secrets/
 # ├── binary-cache
 # │   ├── cache-priv-key.pem
-# │   └── cache-pub-key.pem
 # ├── gpg
 # │   ├── privkey.asc
-# │   └── public.asc
 # └── ssh
 #     ├── id_rsa
-#     └── id_rsa.pub
 # make sure all the leaves have permissions 600, with appropriate user and group
-
+# corresponding public keys are stored as follows:
+# /mnt/etc/nixos/public
+# ├── binary-cache
+# │   ├── cache-pub-key.pem
+# ├── gpg
+# │   ├── public.asc
+# └── ssh
+#     ├── id_rsa.pub
 # secrets are generated as follows:
 $ gpg --full-generate-key
 $ gpg --output public.asc --armor --export <email>
