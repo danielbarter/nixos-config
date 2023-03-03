@@ -2,15 +2,13 @@
   inputs = {
     nixpkgs.url = github:NixOS/nixpkgs/nixos-22.11;
     hosts.url = github:StevenBlack/hosts;
-    emacs-overlay.url = github:nix-community/emacs-overlay;
   };
 
-  outputs = { self, nixpkgs, hosts, emacs-overlay }:
+  outputs = { self, nixpkgs, hosts }:
 
     let core-modules = [
           ./base.nix
           ./networking.nix
-          ./emacs.nix
           ./users.nix
           ./lingering.nix
           ./pass.nix
@@ -23,7 +21,7 @@
           # overlaying inside the emacs module, otherwise build artifacts
           # do not get cached correctly. We also use nixpkgs.outPath to
           # set $NIX_PATH
-          specialArgs = { inherit system nixpkgs emacs-overlay; };
+          specialArgs = { inherit nixpkgs; };
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -33,7 +31,7 @@
         };
 
         punky = nixpkgs.lib.nixosSystem rec {
-          specialArgs = { inherit system nixpkgs emacs-overlay; };
+          specialArgs = { inherit nixpkgs; };
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -43,7 +41,7 @@
         };
 
         rupert = nixpkgs.lib.nixosSystem rec {
-          specialArgs = { inherit system nixpkgs emacs-overlay; };
+          specialArgs = { inherit nixpkgs; };
           system = "x86_64-linux";
           modules = core-modules ++
             [

@@ -23,6 +23,11 @@
 
   # List packages installed in system profile
   environment.systemPackages = with pkgs; [
+    emacs
+    aspell
+    aspellDicts.en
+    cmake               # cmake autocomplete and emacs mode.
+
     tmux                # terminal multiplexer
     git
     file
