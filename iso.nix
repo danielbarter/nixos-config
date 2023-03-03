@@ -4,6 +4,7 @@
 {pkgs, modulesPath, lib, ... }: {
 
   environment.systemPackages = with pkgs; [
+    emacs
     git
     gnupg
   ];
