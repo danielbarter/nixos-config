@@ -1,9 +1,8 @@
 { config, pkgs, ... }:
 {
   system.activationScripts.homeSetup = ''
-      # symlink emacs and vim config into home
+      # symlink emacs config into home
       ln -sf /etc/nixos/dotfiles/emacs/emacs.el /home/danielbarter/.emacs.el
-      ln -sf /etc/nixos/dotfiles/vim/vimrc /home/danielbarter/.vimrc
 
       # symlink shell config files into home
       ln -sf /etc/nixos/dotfiles/shell/alacritty.yml /home/danielbarter/.alacritty.yml
