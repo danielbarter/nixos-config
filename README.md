@@ -34,6 +34,8 @@ $ mount /dev/disk/by-label/boot /mnt/boot
 
 Install Nixos
 ```
+# this generates a minimal configuration which we use to bootstrap
+# up to the full configuration style used in this repo
 $ nixos-generate-config --root /mnt
 $ nixos-install
 ```
