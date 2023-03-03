@@ -103,7 +103,7 @@
 
 
 ;; cmake mode is bundled with the cmake system package
-(require 'cmake-mode)
+(require 'cmake-mode nil `noerror)
 
 
 ;; install the missing melpa packages
