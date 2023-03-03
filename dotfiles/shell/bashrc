@@ -1,3 +1,5 @@
+EDITOR="emacs -nw"
+
 fuzzy_history() {
     history | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}' | fzf
 }
