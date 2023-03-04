@@ -24,7 +24,8 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 
-
+;; if we are running a graphical emacs session
+;; remove additional window noise + set fonts
 (if (display-graphic-p)
     ((toggle-scroll-bar -1)
 
