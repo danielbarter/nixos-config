@@ -23,7 +23,7 @@
 
   # List packages installed in system profile
   environment.systemPackages = with pkgs; [
-    emacs
+    emacs-nox
     aspell
     aspellDicts.en
     cmake               # cmake autocomplete and emacs mode.

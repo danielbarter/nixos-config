@@ -1,11 +1,3 @@
-;; removing window noise
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(toggle-scroll-bar -1)
-(setq tab-bar-show nil)
-
-;; stop cursor blinking
-(blink-cursor-mode 0)
 
 ;; disable scratch message
 (setq initial-scratch-message nil)
@@ -26,43 +18,52 @@
 ;; don't use tabs to indent. indent-tabs-mode is buffer local.
 ;; to set globally, we use setq-default
 (setq-default indent-tabs-mode nil)
+(setq tab-bar-show nil)
+
+;; removing window noise
+(tool-bar-mode -1)
+(menu-bar-mode -1)
 
 
-;; set font
-(setq source-code-pro "Source Code Pro")
-(setq noto-color-emoji "Noto Color Emoji")
-(setq my-font-size 18)
+(if (display-graphic-p)
+    ((toggle-scroll-bar -1)
 
-(set-face-font
-   'default
-   (font-spec
-    :family source-code-pro
-    :size my-font-size
-    :weight 'normal
-    :width 'normal
-    :slant 'normal))
+     ;; stop cursor blinking
+     (blink-cursor-mode 0)
 
-(if (>= emacs-major-version 29)
-  (set-face-font
-     'mode-line-active
-     (font-spec
-      :family source-code-pro
-      :size my-font-size
-      :weight 'normal
-      :width 'normal
-      :slant 'normal))
-  (message "no mode-line-active symbol on this version of emacs")
-)
+     ;; set font
+     (setq source-code-pro "Source Code Pro")
+     (setq noto-color-emoji "Noto Color Emoji")
+     (setq my-font-size 18)
 
+     (set-face-font
+        'default
+        (font-spec
+         :family source-code-pro
+         :size my-font-size
+         :weight 'normal
+         :width 'normal
+         :slant 'normal))
 
-(set-fontset-font
-   t 'symbol
-   (font-spec
-    :family noto-color-emoji
-    :size my-font-size
-    :weight 'normal
-    :width 'normal
-    :slant 'normal))
+     (set-face-font
+        'mode-line-active
+        (font-spec
+         :family source-code-pro
+         :size my-font-size
+         :weight 'normal
+         :width 'normal
+         :slant 'normal))
+
+     (set-fontset-font
+        t 'symbol
+        (font-spec
+         :family noto-color-emoji
+         :size my-font-size
+         :weight 'normal
+         :width 'normal
+         :slant 'normal)))
+
+    (message "running in ncurses mode"))
 
 
 ;; load package.el
