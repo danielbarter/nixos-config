@@ -27,7 +27,8 @@
 ;; if we are running a graphical emacs session
 ;; remove additional window noise + set fonts
 (if (display-graphic-p)
-    ((toggle-scroll-bar -1)
+    ((message "running in gui mode")
+     (toggle-scroll-bar -1)
 
      ;; stop cursor blinking
      (blink-cursor-mode 0)
