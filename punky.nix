@@ -31,20 +31,20 @@
     interfaces = {
       "enp88s0" = {
         useDHCP = false;
-      };
-        addresses = [
+        ipv4.addresses = [
           {
             address = "192.168.1.12";
             prefixLength = 24;
           }
         ];
-        routes = [
+        ipv4.routes = [
           {
             address = "192.168.1.0";
             prefixLength = 24;
             via = "192.168.1.1";
           }
         ];
+      };
     };
   };
 
