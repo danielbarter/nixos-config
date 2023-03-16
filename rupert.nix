@@ -40,47 +40,26 @@ in {
     };
   };
 
-  networking.hostName = "rupert";
-  networking.nameservers = [ "192.168.1.12" ];
-
-  systemd.network = {
-    networks = {
-      "40-wlan0" = {
-        matchConfig = {
-          Name = "wlan0";
-        };
-
-        networkConfig = {
-          DHCP = "no";
-        };
-
-        addresses = [
-          { addressConfig = { Address = "192.168.1.11/24"; RouteMetric = 1024;}; }
-        ];
-
-        routes = [
-          { routeConfig = { Gateway = "192.168.1.1"; Metric = 1024;}; }
-        ];
+  networking = {
+    hostName = "rupert";
+    nameservers = [ "192.168.1.12" ];
+    interfaces = {
+      "enp88s0" = {
+        useDHCP = false;
       };
-
-      "40-enp37s0" = {
-        matchConfig = {
-          Name = "enp37s0";
-        };
-
-        networkConfig = {
-          DHCP = "no";
-        };
-
         addresses = [
-          { addressConfig = { Address = "192.168.1.10/24"; RouteMetric = 512;}; }
+          {
+            address = "192.168.1.10";
+            prefixLength = 24;
+          }
         ];
-
         routes = [
-          { routeConfig = { Gateway = "192.168.1.1"; Metric = 512;}; }
+          {
+            address = "192.168.1.0";
+            prefixLength = 24;
+            via = "192.168.1.1";
+          }
         ];
-      };
-
     };
   };
 

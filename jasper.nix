@@ -13,26 +13,19 @@
     };
   };
 
-  networking.hostName = "jasper";
+  networking = {
+    hostName = "jasper";
+    interfaces = {
+      "wlan0" = {
+        useDHCP = true;
+      };
+    };
+  };
 
   services.resolved.extraConfig = ''
        DNSStubListener=no
   '';
 
-
-  systemd.network = {
-    networks = {
-      "40-wlan0" = {
-        matchConfig = {
-          Name = "wlan0";
-        };
-
-        networkConfig = {
-          DHCP = "yes";
-        };
-      };
-    };
-  };
 
   services.logind.lidSwitch = "suspend";
   services.logind = {

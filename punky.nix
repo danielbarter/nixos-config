@@ -13,66 +13,39 @@
   '';
 
 
-  systemd.network = {
-    networks = {
-      "40-wlan0" = {
-        matchConfig = {
-          Name = "wlan0";
-        };
-
-        networkConfig = {
-          DHCP = "no";
-        };
-
-        addresses = [
-          { addressConfig = { Address = "192.168.1.13/24"; RouteMetric = 1024;}; }
-        ];
-
-        routes = [
-          { routeConfig = { Gateway = "192.168.1.1"; Metric = 1024;}; }
-        ];
-      };
-
-      "40-enp88s0" = {
-        matchConfig = {
-          Name = "enp88s0";
-        };
-
-        networkConfig = {
-          DHCP = "no";
-        };
-
-        addresses = [
-          { addressConfig = { Address = "192.168.1.12/24"; RouteMetric = 512;}; }
-        ];
-
-        routes = [
-          { routeConfig = { Gateway = "192.168.1.1"; Metric = 512;}; }
-        ];
-      };
-
-    };
-  };
-
-
-
-  # these get put into /etc/hosts
   networking = {
 
     hostName = "punky";
 
+    # these get put into /etc/hosts
     hosts = {
       "192.168.1.1" = [ "asusmain.meow" ];
       "192.168.1.2" = [ "asusaux.meow" ];
       "192.168.1.10" = [ "rupert.meow" ];
-      "192.168.1.11" = [ "rupertwireless.meow" ];
       "192.168.1.12" = [ "punky.meow" ];
-      "192.168.1.13" = [ "punkywireless.meow" ];
     };
-
 
     # DNS used by resolved. resolvectl status
     nameservers = [ "1.1.1.1" "8.8.8.8" ];
+
+    interfaces = {
+      "enp88s0" = {
+        useDHCP = false;
+      };
+        addresses = [
+          {
+            address = "192.168.1.12";
+            prefixLength = 24;
+          }
+        ];
+        routes = [
+          {
+            address = "192.168.1.0";
+            prefixLength = 24;
+            via = "192.168.1.1";
+          }
+        ];
+    };
   };
 
 
@@ -103,7 +76,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.11"; # Did you read the comment?
-
-
-
 }
