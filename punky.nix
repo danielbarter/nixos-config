@@ -37,7 +37,7 @@
 
         networkConfig = {
           Bond = "bond0";
-          PrimarySlave = "true";
+          PrimarySlave = true;
         };
       };
 
