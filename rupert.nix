@@ -87,7 +87,6 @@ in {
     interfaces = {
       "bond0" = {
         useDHCP = false;
-      };
         ipv4.addresses = [
           {
             address = "192.168.1.10";
@@ -101,6 +100,7 @@ in {
             via = "192.168.1.1";
           }
         ];
+      };
     };
   };
 
