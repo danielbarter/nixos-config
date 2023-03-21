@@ -12,6 +12,46 @@
        DNSStubListenerExtra=192.168.1.12
   '';
 
+  # bonding ethernet and wireless (with ethernet as primary)
+  systemd.network = {
+    netdevs = {
+      "30-bond0" = {
+        netdevConfig = {
+          Kind = "bond";
+          Name = "bond0";
+        };
+
+        bondConfig = {
+          Mode = "active-backup";
+          PrimaryReselectPolicy = "always";
+          MIIMonitorSec = "1s";
+        };
+      };
+    };
+
+    networks = {
+      "30-enp88s0" = {
+        matchConfig = {
+          Name = "enp88s0";
+        };
+
+        networkConfig = {
+          Bond = "bond0";
+          PrimarySlave = "true";
+        };
+      };
+
+      "30-wlan0" = {
+        matchConfig = {
+          Name = "wlan0";
+        };
+
+        networkConfig = {
+          Bond = "bond0";
+        };
+      };
+    };
+  };
 
   networking = {
 
@@ -29,7 +69,7 @@
     nameservers = [ "1.1.1.1" "8.8.8.8" ];
 
     interfaces = {
-      "enp88s0" = {
+      "bond0" = {
         useDHCP = false;
         ipv4.addresses = [
           {

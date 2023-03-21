@@ -14,10 +14,6 @@ in {
     };
   };
 
-  services.resolved.extraConfig = ''
-       DNSStubListener=no
-  '';
-
 
   systemd.services.windows-control-server-serve = {
     after = [ "network.target" ];
@@ -40,11 +36,56 @@ in {
     };
   };
 
+  services.resolved.extraConfig = ''
+       DNSStubListener=no
+  '';
+
+  # bonding ethernet and wireless (with ethernet as primary)
+  systemd.network = {
+    netdevs = {
+      "30-bond0" = {
+        netdevConfig = {
+          Kind = "bond";
+          Name = "bond0";
+        };
+
+        bondConfig = {
+          Mode = "active-backup";
+          PrimaryReselectPolicy = "always";
+          MIIMonitorSec = "1s";
+        };
+      };
+    };
+
+    networks = {
+      "30-enp37s0" = {
+        matchConfig = {
+          Name = "enp37s0";
+        };
+
+        networkConfig = {
+          Bond = "bond0";
+          PrimarySlave = "true";
+        };
+      };
+
+      "30-wlan0" = {
+        matchConfig = {
+          Name = "wlan0";
+        };
+
+        networkConfig = {
+          Bond = "bond0";
+        };
+      };
+    };
+  };
+
   networking = {
     hostName = "rupert";
     nameservers = [ "192.168.1.12" ];
     interfaces = {
-      "enp88s0" = {
+      "bond0" = {
         useDHCP = false;
       };
         ipv4.addresses = [
