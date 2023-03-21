@@ -78,30 +78,30 @@ in {
           Bond = "bond0";
         };
       };
+
+      "30-bond0" = {
+        matchConfig = {
+          Name = "bond0";
+        };
+
+        networkConfig = {
+          DHCP = "no";
+        };
+
+        addresses = [
+          { addressConfig = { Address = "192.168.1.10/24"; }; }
+        ];
+
+        routes = [
+          { routeConfig = { Gateway = "192.168.1.1"; }; }
+        ];
+      };
     };
   };
 
   networking = {
     hostName = "rupert";
     nameservers = [ "192.168.1.12" ];
-    interfaces = {
-      "bond0" = {
-        useDHCP = false;
-        ipv4.addresses = [
-          {
-            address = "192.168.1.10";
-            prefixLength = 24;
-          }
-        ];
-        ipv4.routes = [
-          {
-            address = "192.168.1.0";
-            prefixLength = 24;
-            via = "192.168.1.1";
-          }
-        ];
-      };
-    };
   };
 
   boot.kernelModules = [ "kvm-amd" "vfio-pci" ];

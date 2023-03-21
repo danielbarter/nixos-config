@@ -50,6 +50,24 @@
           Bond = "bond0";
         };
       };
+
+      "30-bond0" = {
+        matchConfig = {
+          Name = "bond0";
+        };
+
+        networkConfig = {
+          DHCP = "no";
+        };
+
+        addresses = [
+          { addressConfig = { Address = "192.168.1.12/24"; }; }
+        ];
+
+        routes = [
+          { routeConfig = { Gateway = "192.168.1.1"; }; }
+        ];
+      };
     };
   };
 
@@ -67,25 +85,6 @@
 
     # DNS used by resolved. resolvectl status
     nameservers = [ "1.1.1.1" "8.8.8.8" ];
-
-    interfaces = {
-      "bond0" = {
-        useDHCP = false;
-        ipv4.addresses = [
-          {
-            address = "192.168.1.12";
-            prefixLength = 24;
-          }
-        ];
-        ipv4.routes = [
-          {
-            address = "192.168.1.0";
-            prefixLength = 24;
-            via = "192.168.1.1";
-          }
-        ];
-      };
-    };
   };
 
 
