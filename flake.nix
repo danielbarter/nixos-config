@@ -2,9 +2,10 @@
   inputs = {
     nixpkgs.url = github:NixOS/nixpkgs/nixos-22.11;
     hosts.url = github:StevenBlack/hosts;
+    emacs-overlay.url = github:nix-community/emacs-overlay;
   };
 
-  outputs = { self, nixpkgs, hosts }:
+  outputs = { self, nixpkgs, hosts, emacs-overlay }:
 
     let core-modules = [
           ./base.nix
@@ -14,12 +15,12 @@
           ./pass.nix
           ./home-setup.nix
         ];
+        special-args = system: {
+          inherit nixpkgs emacs-overlay system;};
     in {
       nixosConfigurations = {
         jasper = nixpkgs.lib.nixosSystem rec {
-          # we pass in nixpkgs so we use nixpkgs.outPath to
-          # set $NIX_PATH
-          specialArgs = { inherit nixpkgs; };
+          specialArgs = special-args system;
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -29,7 +30,7 @@
         };
 
         punky = nixpkgs.lib.nixosSystem rec {
-          specialArgs = { inherit nixpkgs; };
+          specialArgs = special-args system;
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -39,7 +40,7 @@
         };
 
         rupert = nixpkgs.lib.nixosSystem rec {
-          specialArgs = { inherit nixpkgs; };
+          specialArgs = special-args system;
           system = "x86_64-linux";
           modules = core-modules ++
             [
