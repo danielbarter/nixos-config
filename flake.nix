@@ -14,6 +14,7 @@
           ./lingering.nix
           ./pass.nix
           ./home-setup.nix
+          ./emacs.nix
         ];
         special-args = system: {
           inherit nixpkgs emacs-overlay system;};

@@ -1,11 +1,6 @@
-{ config, pkgs, system, nixpkgs, emacs-overlay,  ... }:
+{ config, pkgs, nixpkgs,  ... }:
 
-let emacs-pkgs = import nixpkgs {
-      inherit system;
-      overlays = [ emacs-overlay.overlays.default ];
-    };
-in {
-
+{
   nix.settings.experimental-features = "nix-command flakes";
   # use our flake input for resolving <nixpkgs>
   nix.nixPath = [ "nixpkgs=${nixpkgs.outPath}" ];
@@ -27,13 +22,6 @@ in {
 
   # List packages installed in system profile
   environment.systemPackages = with pkgs; [
-    (emacs-pkgs.emacsGit.override {
-      withPgtk = true;
-    })
-    aspell
-    aspellDicts.en
-    cmake               # cmake autocomplete and emacs mode.
-
     bintools            # objdump and readelf
     tmux                # terminal multiplexer
     git
