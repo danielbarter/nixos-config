@@ -27,43 +27,44 @@
 ;; if we are running a graphical emacs session
 ;; remove additional window noise + set fonts
 (if (display-graphic-p)
-    ((message "running in gui mode")
-     (toggle-scroll-bar -1)
+    (progn
+      (message "running in gui mode")
+      (toggle-scroll-bar -1)
 
-     ;; stop cursor blinking
-     (blink-cursor-mode 0)
+      ;; stop cursor blinking
+      (blink-cursor-mode 0)
 
-     ;; set font
-     (setq source-code-pro "Source Code Pro")
-     (setq noto-color-emoji "Noto Color Emoji")
-     (setq my-font-size 18)
+      ;; set font
+      (setq source-code-pro "Source Code Pro")
+      (setq noto-color-emoji "Noto Color Emoji")
+      (setq my-font-size 18)
 
-     (set-face-font
-        'default
-        (font-spec
-         :family source-code-pro
-         :size my-font-size
-         :weight 'normal
-         :width 'normal
-         :slant 'normal))
+      (set-face-font
+         'default
+         (font-spec
+          :family source-code-pro
+          :size my-font-size
+          :weight 'normal
+          :width 'normal
+          :slant 'normal))
 
-     (set-face-font
-        'mode-line-active
-        (font-spec
-         :family source-code-pro
-         :size my-font-size
-         :weight 'normal
-         :width 'normal
-         :slant 'normal))
+      (set-face-font
+         'mode-line-active
+         (font-spec
+          :family source-code-pro
+          :size my-font-size
+          :weight 'normal
+          :width 'normal
+          :slant 'normal))
 
-     (set-fontset-font
-        t 'symbol
-        (font-spec
-         :family noto-color-emoji
-         :size my-font-size
-         :weight 'normal
-         :width 'normal
-         :slant 'normal)))
+      (set-fontset-font
+         t 'symbol
+         (font-spec
+          :family noto-color-emoji
+          :size my-font-size
+          :weight 'normal
+          :width 'normal
+          :slant 'normal)))
 
     (message "running in ncurses mode"))
 
