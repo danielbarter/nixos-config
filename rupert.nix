@@ -19,7 +19,6 @@
 
   # enable bluetooth
   hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
 
   # gnome
   services.xserver.enable = true;
