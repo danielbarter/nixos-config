@@ -1,7 +1,5 @@
 {config, pkgs, ...}:
-let
-  python-env = pkgs.python310.withPackages ( p: [ p.libvirt p.gunicorn ]);
-in {
+{
   nix = {
     settings = {
       substituters = [
@@ -14,27 +12,29 @@ in {
     };
   };
 
+  environment.systemPackages = with pkgs; [
+    steam
+    firefox
+  ];
 
-  systemd.services.windows-control-server-serve = {
-    after = [ "network.target" ];
-    wantedBy = [ "multi-user.target" ]; # require service at boot time
+  # enable bluetooth
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
 
-    serviceConfig = {
-      WorkingDirectory="/etc/nixos/utils/windows_control_server/frontend";
-      ExecStart = "${python-env}/bin/python -m http.server 80";
-    };
+  hardware = {
+    # steam client needs 32 bit video/audio drivers to start
+    opengl.enable = true;
+    opengl.driSupport32Bit = true;
+    opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
 
+    # lets steam interact with hardware
+    steam-hardware.enable = true;
   };
 
-  systemd.services.windows-control-server-api = {
-    after = [ "network.target" ];
-    wantedBy = [ "multi-user.target" ]; # require service at boot time
+  # kernel module for switch pro controller
+  boot.kernelModules = [ "hid-nintendo" ];
 
-    serviceConfig = {
-      WorkingDirectory="/etc/nixos/utils/windows_control_server";
-      ExecStart = "${python-env}/bin/gunicorn -w 1 -b 0.0.0.0:10001 windows_control_server:app";
-    };
-  };
+
 
   services.resolved.extraConfig = ''
        DNSStubListener=no
@@ -104,19 +104,6 @@ in {
     nameservers = [ "192.168.1.12" ];
   };
 
-  boot.kernelModules = [ "kvm-amd" "vfio-pci" ];
-
-  # load vfio drivers for the amd gpu pci devices
-  boot.initrd.preDeviceCommands = ''
-  DEVS="0000:12:00.0 0000:12:00.1"
-  for DEV in $DEVS; do
-    echo "vfio-pci" > /sys/bus/pci/devices/$DEV/driver_override
-  done
-  '';
-
-  virtualisation.libvirtd = {
-    enable = true;
-  };
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/f3dcb6ca-b39f-4c0a-86a7-72f9f331a1e0";
@@ -133,17 +120,6 @@ in {
       fsType = "ext4";
     };
 
-
-  # xpad messes up usb passthrough to windows for xbox controllers, so
-  # disable it. Also disable all the bluetooth driver loading so we
-  # can pass through to windows.
-  boot.blacklistedKernelModules = [
-    "xpad"
-    "btusb"
-    "btrtl"
-    "btbcm"
-    "btintel"
-    "bluetooth" ];
 
 
   services.logind = {
