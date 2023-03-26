@@ -105,6 +105,7 @@
   };
 
   networking = {
+    networkmanager.enable = false;
     hostName = "rupert";
     nameservers = [ "192.168.1.12" ];
   };
