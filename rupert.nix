@@ -21,6 +21,11 @@
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
+  # gnome
+  services.xserver.enable = true;
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
+
   hardware = {
     # steam client needs 32 bit video/audio drivers to start
     opengl.enable = true;
