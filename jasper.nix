@@ -13,6 +13,8 @@
     };
   };
 
+  networking.hostName = "jasper";
+
   systemd.network.networks = {
     "40-wlan0" = {
       matchConfig = {
