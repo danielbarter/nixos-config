@@ -1,8 +1,8 @@
 {
   inputs = {
-    nixpkgs.url = github:NixOS/nixpkgs/nixos-22.11;
-    hosts.url = github:StevenBlack/hosts;
-    emacs-overlay.url = github:nix-community/emacs-overlay;
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
+    hosts.url = "github:StevenBlack/hosts";
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
   };
 
   outputs = { self, nixpkgs, hosts, emacs-overlay }:
