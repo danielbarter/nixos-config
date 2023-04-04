@@ -13,7 +13,7 @@ in {
     aspell
     aspellDicts.en
     cmake               # cmake autocomplete and emacs mode.
-    emacs-pkgs.nil
+    emacs-pkgs.nil      # nix lsp server
  ];
 
 
