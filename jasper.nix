@@ -23,7 +23,7 @@
 
       networkConfig = {
         DHCP = "yes";
-        IgnoreCarrierLoss = "3s";
+        IgnoreCarrierLoss = "3s"; # needed to roam between different access points with same SSID on LAN
       };
     };
   };
