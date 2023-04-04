@@ -4,7 +4,7 @@
   nix = {
     settings = {
       substituters = [
-        "http://punky.meow:5000"
+        # "http://punky.meow:5000"
       ];
 
       trusted-public-keys = [
