@@ -13,11 +13,15 @@
     };
   };
 
-  networking = {
-    hostName = "jasper";
-    interfaces = {
-      "wlan0" = {
-        useDHCP = true;
+  systemd.network.networks = {
+    "40-wlan0" = {
+      matchConfig = {
+        Name = "wlan0";
+      };
+
+      networkConfig = {
+        DHCP = "yes";
+        IgnoreCarrierLoss = "3s";
       };
     };
   };
