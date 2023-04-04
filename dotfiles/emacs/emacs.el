@@ -213,8 +213,12 @@
 
 ;; we always want to run typescript LSP through npx
 (with-eval-after-load 'eglot
+  (progn
   (add-to-list 'eglot-server-programs
-               '(typescript-ts-mode . ("npx" "typescript-language-server" "--stdio"))))
+               '(typescript-ts-mode . ("npx" "typescript-language-server" "--stdio")))
+  (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))))
+
+
 
 (defun ide-mode ()
   "start eglot mode"
