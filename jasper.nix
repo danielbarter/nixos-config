@@ -4,7 +4,7 @@
   nix = {
     settings = {
       substituters = [
-        # "http://punky.meow:5000"
+        "http://punky.meow:5000"
       ];
 
       trusted-public-keys = [
@@ -15,7 +15,7 @@
 
   networking = {
     hostName = "jasper";
-    nameservers = [ "8.8.8.8" "1.1.1.1" ];
+    # nameservers = [ "8.8.8.8" "1.1.1.1" ];
   };
 
   systemd.network.networks = {
