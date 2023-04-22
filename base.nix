@@ -22,7 +22,7 @@
 
   # List packages installed in system profile
   environment.systemPackages = with pkgs; [
-    bintools            # objdump and readelf
+    binutils            # objdump, readelf and c++filt
     tmux                # terminal multiplexer
     git
     file

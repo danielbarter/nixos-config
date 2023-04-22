@@ -6,13 +6,13 @@ fuzzy_history() {
 
 disassemble() {
         objdump --disassemble="$2" -M intel --visualize-jumps=extended-color --no-show-raw-insn --no-addresses -w "$1" \
-            | grep -v -E 'Disassembly of section|file format' | grep -v -E '^\s*$'
+            | grep -v -E 'Disassembly of section|file format' | grep -v -E '^\s*$' | c++filt
 
 }
 
 fuzzy_disassemble() {
     # select symbols using objdump and fzf
-    symbols=$(objdump --syms "$1" | awk '{print $6}' | grep -v -E '^\s*$' | fzf -m 10 --bind 'ctrl-a:select-all' --query "$2")
+    symbols=$(objdump -w --syms "$1" | awk '{print $6}' | grep -v -E '^\s*$' | fzf -m 10 --bind 'ctrl-a:select-all' --query "$2")
     for symbol in $symbols
     do
         # disassemble each symbol
