@@ -5,14 +5,14 @@ fuzzy_history() {
 }
 
 disassemble() {
-        objdump --disassemble="$2" -M intel --visualize-jumps=extended-color --no-show-raw-insn --no-addresses -w "$1" \
-            | grep -v -E 'Disassembly of section|file format' | grep -v -E '^\s*$' | c++filt
+    flags="--disassemble="$2" -M intel --visualize-jumps=extended-color --no-show-raw-insn --no-addresses -w"
+    objdump $flags "$1" | grep -v -E 'Disassembly of section|file format|^\s*$' | c++filt
 
 }
 
 fuzzy_disassemble() {
-    # select symbols using objdump and fzf
-    symbols=$(objdump -w --syms "$1" | grep -E '^[0-9]' | awk '{print $(NF-3), $(NF-2), $NF}' | grep -v -E '*UND*' | grep -E '^F' | awk '{print $NF}' | fzf -m 10 --bind 'ctrl-a:select-all' --query "$2")
+    # select symbols using nm and fzf
+    symbols=$( nm "$1" | awk '{print $(NF-1), $NF}' | grep -E '^[tT]' | awk '{print $NF}' | fzf )
     for symbol in $symbols
     do
         # disassemble each symbol
