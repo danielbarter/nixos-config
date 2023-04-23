@@ -12,7 +12,7 @@ disassemble() {
 
 fuzzy_disassemble() {
     # select symbols using objdump and fzf
-    symbols=$(objdump -w --syms "$1" | grep -E '^[0-9]' | grep -v -E '*UND*' | awk '{print $NF}' | fzf -m 10 --bind 'ctrl-a:select-all' --query "$2")
+    symbols=$(objdump -w --syms "$1" | grep -E '^[0-9]' | awk '{print $(NF-3), $(NF-2), $NF}' | grep -v -E '*UND*' | grep -E '^F' | awk '{print $NF}' | fzf -m 10 --bind 'ctrl-a:select-all' --query "$2")
     for symbol in $symbols
     do
         # disassemble each symbol
