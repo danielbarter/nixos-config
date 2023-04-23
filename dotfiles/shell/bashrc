@@ -12,7 +12,7 @@ disassemble() {
 
 fuzzy_disassemble() {
     # select symbols using nm and fzf
-    symbols=$( nm "$1" | awk '{print $(NF-1), $NF}' | grep -E '^[tT]' | awk '{print $NF}' | fzf )
+    symbols=$( nm "$1" | awk '{print $(NF-1), $NF}' | grep -E '^[tT]' | awk '{print $NF}' | fzf -m 10 )
     for symbol in $symbols
     do
         # disassemble each symbol
