@@ -3,6 +3,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
     hosts.url = "github:StevenBlack/hosts";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
+
+    # unify nixpkgs across inputs
+    hosts.inputs.nixpkgs.follows = "nixpkgs";
+    emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, nixpkgs, hosts, emacs-overlay }:
