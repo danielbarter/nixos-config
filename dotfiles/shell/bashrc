@@ -1,14 +1,21 @@
-EDITOR="emacs -nw"
+export EDITOR="emacs -nw"
+
+# infinite bash history
+export HISTFILESIZE=
+export HISTSIZE=
+export HISTFILE=~/.bash_eternal_history
 
 fuzzy_history() {
-    history | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}' | fzf
+    cat ~/.bash_eternal_history | fzf
 }
+
 
 disassemble() {
     flags="--disassemble="$2" -M intel --visualize-jumps=extended-color --no-show-raw-insn --no-addresses -w"
     objdump $flags "$1" | grep -v -E 'Disassembly of section|file format|^\s*$' | c++filt
 
 }
+
 
 fuzzy_disassemble() {
     # select symbols using nm and fzf
@@ -45,6 +52,9 @@ prompt_command() {
     else
         echo -ne "\033]0;$(whoami)@$(hostname)\007"
     fi
+
+    # write history after each prompt
+    history -a
 }
 
 prompts=(🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍈 🍒 🥭 🍍 🥥 🥝 🍅 🍆 🥑 🥦 🥬 🥒 🫑 🌽 🥕 🫒 🧄)
