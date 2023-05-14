@@ -22,14 +22,14 @@ function update(data) {
 };
 
 function tick () {
-    fetch(`${window.location.href}:10001/api/state`)
+    fetch(`${window.location.origin}:10001/api/state`)
 	.then((response) => response.json())
 	.then((data) => update(data));
 };
 
 
 function start_windows () {
-    fetch(`${window.location.href}:10001/api/start`)
+    fetch(`${window.location.origin}:10001/api/start`)
 	.then((response) => response.json())
 	.then((data) => update(data));
 };
