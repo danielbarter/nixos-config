@@ -62,7 +62,7 @@ class WindowsControlServer:
             status = '200 OK'
             response_headers = [
                 ('Content-type', 'application/json'),
-                ('Access-Control-Allow-Origin', self.site_url)
+                ('Access-Control-Allow-Origin', '*')
             ]
 
             start_response(status, response_headers)
