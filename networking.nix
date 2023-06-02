@@ -50,8 +50,10 @@
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
-    passwordAuthentication = false;
-    permitRootLogin = "no";
+    settings = {
+      PasswordAuthentication = false;
+      PermitRootLogin = "no";
+    };
   };
 
   programs.ssh.extraConfig = builtins.readFile ./dotfiles/ssh/config;
