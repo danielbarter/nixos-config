@@ -19,6 +19,7 @@
           ./pass.nix
           ./home-setup.nix
           ./emacs.nix
+          ./manpages.nix
         ];
         special-args = system: {
           inherit nixpkgs emacs-overlay system;};
