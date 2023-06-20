@@ -103,6 +103,7 @@
                       nix-mode
                       yaml-mode
                       markdown-mode
+                      futhark-mode
                     ))
 
 
