@@ -106,6 +106,15 @@
 
   nixpkgs.hostPlatform = "x86_64-linux";
 
+  # intel_gpu_top
+  environment.systemPackages = [ pkgs.intel-gpu-tools ];
+
+  # enabling opencl
+  hardware.opengl = {
+    enable = true;
+    extraPackages = [ pkgs.intel-compute-runtime pkgs.intel-ocl ];
+  };
+
   hardware.cpu.intel.updateMicrocode = config.hardware.enableRedistributableFirmware;
 
   # This value determines the NixOS release from which the default
@@ -115,4 +124,5 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.11"; # Did you read the comment?
+
 }

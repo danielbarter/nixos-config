@@ -7,7 +7,7 @@ let emacs-pkgs = import nixpkgs {
 in {
 
   environment.systemPackages = with pkgs; [
-    (emacs-pkgs.emacsGit.override {
+    (emacs-pkgs.emacs-git.override {
       withPgtk = true;
     })
     aspell
