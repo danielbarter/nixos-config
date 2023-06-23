@@ -112,7 +112,7 @@
   # enabling opencl
   hardware.opengl = {
     enable = true;
-    extraPackages = [ pkgs.intel-compute-runtime pkgs.intel-ocl ];
+    extraPackages = [ pkgs.intel-compute-runtime ];
   };
 
   hardware.cpu.intel.updateMicrocode = config.hardware.enableRedistributableFirmware;
