@@ -1,5 +1,8 @@
 export EDITOR="emacs -nw"
 
+# environment variable with path to system nixpkgs
+export NIXPKGS=${NIX_PATH:8}
+
 # infinite bash history
 export HISTFILESIZE=
 export HISTSIZE=
