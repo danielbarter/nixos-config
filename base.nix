@@ -3,7 +3,20 @@
 {
   nix.settings.experimental-features = "nix-command flakes";
   # use our flake input for resolving <nixpkgs>
-  nix.nixPath = [ "nixpkgs=${nixpkgs.outPath}" ];
+  nix = {
+
+    nixPath = [ "nixpkgs=${nixpkgs.outPath}" ];
+
+    # set the global flake registry
+    extraOptions = let
+      emptyFlakeRegistry = pkgs.writeText "flake-registry.json"
+        (builtins.toJSON { flakes = []; version = 2; });
+      in
+      ''
+        flake-registry = ${emptyFlakeRegistry};
+    '';
+
+  };
 
   # Use the systemd-boot EFI boot loader.
   boot.loader = {
