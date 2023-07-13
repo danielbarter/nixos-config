@@ -106,9 +106,9 @@ in {
 
   boot.kernelModules = [ "kvm-amd" "vfio-pci" ];
 
-  # load vfio drivers for the amd gpu pci devices
+  # load vfio drivers for the amd gpu pci devices and usb hubs
   boot.initrd.preDeviceCommands = ''
-  DEVS="0000:12:00.0 0000:12:00.1"
+  DEVS="0000:12:00.0 0000:12:00.1 0000:15:00.0 0000:38:00.3 0000:38:00.4"
   for DEV in $DEVS; do
     echo "vfio-pci" > /sys/bus/pci/devices/$DEV/driver_override
   done
