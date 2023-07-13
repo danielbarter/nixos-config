@@ -112,9 +112,7 @@ in {
   # all other devices in IOMMU group are being managed by
   # vfio-pci
   boot.initrd.preDeviceCommands = ''
-  GPU="0000:12:00.0 0000:12:00.1"
-  IOMMU_BLOCK=$(ls /sys/bus/pci/devices | grep 38:00)
-  DEVS="$GPU $USB $IOMMU_BLOCK"
+  DEVS="0000:12:00.0 0000:12:00.1"
   for DEV in $DEVS; do
     echo "vfio-pci" > /sys/bus/pci/devices/$DEV/driver_override
   done
@@ -141,16 +139,10 @@ in {
 
 
   # xpad messes up usb passthrough to windows for xbox controllers, so
-  # disable it. Also disable all the bluetooth driver loading so we
-  # can pass through to windows.
+  # disable it.
   boot.blacklistedKernelModules = [
     "xpad"
-    "btusb"
-    "btrtl"
-    "btbcm"
-    "btintel"
-    "bluetooth" ];
-
+  ];
 
   services.logind = {
     extraConfig = ''
