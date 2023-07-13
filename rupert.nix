@@ -145,6 +145,11 @@ in {
     '';
   };
 
+  # xpad messes up usb passthrough to windows for xbox controllers, so
+  # disable it.
+  boot.blacklistedKernelModules = [
+    "xpad"
+  ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "usbhid" "sd_mod" ];
 
