@@ -113,7 +113,6 @@ in {
   # vfio-pci
   boot.initrd.preDeviceCommands = ''
   GPU="0000:12:00.0 0000:12:00.1"
-  USB="0000:15:00.0"
   IOMMU_BLOCK=$(ls /sys/bus/pci/devices | grep 38:00)
   DEVS="$GPU $USB $IOMMU_BLOCK"
   for DEV in $DEVS; do
