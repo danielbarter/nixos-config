@@ -106,9 +106,16 @@ in {
 
   boot.kernelModules = [ "kvm-amd" "vfio-pci" ];
 
-  # load vfio drivers for the amd gpu pci devices and usb hubs
+  # load vfio drivers for the amd gpu pci devices, usb hubs
+  # and all other pci devices in the same IOMMU group as usb
+  # hubs. libvirt can't pass through a pci device unless
+  # all other devices in IOMMU group are being managed by
+  # vfio-pci
   boot.initrd.preDeviceCommands = ''
-  DEVS="0000:12:00.0 0000:12:00.1 0000:15:00.0 0000:38:00.3 0000:38:00.4"
+  GPU="0000:12:00.0 0000:12:00.1"
+  USB="0000:15:00.0 0000:38:00.3 0000:38:00.4"
+  COLLATERAL="0000:38:00.1 0000:38:00.2 0000:38:00.5"
+  DEVS="$GPU $USB $COLLATERAL"
   for DEV in $DEVS; do
     echo "vfio-pci" > /sys/bus/pci/devices/$DEV/driver_override
   done
