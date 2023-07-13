@@ -41,6 +41,7 @@
     file
     strace
     pciutils            # lspci
+    usbutils            # lsusb
     htop
     python3
     nodejs

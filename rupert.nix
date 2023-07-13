@@ -138,12 +138,6 @@ in {
     };
 
 
-  # xpad messes up usb passthrough to windows for xbox controllers, so
-  # disable it.
-  boot.blacklistedKernelModules = [
-    "xpad"
-  ];
-
   services.logind = {
     extraConfig = ''
       HandlePowerKey=ignore
