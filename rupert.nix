@@ -113,9 +113,9 @@ in {
   # vfio-pci
   boot.initrd.preDeviceCommands = ''
   GPU="0000:12:00.0 0000:12:00.1"
-  USB="0000:15:00.0 0000:38:00.3 0000:38:00.4"
-  COLLATERAL="0000:38:00.1 0000:38:00.2 0000:38:00.5"
-  DEVS="$GPU $USB $COLLATERAL"
+  USB="0000:15:00.0"
+  IOMMU_BLOCK=$(ls /sys/bus/pci/devices | grep 38:00)
+  DEVS="$GPU $USB $IOMMU_BLOCK"
   for DEV in $DEVS; do
     echo "vfio-pci" > /sys/bus/pci/devices/$DEV/driver_override
   done
