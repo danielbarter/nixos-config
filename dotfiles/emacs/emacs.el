@@ -217,7 +217,7 @@
   (progn
   (add-to-list 'eglot-server-programs
                '(typescript-ts-mode . ("npx" "typescript-language-server" "--stdio")))
-  (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))))
+  ))
 
 
 

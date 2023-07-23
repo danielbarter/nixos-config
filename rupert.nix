@@ -14,10 +14,9 @@ in {
     };
   };
 
-
   systemd.services.windows-control-server-serve = {
     after = [ "network.target" ];
-    wantedBy = [ "multi-user.target" ]; # require service at boot time
+    wantedBy = [ "default.target" ]; # require service at boot time
 
     serviceConfig = {
       WorkingDirectory="/etc/nixos/utils/windows_control_server/frontend";
@@ -28,7 +27,7 @@ in {
 
   systemd.services.windows-control-server-api = {
     after = [ "network.target" ];
-    wantedBy = [ "multi-user.target" ]; # require service at boot time
+    wantedBy = [ "default.target" ]; # require service at boot time
 
     serviceConfig = {
       WorkingDirectory="/etc/nixos/utils/windows_control_server";
@@ -106,11 +105,9 @@ in {
 
   boot.kernelModules = [ "kvm-amd" "vfio-pci" ];
 
-  # load vfio drivers for the amd gpu pci devices, usb hubs
-  # and all other pci devices in the same IOMMU group as usb
-  # hubs. libvirt can't pass through a pci device unless
-  # all other devices in IOMMU group are being managed by
-  # vfio-pci
+  # load vfio drivers for the amd gpu pci devices
+  # note: if some device in an IOMMU group is passed through,
+  # all devices in that group must be passed through
   boot.initrd.preDeviceCommands = ''
   DEVS="0000:12:00.0 0000:12:00.1"
   for DEV in $DEVS; do
