@@ -1,7 +1,7 @@
 {config, pkgs, ...}:
 let
   python-env = pkgs.python310.withPackages ( p: [ p.libvirt p.gunicorn ]);
-  libvirt-dbus = pkgs.callPackage ./libvirt-dbus {};
+  libvirt-dbus = pkgs.callPackage ./libvirt-dbus.nix {};
 in {
   nix = {
     settings = {
