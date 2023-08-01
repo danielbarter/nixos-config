@@ -1,6 +1,7 @@
 {config, pkgs, ...}:
 let
   python-env = pkgs.python310.withPackages ( p: [ p.libvirt p.gunicorn ]);
+  libvirt-dbus = pkgs.callPackage ./libvirt-dbus {};
 in {
   nix = {
     settings = {
@@ -13,6 +14,14 @@ in {
       ];
     };
   };
+
+  services.cockpit = {
+    enable = true;
+  };
+
+  environment.systemPackages = [
+    libvirt-dbus
+  ];
 
   systemd.services.windows-control-server-serve = {
     after = [ "network.target" ];
