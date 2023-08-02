@@ -19,6 +19,14 @@ in {
     enable = true;
   };
 
+  # systemd.services.libvirt-dbus = {
+  #   after = [ "libvirtd.service" ];
+  #   wantedBy = [ "default.target" ];
+  #   serviceConfig = {
+  #     ExecStart = "${libvirt-dbus}/bin/libvirt-dbus --system";
+  #   };
+  # };
+
   environment.systemPackages = [
     libvirt-dbus
   ];
