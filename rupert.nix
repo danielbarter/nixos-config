@@ -16,7 +16,6 @@ in {
 
   services.cockpit = {
     enable = true;
-    port = 80;
   };
 
   systemd.services.libvirtdbus = {
