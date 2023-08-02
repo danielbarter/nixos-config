@@ -1,6 +1,5 @@
 {config, pkgs, ...}:
 let
-  python-env = pkgs.python310.withPackages ( p: [ p.libvirt p.gunicorn ]);
   libvirt-dbus = pkgs.callPackage ./libvirt-dbus.nix {};
 in {
   nix = {
@@ -17,40 +16,35 @@ in {
 
   services.cockpit = {
     enable = true;
+    port = 80;
   };
 
-  # systemd.services.libvirt-dbus = {
-  #   after = [ "libvirtd.service" ];
-  #   wantedBy = [ "default.target" ];
-  #   serviceConfig = {
-  #     ExecStart = "${libvirt-dbus}/bin/libvirt-dbus --system";
-  #   };
-  # };
+  systemd.services.libvirtdbus = {
+    after = [ "libvirtd.service" ];
+    wantedBy = [ "default.target" ];
+    serviceConfig = {
+      User = "libvirtdbus";
+      ExecStart = "${libvirt-dbus}/bin/libvirt-dbus --system";
+    };
+  };
+
+  services.dbus.packages = [
+    libvirt-dbus
+  ];
 
   environment.systemPackages = [
     libvirt-dbus
   ];
 
-  systemd.services.windows-control-server-serve = {
-    after = [ "network.target" ];
-    wantedBy = [ "default.target" ]; # require service at boot time
 
-    serviceConfig = {
-      WorkingDirectory="/etc/nixos/utils/windows_control_server/frontend";
-      ExecStart = "${python-env}/bin/python -m http.server 80";
-    };
-
-  };
-
-  systemd.services.windows-control-server-api = {
-    after = [ "network.target" ];
-    wantedBy = [ "default.target" ]; # require service at boot time
-
-    serviceConfig = {
-      WorkingDirectory="/etc/nixos/utils/windows_control_server";
-      ExecStart = "${python-env}/bin/gunicorn -w 1 -b 0.0.0.0:10001 windows_control_server:app";
+  users.users = {
+    libvirtdbus = {
+      isNormalUser = true;
+      extraGroups = [ "libvirtd" ];
     };
   };
+
+
 
   services.resolved.extraConfig = ''
        DNSStubListener=no
