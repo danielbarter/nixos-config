@@ -1,7 +1,5 @@
 {config, pkgs, ...}:
-let
-  python-env = pkgs.python310.withPackages ( p: [ p.libvirt p.gunicorn ]);
-in {
+{
   nix = {
     settings = {
       substituters = [
@@ -14,26 +12,11 @@ in {
     };
   };
 
-  systemd.services.windows-control-server-serve = {
-    after = [ "network.target" ];
-    wantedBy = [ "default.target" ]; # require service at boot time
+  environment.systemPackages = with pkgs; [
+    firefox
+  ];
 
-    serviceConfig = {
-      WorkingDirectory="/etc/nixos/utils/windows_control_server/frontend";
-      ExecStart = "${python-env}/bin/python -m http.server 80";
-    };
-
-  };
-
-  systemd.services.windows-control-server-api = {
-    after = [ "network.target" ];
-    wantedBy = [ "default.target" ]; # require service at boot time
-
-    serviceConfig = {
-      WorkingDirectory="/etc/nixos/utils/windows_control_server";
-      ExecStart = "${python-env}/bin/gunicorn -w 1 -b 0.0.0.0:10001 windows_control_server:app";
-    };
-  };
+  programs.steam.enable = true;
 
   services.resolved.extraConfig = ''
        DNSStubListener=no
@@ -101,23 +84,11 @@ in {
   networking = {
     hostName = "rupert";
     nameservers = [ "192.168.1.12" ];
+    networkmanager.enable = false;
   };
 
-  boot.kernelModules = [ "kvm-amd" "vfio-pci" ];
+  boot.kernelModules = [ "hid-nintendo" ];
 
-  # load vfio drivers for the amd gpu pci devices
-  # note: if some device in an IOMMU group is passed through,
-  # all devices in that group must be passed through
-  boot.initrd.preDeviceCommands = ''
-  DEVS="0000:12:00.0 0000:12:00.1"
-  for DEV in $DEVS; do
-    echo "vfio-pci" > /sys/bus/pci/devices/$DEV/driver_override
-  done
-  '';
-
-  virtualisation.libvirtd = {
-    enable = true;
-  };
 
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/f3dcb6ca-b39f-4c0a-86a7-72f9f331a1e0";
@@ -142,17 +113,17 @@ in {
     '';
   };
 
-  # xpad messes up usb passthrough to windows for xbox controllers, so
-  # disable it.
-  boot.blacklistedKernelModules = [
-    "xpad"
-  ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "usbhid" "sd_mod" ];
 
   swapDevices = [ ];
 
   hardware.enableRedistributableFirmware = true;
+  hardware.bluetooth.enable = true;
+
++  services.xserver.enable = true;
++  services.xserver.displayManager.gdm.enable = true;
++  services.xserver.desktopManager.gnome.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

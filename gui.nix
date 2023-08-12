@@ -71,7 +71,6 @@ in
     kanshi                    # sway hotplug functionality
     wf-recorder               # screen recording
     bemenu
-    virt-manager
     steam
   ];
 
