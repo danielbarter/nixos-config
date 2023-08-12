@@ -121,9 +121,9 @@
   hardware.enableRedistributableFirmware = true;
   hardware.bluetooth.enable = true;
 
-+  services.xserver.enable = true;
-+  services.xserver.displayManager.gdm.enable = true;
-+  services.xserver.desktopManager.gnome.enable = true;
+  services.xserver.enable = true;
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
