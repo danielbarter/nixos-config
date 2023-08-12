@@ -71,7 +71,6 @@ in
     kanshi                    # sway hotplug functionality
     wf-recorder               # screen recording
     bemenu
-    steam
   ];
 
   # enable bluetooth
@@ -99,19 +98,6 @@ in
     enable = true;
     wlr.enable = true;
   };
-
-  hardware = {
-    # steam client needs 32 bit video/audio drivers to start
-    opengl.enable = true;
-    opengl.driSupport32Bit = true;
-    opengl.extraPackages32 = with pkgs.pkgsi686Linux; [ libva ];
-
-    # lets steam interact with hardware
-    steam-hardware.enable = true;
-  };
-
-  # kernel module for switch pro controller
-  boot.kernelModules = [ "hid-nintendo" ];
 
   fonts = {
     enableDefaultFonts = true;

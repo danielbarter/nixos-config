@@ -31,7 +31,7 @@
           modules = core-modules ++
             [
               ./jasper.nix
-              ./gui.nix
+              ./sway-gui.nix
             ];
         };
 
