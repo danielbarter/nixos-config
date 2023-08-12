@@ -121,6 +121,7 @@
   hardware.enableRedistributableFirmware = true;
   hardware.bluetooth.enable = true;
 
+  # enabling gnome
   services.xserver.enable = true;
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
