@@ -18,6 +18,13 @@
 
   programs.steam.enable = true;
 
+  # controls the max number of memory mapped areas a process can have
+  # modern games have been hitting the default limit which is low
+  # 512 * 1024 = 524288
+  boot.kernel.sysctl = {
+    "vm.max_map_count" = 524288;
+  };
+
   services.resolved.extraConfig = ''
        DNSStubListener=no
   '';
