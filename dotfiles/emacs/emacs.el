@@ -337,13 +337,13 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; c/c++ mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun no-indent-namespace ()
-  "don't indent c++ namespaces"
-   (c-set-offset 'innamespace [0]))
+;; (defun no-indent-namespace ()
+;;   "don't indent c++ namespaces"
+;;    (c-set-offset 'innamespace [0]))
 
-(add-hook 'c++-mode-hook 'no-indent-namespace)
-(setq c-default-style "linux"
-      c-basic-offset 4)
+;; (add-hook 'c++-mode-hook 'no-indent-namespace)
+;; (setq c-default-style "linux"
+;;       c-basic-offset 4)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; tree sitter mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
