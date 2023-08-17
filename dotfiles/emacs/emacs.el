@@ -226,9 +226,11 @@
   (interactive)
   (call-interactively 'eglot))
 
+
 ;; general key bindings
 (evil-define-key 'normal 'global
   (kbd "<leader>ide") 'ide-mode
+  (kbd "<leader>egi") 'eglot-inlay-hints-mode
   (kbd "<leader>env") 'direnv-update-environment
 
   (kbd "<leader>tc") 'toggle-camelcase-underscores
@@ -362,8 +364,8 @@
   (interactive "sPassword: ")
   (erc-tls :server "irc.hackint.org"
            :port 6697
-           :nick "markrudiger"
-           :full-name "markrudiger"
+           :nick "fill_me_in"
+           :full-name "fill_me_in"
            :password password
            ))
 
@@ -372,8 +374,8 @@
   (interactive "sPassword: ")
   (erc-tls :server "irc.libera.chat"
            :port 6697
-           :nick "markrudiger"
-           :full-name "markrudiger"
+           :nick "fill_me_in"
+           :full-name "fill_me_in"
            :password password
            ))
 
