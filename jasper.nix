@@ -41,9 +41,13 @@
     extraConfig = "HandlePowerKey=suspend";
   };
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
+    kernelModules = [ "kvm-intel" ];
 
-  boot.kernelModules = [ "kvm-intel" ];
+    # set /sys/power/mem_sleep to deep. This suspends to ram rathar than just idling
+    kernelParams = [ "mem_sleep_default=deep" ];
+  };
 
 
   hardware.enableRedistributableFirmware =  true;
