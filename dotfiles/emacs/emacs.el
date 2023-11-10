@@ -235,7 +235,7 @@
 
   (kbd "<leader>tc") 'toggle-camelcase-underscores
 
-  (kbd "<leader>!") 'shell-command
+  (kbd "<leader>!") 'async-shell-command
 
   (kbd "<leader>/") 'project-grep
 
@@ -319,6 +319,12 @@
 ;; set keybindings for indent-rigidly. ?char gives the ascii code
 (setq indent-rigidly-map
       '(keymap (?l . indent-rigidly-right) (?h . indent-rigidly-left)))
+
+
+;; mini buffer keybindings
+(define-key minibuffer-local-map (kbd "C-p") 'previous-history-element)
+(define-key minibuffer-local-map (kbd "C-n") 'next-history-element)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; lisp interaction mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
