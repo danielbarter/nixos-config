@@ -7,7 +7,7 @@
 
     nixPath = [ "nixpkgs=${nixpkgs.outPath}" ];
 
-    # set the global flake registry
+    # wipe the default flake reg, and set it to be our system nixpkgs
     extraOptions = let
       emptyFlakeRegistry = pkgs.writeText "flake-registry.json"
         (builtins.toJSON { flakes = []; version = 2; });
@@ -17,6 +17,8 @@
     '';
 
   };
+
+  nix.registry.nixpkgs.flake = nixpkgs;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader = {
