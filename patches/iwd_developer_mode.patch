@@ -7,7 +7,7 @@ index 8ef7c0c7..34b2cdce 100644
  Type=dbus
  BusName=net.connman.iwd
 -ExecStart=@libexecdir@/iwd
-+ExecStart=@libexecdir@/iwd --developer
++ExecStart=@libexecdir@/iwd --developer --debug
  NotifyAccess=main
  LimitNPROC=1
  Restart=on-failure
