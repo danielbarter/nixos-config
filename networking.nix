@@ -47,6 +47,9 @@
 
     useNetworkd = true;
     wireless.iwd = {
+      package = pkgs.iwd.overrideAttrs (final: previous: {
+        patches = ( previous.patches or [] ) ++ [ "patches/iwd_developer_mode.patch" ];
+      });
       enable = true;
       settings = {
         General = {
