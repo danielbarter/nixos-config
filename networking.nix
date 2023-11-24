@@ -48,6 +48,12 @@
     useNetworkd = true;
     wireless.iwd = {
       enable = true;
+      settings = {
+        General = {
+          # attempt to find a better AP every 10 seconds (default is 60)
+          RoamRetryInterval = "10";
+        };
+      };
     };
 
   };
