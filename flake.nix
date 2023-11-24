@@ -22,7 +22,7 @@
           ./manpages.nix
         ];
         special-args = system: {
-          inherit nixpkgs emacs-overlay system;};
+          inherit self nixpkgs emacs-overlay system;};
     in {
       nixosConfigurations = {
         jasper = nixpkgs.lib.nixosSystem rec {

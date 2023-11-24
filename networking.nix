@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ self, config, pkgs, ... }:
 
 {
   services.resolved = {
@@ -47,8 +47,10 @@
 
     useNetworkd = true;
     wireless.iwd = {
+
+      # run a patched version of iwd so we can do experiments with roaming
       package = pkgs.iwd.overrideAttrs (final: previous: {
-        patches = ( previous.patches or [] ) ++ [ "patches/iwd_developer_mode.patch" ];
+        patches = ( previous.patches or [] ) ++ [ "${self.outPath}/patches/iwd_developer_mode.patch" ];
       });
       enable = true;
       settings = {
