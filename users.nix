@@ -14,7 +14,7 @@
 
     danielbarter = {
       isNormalUser = true;
-      extraGroups = [ "wheel" "video" "audio" "adbusers"];
+      extraGroups = [ "wheel" "video" "audio" ];
       openssh.authorizedKeys.keys = [
         (builtins.readFile ./public/ssh/id_rsa.pub)
       ];

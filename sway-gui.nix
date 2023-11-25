@@ -55,8 +55,6 @@ in
     configure-gtk
     wayland
     xkeyboard_config          # useful man pages for sway
-    firefox
-    chromium
     zathura
     glib                      # gsettings
     dracula-theme             # gtk theme
@@ -79,6 +77,8 @@ in
 
   # make udev rules for backlight
   programs.light.enable = true;
+  programs.firefox.enable = true;
+
 
   services.pipewire = {
     enable = true;
