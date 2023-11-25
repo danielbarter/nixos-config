@@ -1,5 +1,6 @@
-{ self, config, pkgs, ... }:
-
+{ nixpkgs-unstable, system, self, config, pkgs, ... }:
+let pkgs-unstable = import nixpkgs-unstable { inherit system;};
+in
 {
   services.resolved = {
     # use resolved for dns management
@@ -49,7 +50,7 @@
     wireless.iwd = {
 
       # run a patched version of iwd so we can do experiments with roaming
-      package = pkgs.iwd.overrideAttrs (final: previous: {
+      package = pkgs-unstable.iwd.overrideAttrs (final: previous: {
         patches = ( previous.patches or [] ) ++ [ "${self.outPath}/patches/iwd_developer_mode.patch" ];
       });
       enable = true;

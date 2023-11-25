@@ -1,6 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-generators.url = "github:nix-community/nixos-generators";
     hosts.url = "github:StevenBlack/hosts";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
@@ -11,7 +12,7 @@
     emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, nixos-generators, hosts, emacs-overlay }:
+  outputs = { self, nixpkgs, nixpkgs-unstable, nixos-generators, hosts, emacs-overlay }:
 
     let core-modules = [
           ./base.nix
@@ -24,7 +25,7 @@
           ./manpages.nix
         ];
         special-args = system: {
-          inherit self nixpkgs emacs-overlay system;};
+          inherit self nixpkgs nixpkgs-unstable emacs-overlay system;};
     in {
       nixosConfigurations = {
         jasper = nixpkgs.lib.nixosSystem rec {
