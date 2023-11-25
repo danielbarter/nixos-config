@@ -12,7 +12,9 @@
     emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, nixos-generators, hosts, emacs-overlay }:
+  outputs = {
+    self, nixpkgs, nixpkgs-unstable, nixos-generators, hosts, emacs-overlay
+  }:
 
     let core-modules = [
           ./base.nix
