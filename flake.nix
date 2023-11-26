@@ -69,7 +69,7 @@
         # 3. run /etc/nixos/set_permissions.sh
         # 4. login as user and import gpg keys
 
-        # generate config zip with zip -er /tmp/nixos.zip /etc/nixos
+        # generate config zip with sudo zip -er /tmp/nixos.zip /etc/nixos
         # nix build .#x86_64-linux --impure
         x86_64-linux-iso = nixos-generators.nixosGenerate rec {
           system = "x86_64-linux";
