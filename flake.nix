@@ -69,7 +69,7 @@
         # 3. run /etc/nixos/set_permissions.sh
         # 4. login as user and import gpg keys
 
-        # generate config zip with zip -er /etc/nixos.zip /etc/nixos
+        # generate config zip with zip -er /tmp/nixos.zip /etc/nixos
         # nix build .#x86_64-linux --impure
         x86_64-linux-iso = nixos-generators.nixosGenerate rec {
           system = "x86_64-linux";
@@ -85,11 +85,12 @@
               # add encrypted, zipped nixos config to iso
               isoImage.contents = [
                 {
-                 source = /etc/nixos.zip;
+                 source = /tmp/nixos.zip;
                   target = "nixos.zip";
                 }
               ];
 
+              # catchall network config. Configure whatever interface is present
               systemd.network.networks = {
                 "40-generic" = {
                   matchConfig = {
@@ -100,6 +101,7 @@
                   };
                 };
               };
+
             })
           ];
         };
