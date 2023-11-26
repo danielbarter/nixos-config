@@ -78,13 +78,27 @@
           modules = core-modules ++ [
             ({...}: {
               system.stateVersion = "23.05";
+
+              # set password to be empty for root
               users.users.root.initialPassword = "";
+
+              # add encrypted, zipped nixos config to iso
               isoImage.contents = [
                 {
                  source = /etc/nixos.zip;
                   target = "nixos.zip";
                 }
               ];
+
+              systemd.network.networks = {
+                "40-generic" = {
+                  matchConfig = {
+                    Name = "*";
+                  };
+                  networkConfig = {
+                    DHCP = "yes";
+                  };
+              };
             })
           ];
         };
