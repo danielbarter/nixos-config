@@ -83,7 +83,7 @@
                 }
 
                 {
-                  source = /etc/nixos/utils/setup_replicator_iso.h;
+                  source = /etc/nixos/utils/setup_replicator_iso.sh;
                   target = "setup_replicator_iso.h";
                 }
               ];
