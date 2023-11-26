@@ -15,3 +15,9 @@ mv /tmp/etc/nixos /etc/nixos
 
 cd /etc/nixos
 source /etc/nixos/utils/set_permissions.sh
+
+# symlink for ssh private key is now resolvable, so we need
+# to restart sshd
+systemctl restart sshd.service
+
+echo "all done!"

@@ -15,6 +15,9 @@
 
       # create socket directory for ssh
       mkdir -p /home/danielbarter/.ssh/sockets
+      chgrp wheel /home/danielbarter/.ssh/sockets
+      chown danielbarter /home/danielbarter/.ssh/sockets
+
 
       # sway config
       mkdir -p /home/danielbarter/.config/sway
