@@ -26,7 +26,7 @@
 #     ├── id_rsa.pub
 
 # gpg keys are imported as follows
-$ gpg --import /etc/nixos/secrets/gpg/privkey.asc /etc/nixos/secrets/gpg/public.asc
+$ gpg --import /etc/nixos/secrets/gpg/privkey.asc /etc/nixos/public/gpg/public.asc
 
 # secrets are generated as follows:
 $ gpg --full-generate-key
