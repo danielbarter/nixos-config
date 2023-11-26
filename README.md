@@ -5,7 +5,7 @@
 
 ```
 # Secrets are stored (not in VC!) as follows:
-# /mnt/etc/nixos/secrets/
+# /etc/nixos/secrets/
 # ├── binary-cache
 # │   ├── cache-priv-key.pem
 # ├── gpg
@@ -17,7 +17,7 @@
 # see set_permissions.sh
 
 # corresponding public keys are stored as follows:
-# /mnt/etc/nixos/public/
+# /etc/nixos/public/
 # ├── binary-cache
 # │   ├── cache-pub-key.pem
 # ├── gpg

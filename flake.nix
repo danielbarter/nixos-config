@@ -63,19 +63,12 @@
       # various isos and VMs
       packages."x86_64-linux" = {
 
-        # iso boot checklist:
-        # 1. change root and user passwords
-        # 2. unzip /iso/nixos.zip and move result to /etc/nixos
-        # 3. run /etc/nixos/set_permissions.sh
-        # 4. login as user and import gpg keys
-
-        # generate config zip with sudo zip -er /tmp/nixos.zip /etc/nixos
-        # nix build .#x86_64-linux --impure
         x86_64-linux-iso = nixos-generators.nixosGenerate rec {
           system = "x86_64-linux";
           format = "iso";
           specialArgs = special-args system;
           modules = core-modules ++ [
+            ./sway-gui.nix
             ({...}: {
               system.stateVersion = "23.05";
 
@@ -85,8 +78,8 @@
               # add encrypted, zipped nixos config to iso
               isoImage.contents = [
                 {
-                 source = /tmp/nixos.zip;
-                  target = "nixos.zip";
+                 source = /tmp/nixos.zip.gpg;
+                  target = "nixos.zip.gpg";
                 }
               ];
 
