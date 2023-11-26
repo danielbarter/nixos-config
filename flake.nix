@@ -67,7 +67,12 @@
           system = "x86_64-linux";
           format = "iso";
           specialArgs = special-args system;
-          modules = core-modules ++ [ ({...}: { system.stateVersion = "23.05"; }) ];
+          modules = core-modules ++ [
+            ({...}: {
+              system.stateVersion = "23.05";
+              users.users.root.initialPassword = "";
+            })
+          ];
         };
 
         aarch64-linux-vm =

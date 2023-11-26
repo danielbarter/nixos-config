@@ -7,8 +7,8 @@
   # which doesn't like nixos filesystem flags
   system.activationScripts.enableLingering = ''
       # remove all existing lingering users
-      rm -r /var/lib/systemd/linger
-      mkdir /var/lib/systemd/linger
+      rm -rf /var/lib/systemd/linger
+      mkdir -p /var/lib/systemd/linger
       # enable for danielbarter
       touch /var/lib/systemd/linger/danielbarter
     '';
