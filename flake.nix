@@ -98,6 +98,7 @@
                   networkConfig = {
                     DHCP = "yes";
                   };
+                };
               };
             })
           ];
