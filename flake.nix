@@ -63,6 +63,16 @@
       # various isos and VMs
       packages."x86_64-linux" = {
 
+        # iso boot checklist:
+        # 1. root password is blank
+        # 2. change root and user passwords
+        # 3. unzip /iso/nixos.zip
+        # 4. mv /iso/nixos to /etc/nixos
+        # 5. run /etc/nixos/set_permissions.sh
+        # 6. login as user and import gpg keys
+
+        # generate config zip with zip -er /etc/nixos.zip /etc/nixos
+        # nix build .#x86_64-linux --impure
         x86_64-linux-iso = nixos-generators.nixosGenerate rec {
           system = "x86_64-linux";
           format = "iso";
@@ -71,6 +81,12 @@
             ({...}: {
               system.stateVersion = "23.05";
               users.users.root.initialPassword = "";
+              isoImage.contents = [
+                {
+                 source = /etc/nixos.zip;
+                  target = "nixos.zip";
+                }
+              ];
             })
           ];
         };
