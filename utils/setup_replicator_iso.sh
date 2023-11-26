@@ -14,4 +14,4 @@ rmdir /etc/nixos
 mv /tmp/etc/nixos /etc/nixos
 
 cd /etc/nixos
-source /etc/nixos/set_permissions.sh
+source /etc/nixos/utils/set_permissions.sh
