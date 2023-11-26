@@ -81,6 +81,11 @@
                  source = /tmp/nixos.zip.gpg;
                   target = "nixos.zip.gpg";
                 }
+
+                {
+                  source = /etc/nixos/utils/setup_replicator_iso.h;
+                  target = "setup_replicator_iso.h";
+                }
               ];
 
               # catchall network config. Configure whatever interface is present
