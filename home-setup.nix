@@ -15,9 +15,6 @@
 
       # create socket directory for ssh
       mkdir -p /home/danielbarter/.ssh/sockets
-      chgrp wheel /home/danielbarter/.ssh/sockets
-      chown danielbarter /home/danielbarter/.ssh/sockets
-
 
       # sway config
       mkdir -p /home/danielbarter/.config/sway
@@ -26,5 +23,9 @@
       ln -sf /etc/nixos/dotfiles/sway/config /home/danielbarter/.config/sway/config
       ln -sf /etc/nixos/dotfiles/sway/config_kanshi /home/danielbarter/.config/kanshi/config
       ln -sf /etc/nixos/dotfiles/sway/config_mako /home/danielbarter/.config/mako/config
+
+      # fix permissions
+      chgrp -R wheel /home/danielbarter
+      chown -R danielbarter /home/danielbarter
     '';
 }
