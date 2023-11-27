@@ -88,6 +88,11 @@
                 }
               ];
 
+              boot.kernelModules = [
+                # closed source intel wifi drivers
+                "iwlwifi"
+              ];
+
               # catchall network config. Configure whatever interface is present
               systemd.network.networks = {
                 "40-generic" = {
