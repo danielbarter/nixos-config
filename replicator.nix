@@ -17,10 +17,8 @@
     }
   ];
 
-  boot.kernelModules = [
-    # closed source intel wifi drivers
-    "iwlwifi"
-  ];
+  hardware.enableRedistributableFirmware = true;
+  hardware.bluetooth.enable = true;
 
   networking = {
     hostName = "replicator";
