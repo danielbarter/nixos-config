@@ -18,7 +18,6 @@
   ];
 
   hardware.enableRedistributableFirmware = true;
-  hardware.bluetooth.enable = true;
 
   networking = {
     hostName = "replicator";
