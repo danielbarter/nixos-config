@@ -17,6 +17,7 @@
     }
   ];
 
+  # allow closed source firmware
   hardware.enableRedistributableFirmware = true;
 
   networking = {
