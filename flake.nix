@@ -62,7 +62,7 @@
 
       packages."x86_64-linux" = {
 
-        replicant-iso = nixos-generators.nixosGenerate {
+        replicant-iso = nixos-generators.nixosGenerate rec {
           specialArgs = special-args system;
           format = "iso";
           system = "x86_64-linux";
@@ -70,6 +70,12 @@
             ./replicant.nix
             ./sway-gui.nix
           ];
+        };
+
+        aarch64-linux-iso = nixos-generators.nixosGenerate {
+            system = "x86_64-linux";
+            format = "iso";
+            modules = [ ./aarch64-linux-base-module.nix  ];
         };
 
         aarch64-linux-vm =
@@ -88,11 +94,6 @@
           -drive file=${self.packages."x86_64-linux".aarch64-linux-iso}/iso/nixos.iso,${drive-flags}
           '';
 
-        aarch64-linux-iso = nixos-generators.nixosGenerate {
-            system = "x86_64-linux";
-            format = "iso";
-            modules = [ ./aarch64-linux-base-module.nix  ];
-        };
-      };
+     };
     };
 }
