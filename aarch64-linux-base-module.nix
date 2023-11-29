@@ -16,4 +16,4 @@
   };
 
   services.getty.autologinUser = "test";
-};
+}
