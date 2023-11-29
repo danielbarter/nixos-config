@@ -1,4 +1,4 @@
-build_new_replicator_iso() {
+build_new_replicant_iso() {
     echo "packing up nixos configuration"
     cd /tmp
     sudo zip -r /tmp/nixos.zip /etc/nixos
@@ -16,9 +16,9 @@ build_new_replicator_iso() {
 }
 
 
-read -p "Building a new replicator iso. Continue (y/n)? " choice
+read -p "Building a new replicant iso. Continue (y/n)? " choice
 case "$choice" in
-    y|Y ) build_new_replicator_iso;;
+    y|Y ) build_new_replicant_iso;;
     n|N ) echo "doing nothing";;
     * ) echo "invalid";;
 esac

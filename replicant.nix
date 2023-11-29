@@ -12,8 +12,8 @@
     }
 
     {
-      source = /etc/nixos/utils/setup_replicator_iso.sh;
-      target = "setup_replicator_iso.h";
+      source = /etc/nixos/utils/setup_replicant_iso.sh;
+      target = "setup_replicant_iso.sh";
     }
   ];
 
@@ -21,7 +21,7 @@
   hardware.enableRedistributableFirmware = true;
 
   networking = {
-    hostName = "replicator";
+    hostName = "replicant";
   };
 
   # catchall network config. Configure whatever interface is present

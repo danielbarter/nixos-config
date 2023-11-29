@@ -1,4 +1,4 @@
-setup_replicator_iso() {
+setup_replicant_iso() {
     echo "set root password:"
     passwd root
 
@@ -24,9 +24,9 @@ setup_replicator_iso() {
     echo "all done!"
 }
 
-read -p "Setting up replicator iso. Continue (y/n)? " choice
+read -p "Setting up replicant iso. Continue (y/n)? " choice
 case "$choice" in
-    y|Y ) setup_replicator_iso;;
+    y|Y ) setup_replicant_iso;;
     n|N ) echo "doing nothing";;
     * ) echo "invalid";;
 esac

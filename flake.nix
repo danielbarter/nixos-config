@@ -69,7 +69,7 @@
           specialArgs = special-args system;
           modules = core-modules ++ [
             ./sway-gui.nix
-            ./replicator.nix
+            ./replicant.nix
           ];
         };
 
