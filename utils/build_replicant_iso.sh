@@ -7,7 +7,7 @@ build_new_replicant_iso() {
 
     echo "generating iso"
     cd /etc/nixos
-    nix build .#x86_64-linux-iso -o /tmp/result --impure
+    nix build .#replicant-iso -o /tmp/result --impure
     rm /tmp/nixos.zip.gpg
     cp /tmp/result/iso/nixos.iso /tmp
     rm /tmp/result

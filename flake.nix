@@ -60,16 +60,15 @@
         };
       };
 
-      # various isos and VMs
       packages."x86_64-linux" = {
 
-        x86_64-linux-iso = nixos-generators.nixosGenerate rec {
-          system = "x86_64-linux";
-          format = "iso";
+        replicant-iso = nixos-generators.nixosGenerate {
           specialArgs = special-args system;
+          format = "iso";
+          system = "x86_64-linux";
           modules = core-modules ++ [
-            ./sway-gui.nix
             ./replicant.nix
+            ./sway-gui.nix
           ];
         };
 
@@ -89,30 +88,10 @@
           -drive file=${self.packages."x86_64-linux".aarch64-linux-iso}/iso/nixos.iso,${drive-flags}
           '';
 
-        aarch64-linux-iso =
-          let aarch64-iso-module = {pkgs, lib, ...}: {
-                system.stateVersion = "23.05";
-                nixpkgs.buildPlatform.system = "x86_64-linux";
-                nixpkgs.hostPlatform.system = "aarch64-linux";
-
-                boot.loader = {
-                  systemd-boot.enable = true;
-                  efi.canTouchEfiVariables = true;
-                  timeout = lib.mkForce 0;
-                };
-
-                users.users.test = {
-                  isNormalUser = true;
-                  extraGroups = [ "wheel" ];
-                  initialPassword = "test";
-                };
-
-                services.getty.autologinUser = "test";
-              };
-          in nixos-generators.nixosGenerate {
+        aarch64-linux-iso = nixos-generators.nixosGenerate {
             system = "x86_64-linux";
             format = "iso";
-            modules = [ aarch64-iso-module ];
+            modules = [ ./aarch64-linux-base-module.nix  ];
         };
       };
     };
