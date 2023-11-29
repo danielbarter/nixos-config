@@ -61,7 +61,8 @@
       };
 
       packages."x86_64-linux" = {
-
+        # build using ./utils/build_replicant_iso.sh
+        # qemu-kvm -smp 8 -cdrom /tmp/nixos.iso -nographic -m 8G
         replicant-iso = nixos-generators.nixosGenerate rec {
           specialArgs = special-args system;
           format = "iso";
@@ -93,7 +94,6 @@
           -drive if=pflash,file=${pkgs-aarch64.OVMF.fd}/AAVMF/QEMU_EFI-pflash.raw,${drive-flags} \
           -drive file=${self.packages."x86_64-linux".aarch64-linux-iso}/iso/nixos.iso,${drive-flags}
           '';
-
      };
     };
 }
