@@ -40,6 +40,7 @@
     binutils            # objdump, readelf and c++filt
     tmux                # terminal multiplexer
     git
+    git-lfs
     file
     strace
     pciutils            # lspci
