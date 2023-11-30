@@ -13,6 +13,7 @@
 
 
     danielbarter = {
+      linger = true;
       isNormalUser = true;
       extraGroups = [ "wheel" "video" "audio" ];
       openssh.authorizedKeys.keys = [

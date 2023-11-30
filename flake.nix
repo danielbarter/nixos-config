@@ -20,7 +20,6 @@
           ./base.nix
           ./networking.nix
           ./users.nix
-          ./lingering.nix
           ./pass.nix
           ./home-setup.nix
           ./emacs.nix

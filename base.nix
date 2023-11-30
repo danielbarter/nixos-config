@@ -62,4 +62,8 @@
   security.rtkit.enable = true;
   services.dbus.enable = true;
 
+
+  # allow processes to persist after logout
+  services.logind.killUserProcesses = false;
+
 }
