@@ -94,15 +94,24 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
-  fileSystems."/" =
-    { device = "/dev/disk/by-uuid/7ac43c6f-2132-4640-9f47-1b8676fbc26e";
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-uuid/7ac43c6f-2132-4640-9f47-1b8676fbc26e";
       fsType = "ext4";
     };
 
-  fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/6659-4237";
+    "/boot" = {
+      device = "/dev/disk/by-uuid/6659-4237";
       fsType = "vfat";
     };
+
+    "/home/danielbarter/LLM" = {
+      device = "/dev/disk/by-uuid/308bd10e-7a18-4610-8c7d-757a098ef2dc";
+      fsType = "ext4";
+    };
+  };
+
+
 
   nixpkgs.hostPlatform = "x86_64-linux";
 
