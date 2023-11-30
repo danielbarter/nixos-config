@@ -100,9 +100,9 @@ in
   };
 
   fonts = {
-    enableDefaultFonts = true;
+    enableDefaultPackages = true;
 
-    fonts = with pkgs; [
+    packages = with pkgs; [
       source-code-pro
       source-sans-pro
       source-serif-pro

@@ -50,7 +50,7 @@ in
     wireless.iwd = {
 
       # run a patched version of iwd so we can do experiments with roaming
-      package = pkgs-unstable.iwd.overrideAttrs (final: previous: {
+      package = pkgs.iwd.overrideAttrs (final: previous: {
         patches = ( previous.patches or [] ) ++ [ "${self.outPath}/patches/iwd_developer_mode.patch" ];
       });
       enable = true;
