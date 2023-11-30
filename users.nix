@@ -13,6 +13,8 @@
 
 
     danielbarter = {
+
+      # creates /var/lib/systemd/linger/danielbarter
       linger = true;
       isNormalUser = true;
       extraGroups = [ "wheel" "video" "audio" ];
