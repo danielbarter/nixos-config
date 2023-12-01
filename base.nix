@@ -1,11 +1,11 @@
-{ config, pkgs, nixpkgs,  ... }:
+{ config, pkgs, flake-outputs-args, system,  ... }:
 
 {
   nix.settings.experimental-features = "nix-command flakes";
   # use our flake input for resolving <nixpkgs>
   nix = {
 
-    nixPath = [ "nixpkgs=${nixpkgs.outPath}" ];
+    nixPath = [ "nixpkgs=${flake-outputs-args.nixpkgs.outPath}" ];
 
     # wipe the default flake reg, and set it to be our system nixpkgs
     extraOptions = let
@@ -18,7 +18,7 @@
 
   };
 
-  nix.registry.nixpkgs.flake = nixpkgs;
+  nix.registry.nixpkgs.flake = flake-outputs-args.nixpkgs;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader = {
@@ -54,6 +54,11 @@
     radare2
     fzf                 # fuzzy searcher
     direnv
+
+    flake-outputs-args.self.packages."${system}".emacs
+    aspell
+    aspellDicts.en
+    cmake               # cmake autocomplete and emacs mode.
   ];
 
   # RealtimeKit is a D-Bus system service that changes the scheduling

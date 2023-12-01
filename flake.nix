@@ -14,7 +14,7 @@
 
   outputs = {
     self, nixpkgs, nixpkgs-unstable, nixos-generators, hosts, emacs-overlay
-  }:
+  } @ outputs-args:
 
     let core-modules = [
           ./base.nix
@@ -22,11 +22,12 @@
           ./users.nix
           ./pass.nix
           ./home-setup.nix
-          ./emacs.nix
           ./manpages.nix
         ];
         special-args = system: {
-          inherit self nixpkgs nixpkgs-unstable emacs-overlay system;};
+          flake-outputs-args = outputs-args;
+          inherit system;
+        };
     in {
       nixosConfigurations = {
         jasper = nixpkgs.lib.nixosSystem rec {
@@ -60,6 +61,17 @@
       };
 
       packages."x86_64-linux" = {
+
+        emacs = let
+          emacs-pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            overlays = [ emacs-overlay.overlays.default ];
+          };
+          in (emacs-pkgs.emacs-git.override {
+            withPgtk = true;
+          });
+
+
         # build using ./utils/build_replicant_iso.sh
         # qemu-kvm -smp 8 -cdrom /tmp/nixos.iso -nographic -m 8G
         replicant-iso = nixos-generators.nixosGenerate rec {

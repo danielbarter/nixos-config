@@ -1,6 +1,4 @@
-{ nixpkgs-unstable, system, self, config, pkgs, ... }:
-let pkgs-unstable = import nixpkgs-unstable { inherit system;};
-in
+{ config, pkgs, flake-outputs-args, ... }:
 {
   services.resolved = {
     # use resolved for dns management
@@ -51,7 +49,7 @@ in
 
       # run a patched version of iwd so we can do experiments with roaming
       package = pkgs.iwd.overrideAttrs (final: previous: {
-        patches = ( previous.patches or [] ) ++ [ "${self.outPath}/patches/iwd_developer_mode.patch" ];
+        patches = ( previous.patches or [] ) ++ [ "${flake-outputs-args.self.outPath}/patches/iwd_developer_mode.patch" ];
       });
       enable = true;
       settings = {
