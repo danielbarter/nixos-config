@@ -24,14 +24,14 @@
           ./home-setup.nix
           ./manpages.nix
         ];
-        special-args = system: {
+        flake-outputs-args-passthrough = system: {
           flake-outputs-args = outputs-args;
           inherit system;
         };
     in {
       nixosConfigurations = {
         jasper = nixpkgs.lib.nixosSystem rec {
-          specialArgs = special-args system;
+          specialArgs = flake-outputs-args-passthrough system;
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -41,7 +41,7 @@
         };
 
         punky = nixpkgs.lib.nixosSystem rec {
-          specialArgs = special-args system;
+          specialArgs =  flake-outputs-args-passthrough system;
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -51,7 +51,7 @@
         };
 
         rupert = nixpkgs.lib.nixosSystem rec {
-          specialArgs = special-args system;
+          specialArgs =  flake-outputs-args-passthrough system;
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -75,7 +75,7 @@
         # build using ./utils/build_replicant_iso.sh
         # qemu-kvm -smp 8 -cdrom /tmp/nixos.iso -nographic -m 8G
         replicant-iso = nixos-generators.nixosGenerate rec {
-          specialArgs = special-args system;
+          specialArgs = flake-outputs-args-passthrough system;
           format = "iso";
           system = "x86_64-linux";
           modules = core-modules ++ [
