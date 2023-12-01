@@ -61,56 +61,57 @@
       };
 
       packages."x86_64-linux" =
-        let emacs-pkgs = import nixpkgs {
-              system = "x86_64-linux";
-              overlays = [ emacs-overlay.overlays.default ];
-            };
-            pkgs = import nixpkgs { system = "x86_64-linux"; };
+        let
+          emacs-pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            overlays = [ emacs-overlay.overlays.default ];
+          };
+          pkgs = import nixpkgs { system = "x86_64-linux"; };
         in {
 
-        emacs = (emacs-pkgs.emacs-git.override {
-          withPgtk = true;
-        });
+          emacs = (emacs-pkgs.emacs-git.override {
+            withPgtk = true;
+          });
 
-        iwd-with-developer-mode = pkgs.iwd.overrideAttrs (final: previous: {
-          patches = ( previous.patches or [] ) ++ [
-            "${self.outPath}/patches/iwd_developer_mode.patch"
-          ];
-        });
+          iwd-with-developer-mode = pkgs.iwd.overrideAttrs (final: previous: {
+            patches = ( previous.patches or [] ) ++ [
+              "${self.outPath}/patches/iwd_developer_mode.patch"
+            ];
+          });
 
-        # build using ./utils/build_replicant_iso.sh
-        # qemu-kvm -smp 8 -cdrom /tmp/nixos.iso -nographic -m 8G
-        replicant-iso = nixos-generators.nixosGenerate rec {
-          specialArgs = flake-outputs-args-passthrough system;
-          format = "iso";
-          system = "x86_64-linux";
-          modules = core-modules ++ [
-            ./replicant.nix
-            ./sway-gui.nix
-          ];
-        };
-
-        aarch64-linux-iso = nixos-generators.nixosGenerate {
-            system = "x86_64-linux";
+          # build using ./utils/build_replicant_iso.sh
+          # qemu-kvm -smp 8 -cdrom /tmp/nixos.iso -nographic -m 8G
+          replicant-iso = nixos-generators.nixosGenerate rec {
+            specialArgs = flake-outputs-args-passthrough system;
             format = "iso";
-            modules = [ ./aarch64-linux-base-module.nix  ];
+            system = "x86_64-linux";
+            modules = core-modules ++ [
+              ./replicant.nix
+              ./sway-gui.nix
+            ];
+          };
+
+          aarch64-linux-iso = nixos-generators.nixosGenerate {
+              system = "x86_64-linux";
+              format = "iso";
+              modules = [ ./aarch64-linux-base-module.nix  ];
+          };
+
+          aarch64-linux-vm =
+            let pkgs-x86_64 = import nixpkgs { system = "x86_64-linux"; };
+                pkgs-aarch64 = import nixpkgs { system = "aarch64-linux"; };
+                drive-flags = "format=raw,readonly=on";
+            in pkgs-x86_64.writeScriptBin "run-nixos-vm-aarch64" ''
+
+            #!${pkgs-x86_64.runtimeShell} \
+            ${pkgs-x86_64.qemu_full}/bin/qemu-system-aarch64 \
+            -machine virt \
+            -cpu cortex-a57 \
+            -m 2G \
+            -nographic \
+            -drive if=pflash,file=${pkgs-aarch64.OVMF.fd}/AAVMF/QEMU_EFI-pflash.raw,${drive-flags} \
+            -drive file=${self.packages."x86_64-linux".aarch64-linux-iso}/iso/nixos.iso,${drive-flags}
+            '';
         };
-
-        aarch64-linux-vm =
-          let pkgs-x86_64 = import nixpkgs { system = "x86_64-linux"; };
-              pkgs-aarch64 = import nixpkgs { system = "aarch64-linux"; };
-              drive-flags = "format=raw,readonly=on";
-          in pkgs-x86_64.writeScriptBin "run-nixos-vm-aarch64" ''
-
-          #!${pkgs-x86_64.runtimeShell} \
-          ${pkgs-x86_64.qemu_full}/bin/qemu-system-aarch64 \
-          -machine virt \
-          -cpu cortex-a57 \
-          -m 2G \
-          -nographic \
-          -drive if=pflash,file=${pkgs-aarch64.OVMF.fd}/AAVMF/QEMU_EFI-pflash.raw,${drive-flags} \
-          -drive file=${self.packages."x86_64-linux".aarch64-linux-iso}/iso/nixos.iso,${drive-flags}
-          '';
-      };
     };
 }
