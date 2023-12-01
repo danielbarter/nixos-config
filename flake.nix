@@ -60,17 +60,23 @@
         };
       };
 
-      packages."x86_64-linux" = {
+      packages."x86_64-linux" =
+        let emacs-pkgs = import nixpkgs {
+              system = "x86_64-linux";
+              overlays = [ emacs-overlay.overlays.default ];
+            };
+            pkgs = import nixpkgs { system = "x86_64-linux"; };
+        in {
 
-        emacs = let
-          emacs-pkgs = import nixpkgs {
-            system = "x86_64-linux";
-            overlays = [ emacs-overlay.overlays.default ];
-          };
-          in (emacs-pkgs.emacs-git.override {
-            withPgtk = true;
-          });
+        emacs = (emacs-pkgs.emacs-git.override {
+          withPgtk = true;
+        });
 
+        iwd-with-developer-mode = pkgs.iwd.overrideAttrs (final: previous: {
+          patches = ( previous.patches or [] ) ++ [
+            "${self.outPath}/patches/iwd_developer_mode.patch"
+          ];
+        });
 
         # build using ./utils/build_replicant_iso.sh
         # qemu-kvm -smp 8 -cdrom /tmp/nixos.iso -nographic -m 8G
