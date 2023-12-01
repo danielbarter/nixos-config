@@ -55,11 +55,30 @@
     fzf                 # fuzzy searcher
     direnv
 
-    flak.packages."${system}".emacs
+    flake.packages."${system}".emacs
     aspell
     aspellDicts.en
     cmake               # cmake autocomplete and emacs mode.
+
+    (pass.withExtensions (exts: [exts.pass-otp]))
+    zbar # QRcode reader
+
+    stdman              # c++ stdlib man pages
+    man-pages           # linux programmers man pages
+    man-pages-posix     # posix man pages
+
   ];
+
+  documentation = {
+    dev.enable = true;
+    enable = true;
+    man.enable = true;
+  };
+
+
+  # enable gpg
+  programs.gnupg.agent.enable = true;
+
 
   # RealtimeKit is a D-Bus system service that changes the scheduling
   # policy of user processes/threads to SCHED_RR (i.e. realtime scheduling
