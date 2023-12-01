@@ -26,6 +26,7 @@
         ];
         flake-outputs-args-passthrough = system: {
           flake-outputs-args = outputs-args;
+          flake = self;
           inherit system;
         };
     in {

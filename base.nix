@@ -1,4 +1,4 @@
-{ config, pkgs, flake-outputs-args, system,  ... }:
+{ config, pkgs, flake-outputs-args, flake, system,  ... }:
 
 {
   nix.settings.experimental-features = "nix-command flakes";
@@ -55,7 +55,7 @@
     fzf                 # fuzzy searcher
     direnv
 
-    flake-outputs-args.self.packages."${system}".emacs
+    flak.packages."${system}".emacs
     aspell
     aspellDicts.en
     cmake               # cmake autocomplete and emacs mode.

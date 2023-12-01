@@ -1,4 +1,4 @@
-{ config, pkgs, flake-outputs-args, system, ... }:
+{ config, pkgs, flake, system, ... }:
 {
   services.resolved = {
     # use resolved for dns management
@@ -48,7 +48,7 @@
     wireless.iwd = {
 
       # run a patched version of iwd so we can do experiments with roaming
-      package = flake-outputs-args.self.packages."${system}".iwd-with-developer-mode;
+      package = flake.packages."${system}".iwd-with-developer-mode;
       enable = true;
       settings = {
         General = {
