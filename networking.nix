@@ -47,8 +47,8 @@
     useNetworkd = true;
     wireless.iwd = {
 
-      # run a patched version of iwd so we can do experiments with roaming
-      package = flake.packages."${system}".iwd-with-developer-mode;
+      # run developer mode of iwd
+      # package = flake.packages."${system}".iwd-with-developer-mode;
       enable = true;
       settings = {
         General = {
