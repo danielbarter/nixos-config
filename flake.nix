@@ -68,9 +68,9 @@
           pkgs = import nixpkgs { system = "x86_64-linux"; };
         in {
 
-          emacs = (emacs-pkgs.emacs-git.override {
+          emacs = emacs-pkgs.emacs-git.override {
             withPgtk = true;
-          });
+          };
 
           iwd-with-developer-mode = pkgs.iwd.overrideAttrs (final: previous: {
             patches = ( previous.patches or [] ) ++ [
