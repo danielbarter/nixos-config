@@ -103,7 +103,6 @@
                       nix-mode
                       yaml-mode
                       markdown-mode
-                      opencl-mode
                     ))
 
 
@@ -192,33 +191,9 @@
     (project-grep regex)
   ))
 
-(defun toggle-camelcase-underscores ()
-  "Toggle between camelcase and underscore notation for the symbol at point."
-  (interactive)
-  (save-excursion
-    (let* ((bounds (bounds-of-thing-at-point 'symbol))
-           (start (car bounds))
-           (end (cdr bounds))
-           (currently-using-underscores-p (progn (goto-char start)
-                                                 (re-search-forward "_" end t))))
-      (if currently-using-underscores-p
-          (progn
-            (upcase-initials-region start end)
-            (replace-string "_" "" nil start end)
-            (downcase-region start (1+ start)))
-        (replace-regexp "\\([A-Z]\\)" "_\\1" nil (1+ start) end)
-        (downcase-region start (cdr (bounds-of-thing-at-point 'symbol)))))))
 
 ;; hook company mode to eglot mode
 (add-hook 'eglot-managed-mode-hook 'company-mode)
-
-;; we always want to run typescript LSP through npx
-(with-eval-after-load 'eglot
-  (progn
-  (add-to-list 'eglot-server-programs
-               '(typescript-ts-mode . ("npx" "typescript-language-server" "--stdio")))
-  ))
-
 
 
 (defun ide-mode ()
@@ -343,16 +318,6 @@
 
 )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; c/c++ mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (defun no-indent-namespace ()
-;;   "don't indent c++ namespaces"
-;;    (c-set-offset 'innamespace [0]))
-
-;; (add-hook 'c++-mode-hook 'no-indent-namespace)
-;; (setq c-default-style "linux"
-;;       c-basic-offset 4)
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; tree sitter mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -363,31 +328,27 @@
 (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; erc mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun join-hackint (password)
-  "Connect to hackint"
-  (interactive "sPassword: ")
-  (erc-tls :server "irc.hackint.org"
-           :port 6697
-           :nick "fill_me_in"
-           :full-name "fill_me_in"
-           :password password
-           ))
-
-(defun join-liberaChat (password)
-  "Connect to libera.chat"
-  (interactive "sPassword: ")
-  (erc-tls :server "irc.libera.chat"
-           :port 6697
-           :nick "fill_me_in"
-           :full-name "fill_me_in"
-           :password password
-           ))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; misc functions ;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun insert-numbers (start end)
   (interactive "nStart: \nnEnd: ")
   (dolist (ind (number-sequence start end))
     (insert (format "%d\n" ind))))
+
+
+(defun toggle-camelcase-underscores ()
+  "Toggle between camelcase and underscore notation for the symbol at point."
+  (interactive)
+  (save-excursion
+    (let* ((bounds (bounds-of-thing-at-point 'symbol))
+           (start (car bounds))
+           (end (cdr bounds))
+           (currently-using-underscores-p (progn (goto-char start)
+                                                 (re-search-forward "_" end t))))
+      (if currently-using-underscores-p
+          (progn
+            (upcase-initials-region start end)
+            (replace-string "_" "" nil start end)
+            (downcase-region start (1+ start)))
+        (replace-regexp "\\([A-Z]\\)" "_\\1" nil (1+ start) end)
+        (downcase-region start (cdr (bounds-of-thing-at-point 'symbol)))))))
