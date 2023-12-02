@@ -98,10 +98,7 @@
                       direnv
 
                       ;; language modes
-                      rust-mode
-                      haskell-mode
                       nix-mode
-                      yaml-mode
                       markdown-mode
                     ))
 
