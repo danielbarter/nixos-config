@@ -15,7 +15,12 @@ setup_replicant_iso() {
     mv /tmp/etc/nixos /etc/nixos
 
     cd /etc/nixos
+
+    # set permissions for /etc/nixos
     source /etc/nixos/utils/set_permissions.sh
+
+    # setup home
+    source /etc/nixos/utils/home_setup.sh
 
     # symlink for ssh private key is now resolvable, so we need
     # to restart sshd

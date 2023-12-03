@@ -20,7 +20,6 @@
           ./base.nix
           ./networking.nix
           ./users.nix
-          ./home-setup.nix
         ];
         flake-outputs-args-passthrough = system: {
           flake-outputs-args = outputs-args;

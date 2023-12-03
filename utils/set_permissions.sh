@@ -2,10 +2,6 @@
 chown -R danielbarter /etc/nixos
 chgrp -R wheel /etc/nixos
 
-chgrp -R wheel /home/danielbarter
-chown -R danielbarter /home/danielbarter
-
-
 # LAN cache private key needs to be owned by nix-serve
 # if id nix-serve
 # then
