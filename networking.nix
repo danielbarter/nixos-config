@@ -22,9 +22,6 @@
     fallbackDns = [ "1.1.1.1" "8.8.8.8" ];
   };
 
-  # more reliable replacement for nscd
-  services.nscd.enableNsncd = true;
-
   # enable systemd networking for all hosts
   # actual networkd config is host specific
   systemd.network.enable = true;
