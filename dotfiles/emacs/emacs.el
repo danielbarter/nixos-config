@@ -247,6 +247,9 @@
 
   (kbd "u") 'evil-undo
   (kbd "U") 'evil-redo
+
+  (kbd "<leader>ms") 'kmacro-start-macro
+  (kbd "<leader>me") 'kmacro-end-or-call-macro
 )
 
 ;; we use C-SPC as the prefix key for tmux. previously bound to
