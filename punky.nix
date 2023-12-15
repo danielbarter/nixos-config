@@ -11,7 +11,7 @@
   environment.etc = {
     "systemd/dnssd/nix_store.dnssd".text = ''
     [Service]
-    Name=%H_nix_store
+    Name=nix_store
     Type=_http._tcp
     Port=5000
     '';
