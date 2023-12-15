@@ -7,6 +7,17 @@
     secretKeyFile = "/etc/nixos/secrets/binary-cache/cache-priv-key.pem";
   };
 
+  # dnssd for nix store
+  environment.etc = {
+    "systemd/dnssd/nix_store.dnssd".text = ''
+    [Service]
+    Name=%H_nix_store
+    Type=_http._tcp
+    Port=5000
+    '';
+  };
+
+
   # serve DNS stub on local network
   services.resolved.extraConfig = ''
        DNSStubListenerExtra=192.168.1.12
