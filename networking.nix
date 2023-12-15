@@ -13,11 +13,6 @@
     # see man 8 systemd-resolved
     llmnr = "false";
 
-    # disable mDNS
-    # extraConfig = ''
-    #     MulticastDNS=false
-    # '';
-
     # if not set, resolved defaults to its own list
     fallbackDns = [ "1.1.1.1" "8.8.8.8" ];
   };
