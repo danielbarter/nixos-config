@@ -14,9 +14,9 @@
     llmnr = "false";
 
     # disable mDNS
-    extraConfig = ''
-        MulticastDNS=false
-    '';
+    # extraConfig = ''
+    #     MulticastDNS=false
+    # '';
 
     # if not set, resolved defaults to its own list
     fallbackDns = [ "1.1.1.1" "8.8.8.8" ];

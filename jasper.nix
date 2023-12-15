@@ -27,6 +27,7 @@
       networkConfig = {
         DHCP = "yes";
         IgnoreCarrierLoss = "3s"; # make sure systemd-networkd doesn't reconfigure interface while roaming between APs
+        MulticastDNS = "yes";
       };
     };
   };

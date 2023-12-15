@@ -58,6 +58,7 @@
 
         networkConfig = {
           DHCP = "no";
+          MulticastDNS = "yes";
         };
 
         addresses = [
