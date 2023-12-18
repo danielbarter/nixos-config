@@ -46,7 +46,9 @@
     kernelModules = [ "kvm-intel" ];
 
     kernelParams = [
-      # Fixes a regression in s2idle, making it more power efficient than deep sleep
+      # Fixes a regression in s2idle
+      # making it more power efficient than deep sleep
+      "mem_sleep_default=s2idle"
       "acpi_osi=\"!Windows 2020\""
       # For Power consumption
       # https://community.frame.work/t/linux-battery-life-tuning/6665/156
