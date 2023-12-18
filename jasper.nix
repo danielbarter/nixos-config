@@ -45,8 +45,13 @@
   boot = {
     kernelModules = [ "kvm-intel" ];
 
-    # set /sys/power/mem_sleep to deep. This suspends to ram rathar than just idling
-    kernelParams = [ "mem_sleep_default=deep" ];
+    kernelParams = [
+      # Fixes a regression in s2idle, making it more power efficient than deep sleep
+      "acpi_osi=\"!Windows 2020\""
+      # For Power consumption
+      # https://community.frame.work/t/linux-battery-life-tuning/6665/156
+      "nvme.noacpi=1"
+    ];
   };
 
 
