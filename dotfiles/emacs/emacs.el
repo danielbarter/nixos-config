@@ -188,10 +188,13 @@
     (project-grep regex)
   ))
 
+(with-eval-after-load 'eglot
+  ;; stop eglot from redefining mouse-2
+  (keymap-unset eglot-diagnostics-map "<mouse-2>" t)
+)
 
 ;; hook company mode to eglot mode
 (add-hook 'eglot-managed-mode-hook 'company-mode)
-
 
 (defun ide-mode ()
   "start eglot mode"
@@ -328,8 +331,10 @@
 (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;; misc functions ;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; C/C++ mode config ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq-default c-basic-offset 4)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;; misc functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun insert-numbers (start end)
   (interactive "nStart: \nnEnd: ")
   (dolist (ind (number-sequence start end))
