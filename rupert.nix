@@ -95,6 +95,10 @@
     networkmanager.enable = false;
   };
 
+  services.avahi.enable = false;
+
+  services.gnome.core-utilities.enable = false;
+
   boot.kernelModules = [ "hid-nintendo" ];
 
 
