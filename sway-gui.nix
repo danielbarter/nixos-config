@@ -37,7 +37,7 @@ let
 
         gsettings set $gnome_schema gtk-theme 'Dracula'
         gsettings set $gnome_schema icon-theme 'Adwaita'
-        gsettings set $gnome_schema cursor-theme 'Adwaita'
+        gsettings set $gnome_schema cursor-theme 'Dracula-cursors'
         gsettings set $gnome_schema document-font-name 'Source Sans Pro 11'
         gsettings set $gnome_schema font-name 'Source Sans Pro 11'
         gsettings set $gnome_schema monospace-font-name 'Source Code Pro 11'
