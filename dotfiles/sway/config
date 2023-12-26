@@ -296,6 +296,8 @@ exec swayidle -w \
               resume 'swaymsg "output * dpms on"' \
          before-sleep 'swaylock -f -c 000000'
 
+seat seat0 xcursor_theme Dracula-cursors 24
+
 # set gtk settings
 exec configure-gtk
 
