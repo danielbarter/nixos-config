@@ -36,11 +36,12 @@ let
         wm_schema=org.gnome.desktop.wm.preferences
 
         gsettings set $gnome_schema gtk-theme 'Dracula'
-        gsettings set $gnome_schema icon-theme 'Dracula'
-        gsettings set $gnome_schema document-font-name "Source Sans Pro 11"
-        gsettings set $gnome_schema font-name "Source Sans Pro 11"
-        gsettings set $gnome_schema monospace-font-name "Source Code Pro 11"
-        gsettings set $wm_schema titlebar-font "Source Sans Pro 11"
+        gsettings set $gnome_schema icon-theme 'Adwaita'
+        gsettings set $gnome_schema cursor-theme 'Adwaita'
+        gsettings set $gnome_schema document-font-name 'Source Sans Pro 11'
+        gsettings set $gnome_schema font-name 'Source Sans Pro 11'
+        gsettings set $gnome_schema monospace-font-name 'Source Code Pro 11'
+        gsettings set $wm_schema titlebar-font 'Source Sans Pro 11'
         '';
   };
 in
