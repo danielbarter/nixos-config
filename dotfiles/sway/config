@@ -280,8 +280,13 @@ bar {
     }
 }
 
-# Import the WAYLAND_DISPLAY env var from sway into the systemd user session.
-exec dbus-sway-environment
+# Import the WAYLAND_DISPLAY env var from sway into the systemd user session, and restart some user services
+# so that they have fresh environment variables
+exec {
+    dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+    systemctl --user stop pipewire wireplumber pipewire-pulse xdg-desktop-portal xdg-desktop-portal-wlr
+    systemctl --user start pipewire wireplumber pipewire-pulse xdg-desktop-portal xdg-desktop-portal-wlr
+}
 
 # lock keybind
 bindsym $mod+F1 exec 'swaylock -f -c 000000'
@@ -296,10 +301,23 @@ exec swayidle -w \
               resume 'swaymsg "output * dpms on"' \
          before-sleep 'swaylock -f -c 000000'
 
+# set cursor theme
 seat seat0 xcursor_theme Dracula-cursors 24
 
-# set gtk settings
-exec configure-gtk
+set $gome_schema org.gnome.desktop.interface
+set $wm_schema org.gnome.desktop.wm.preferences
+
+exec_always {
+        gsettings set $gnome_schema gtk-theme 'Dracula'
+        gsettings set $gnome_schema icon-theme 'Adwaita'
+        gsettings set $gnome_schema cursor-theme 'Dracula-cursors'
+        gsettings set $gnome_schema cursor-size 24
+        gsettings set $gnome_schema document-font-name 'Source Sans Pro 11'
+        gsettings set $gnome_schema font-name 'Source Sans Pro 11'
+        gsettings set $gnome_schema monospace-font-name 'Source Code Pro 11'
+        gsettings set $wm_schema titlebar-font 'Source Sans Pro 11'
+}
+
 
 # run kanshi which handles display hotswapping
 exec_always "pkill kanshi; kanshi"

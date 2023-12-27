@@ -1,47 +1,4 @@
 { config, pkgs, lib, ... }:
-
-let
-  # bash script to let dbus know about important env variables and propogate them to
-  # relevent services
-  # run at the end of sway config
-  # see https://github.com/emersion/xdg-desktop-portal-wlr/wiki/"It-doesn't-work"-Troubleshooting-Checklist
-  dbus-sway-environment = pkgs.writeTextFile {
-    name = "dbus-sway-environment";
-    destination = "/bin/dbus-sway-environment";
-    executable = true;
-
-    text = ''
-    dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
-    systemctl --user stop pipewire wireplumber pipewire-pulse xdg-desktop-portal xdg-desktop-portal-wlr
-    systemctl --user start pipewire wireplumber pipewire-pulse xdg-desktop-portal xdg-desktop-portal-wlr
-      '';
-  };
-
-  # currently, there is some friction between sway and gtk:
-  # https://github.com/swaywm/sway/wiki/GTK-3-settings-on-Wayland
-  # the suggested way to set gtk settings is with gsettings
-  # for gsettings to work, we need to tell it where the schemas are
-  # using the XDG_DATA_DIR environment variable
-  # also some gtk fonts not being set by nixos config
-  configure-gtk = pkgs.writeTextFile {
-      name = "configure-gtk";
-      destination = "/bin/configure-gtk";
-      executable = true;
-      text = ''
-        gnome_schema=org.gnome.desktop.interface
-        wm_schema=org.gnome.desktop.wm.preferences
-
-        gsettings set $gnome_schema gtk-theme 'Dracula'
-        gsettings set $gnome_schema icon-theme 'Adwaita'
-        gsettings set $gnome_schema cursor-theme 'Dracula-cursors'
-        gsettings set $gnome_schema cursor-size 24
-        gsettings set $gnome_schema document-font-name 'Source Sans Pro 11'
-        gsettings set $gnome_schema font-name 'Source Sans Pro 11'
-        gsettings set $gnome_schema monospace-font-name 'Source Code Pro 11'
-        gsettings set $wm_schema titlebar-font 'Source Sans Pro 11'
-        '';
-  };
-in
 {
   environment.systemPackages = with pkgs; [
     iwgtk
