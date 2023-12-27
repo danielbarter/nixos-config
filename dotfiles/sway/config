@@ -304,7 +304,7 @@ exec swayidle -w \
 # set cursor theme
 seat seat0 xcursor_theme Dracula-cursors 24
 
-set $gome_schema org.gnome.desktop.interface
+set $gnome_schema org.gnome.desktop.interface
 set $wm_schema org.gnome.desktop.wm.preferences
 
 exec_always {
