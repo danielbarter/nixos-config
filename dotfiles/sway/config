@@ -48,7 +48,7 @@ set $Yellow            #f1fa8c
 
 # _JAVA_AWT_WM_NONREPARENTING=1 needed to make java apps
 # play nice with tiling wm
-set $menu _JAVA_AWT_WM_NONREPARENTING=1 bemenu-run \
+set $menu bemenu-run \
           --fn "SourceCodePro Regular 11" \
           --line-height=25 \
           --tb=$Background \

@@ -11,9 +11,9 @@ let
     executable = true;
 
     text = ''
-  dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
-  systemctl --user stop pipewire wireplumber pipewire-pulse xdg-desktop-portal xdg-desktop-portal-wlr
-  systemctl --user start pipewire wireplumber pipewire-pulse xdg-desktop-portal xdg-desktop-portal-wlr
+    dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+    systemctl --user stop pipewire wireplumber pipewire-pulse xdg-desktop-portal xdg-desktop-portal-wlr
+    systemctl --user start pipewire wireplumber pipewire-pulse xdg-desktop-portal xdg-desktop-portal-wlr
       '';
   };
 
@@ -27,11 +27,7 @@ let
       name = "configure-gtk";
       destination = "/bin/configure-gtk";
       executable = true;
-      text = let
-        schema = pkgs.gsettings-desktop-schemas;
-        datadir = "${schema}/share/gsettings-schemas/${schema.name}";
-      in ''
-        export XDG_DATA_DIRS=${datadir}:$XDG_DATA_DIRS
+      text = ''
         gnome_schema=org.gnome.desktop.interface
         wm_schema=org.gnome.desktop.wm.preferences
 
@@ -177,6 +173,17 @@ in
   programs.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
+
+    # extra session environment variables
+    # we need add gsettings-desktop-schemas to XDG_DATA_DIRS so gsettings works
+    # we need to set _JAVA_AWT_WM_NONREPARENTING=1 so java GUI apps aren't broken
+    extraSessionCommands = let
+        schema = pkgs.gsettings-desktop-schemas;
+        datadir = "${schema}/share/gsettings-schemas/${schema.name}";
+    in ''
+    export XDG_DATA_DIRS=${datadir}:$XDG_DATA_DIRS
+    export _JAVA_AWT_WM_NONREPARENTING=1
+    '';
   };
 
   # useful program for printing keypresses
