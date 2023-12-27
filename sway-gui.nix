@@ -6,11 +6,8 @@
     pavucontrol               # pulseaudio control volume
     pulseaudio                # pactl
     gammastep                 # redshift
-    dbus-sway-environment
-    configure-gtk
-    wayland
     xkeyboard_config          # useful man pages for sway
-    zathura
+    zathura                   # pdf viewer
     glib                      # gsettings
     dracula-theme             # gtk theme
     gnome3.adwaita-icon-theme # default gnome icons
