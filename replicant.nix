@@ -21,7 +21,7 @@
   hardware.enableRedistributableFirmware = true;
 
   # we are probably going to be running on some intel chip,
-  # so make sure that we have the relevent intel GPU drivers
+  # so make sure that we have VA-API drivers so firefox is happy
   hardware.opengl = {
     enable = true;
     extraPackages = with pkgs; [
