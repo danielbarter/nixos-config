@@ -80,7 +80,11 @@
   # enabling opencl
   hardware.opengl = {
     enable = true;
-    extraPackages = [ pkgs.intel-compute-runtime ];
+    extraPackages = [
+      pkgs.intel-compute-runtime
+      libvdpau-va-gl
+      intel-media-driver
+    ];
   };
 
 
