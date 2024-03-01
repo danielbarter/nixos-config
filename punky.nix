@@ -108,12 +108,12 @@
 
   fileSystems = {
     "/" = {
-      device = "/dev/disk/by-uuid/7ac43c6f-2132-4640-9f47-1b8676fbc26e";
+      device = "/dev/disk/by-uuid/cfbddc74-a767-40f2-993d-729d1a5758b9";
       fsType = "ext4";
     };
 
     "/boot" = {
-      device = "/dev/disk/by-uuid/6659-4237";
+      device = "/dev/disk/by-uuid/4CF2-BE53";
       fsType = "vfat";
     };
 
