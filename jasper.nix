@@ -1,4 +1,4 @@
-{config, pkgs, ...}:
+{config, pkgs, lib, ...}:
 
 {
   nix = {
@@ -26,7 +26,6 @@
 
       networkConfig = {
         DHCP = "yes";
-        IgnoreCarrierLoss = "3s"; # make sure systemd-networkd doesn't reconfigure interface while roaming between APs
         MulticastDNS = "yes";
       };
     };
@@ -36,41 +35,32 @@
        DNSStubListener=no
   '';
 
-
-  services.logind.lidSwitch = "suspend";
   services.logind = {
     extraConfig = "HandlePowerKey=suspend";
   };
 
-  boot = {
-    kernelModules = [ "kvm-intel" ];
+  hardware.enableRedistributableFirmware =  true;
+  hardware.cpu.intel.updateMicrocode = true;
 
-    kernelParams = [
-      # Fixes a regression in s2idle
-      # making it more power efficient than deep sleep
-      "mem_sleep_default=s2idle"
-      "acpi_osi=\"!Windows 2020\""
-      # For Power consumption
-      # https://community.frame.work/t/linux-battery-life-tuning/6665/156
-      "nvme.noacpi=1"
+  boot = {
+    initrd.availableKernelModules = [
+      "xhci_pci" "thunderbolt" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod"
     ];
+      initrd.kernelModules = [ ];
+      kernelModules = [ "kvm-intel" ];
+      extraModulePackages = [ ];
   };
 
-
-  hardware.enableRedistributableFirmware =  true;
-  boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
-  boot.extraModulePackages = [ ];
-
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/784c98bf-646b-4f21-a176-9067b5a059f3";
+    { device = "/dev/disk/by-uuid/3e74cb7c-1f46-4a90-af40-04ac22c54d2e";
       fsType = "ext4";
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/8F55-8AC0";
+    { device = "/dev/disk/by-uuid/A65D-C287";
       fsType = "vfat";
     };
+
 
   swapDevices = [ ];
 
@@ -88,14 +78,11 @@
     ];
   };
 
-
-  powerManagement.cpuFreqGovernor =  "powersave";
-
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "20.11";  # Did you read the comment?
+  system.stateVersion = "23.11";  # Did you read the comment?
 }
