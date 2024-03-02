@@ -120,7 +120,6 @@
           });
 
           # build using ./utils/build_replicant_iso.sh
-          # qemu-kvm -smp $(nproc) -cdrom /tmp/nixos.iso -nographic -m 8G
           replicant-iso = nixos-generators.nixosGenerate rec {
             specialArgs = flake-outputs-args-passthrough system;
             format = "iso";
