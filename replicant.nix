@@ -8,30 +8,15 @@
   # add encrypted, zipped nixos config to iso
   isoImage.contents = [
     {
-      source = "/tmp/nixos.zip.gpg";
+      source = /tmp/nixos.zip.gpg;
       target = "nixos.zip.gpg";
     }
 
     {
-      source = "${flake.outPath}/utils/setup_replicant_iso.sh";
+      source = ./utils/setup_replicant_iso.sh;
       target = "setup_replicant_iso.sh";
     }
   ];
-
-  # allow closed source firmware
-  hardware.enableRedistributableFirmware = true;
-
-  # we are probably going to be running on some intel chip,
-  # so make sure that we have VA-API drivers so firefox is happy
-  hardware.opengl = {
-    enable = true;
-    extraPackages = with pkgs; [
-      intel-vaapi-driver
-      libvdpau-va-gl
-      intel-media-driver
-    ];
-  };
-
 
 
   networking = {

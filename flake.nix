@@ -42,6 +42,7 @@
             [
               ./jasper.nix
               ./sway-gui.nix
+              ./intel-gpu.nix
             ];
         };
 
@@ -52,6 +53,7 @@
             [
               ./punky.nix
               hosts.nixosModule { networking.stevenBlackHosts.enable = true; }
+              ./intel-gpu.nix
             ];
         };
 
@@ -124,10 +126,15 @@
             format = "iso";
             system = "x86_64-linux";
             modules = core-modules ++ [
+              # we are probably going to be running on some intel chip,
+              # so make sure that we have VA-API drivers so firefox is happy
+              ./intel-gpu.nix
               ./replicant.nix
               ./sway-gui.nix
             ];
           };
+
+          replicant-vm = x86_64-vm self.packages."x86_64-linux".replicant-iso;
 
           aarch64-minimal-iso = nixos-generators.nixosGenerate rec {
               system = "x86_64-linux";

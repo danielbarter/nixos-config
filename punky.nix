@@ -123,16 +123,6 @@
     };
   };
 
-
-  # intel_gpu_top
-  environment.systemPackages = [ pkgs.intel-gpu-tools ];
-
-  # enabling opencl
-  hardware.opengl = {
-    enable = true;
-    extraPackages = [ pkgs.intel-compute-runtime ];
-  };
-
   hardware.cpu.intel.updateMicrocode = config.hardware.enableRedistributableFirmware;
 
   # This value determines the NixOS release from which the default
