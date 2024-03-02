@@ -75,7 +75,7 @@
           pkgs = import nixpkgs { system = "x86_64-linux"; };
 
 
-          x86_64-vm = iso: pkgs.writeScriptBin "run-nixos-vm-x86_64" ''
+          x86_64-vm = iso: pkgs.writeScriptBin "x86_64-run-nixos-vm" ''
 
           #!${pkgs.runtimeShell} \
           ${pkgs.qemu_full}/bin/qemu-kvm \
@@ -90,7 +90,7 @@
             pkgs-x86_64 = import nixpkgs { system = "x86_64-linux"; };
             pkgs-aarch64 = import nixpkgs { system = "aarch64-linux"; };
             drive-flags = "format=raw,readonly=on";
-          in pkgs-x86_64.writeScriptBin "run-nixos-vm-aarch64" ''
+          in pkgs-x86_64.writeScriptBin "aarch64-run-nixos-vm" ''
 
             #!${pkgs-x86_64.runtimeShell} \
             ${pkgs-x86_64.qemu_full}/bin/qemu-system-aarch64 \
