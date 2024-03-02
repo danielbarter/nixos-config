@@ -135,6 +135,17 @@
 
           replicant-vm = x86_64-vm self.packages."x86_64-linux".replicant-iso;
 
+          aarch64-replicant-iso = nixos-generators.nixosGenerate rec {
+            specialArgs = flake-outputs-args-passthrough system;
+            format = "iso";
+            system = "x86_64-linux";
+            modules = core-modules ++ [
+              ./replicant.nix
+              ./sway-gui.nix
+              (platform {build = system; host = "aarch64-linux";})
+            ];
+          };
+
           aarch64-minimal-iso = nixos-generators.nixosGenerate rec {
               system = "x86_64-linux";
               format = "iso";
