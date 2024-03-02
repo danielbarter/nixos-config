@@ -4,7 +4,6 @@
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
-    timeout = lib.mkForce 0;
   };
 
   users.users.test = {

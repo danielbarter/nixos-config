@@ -74,7 +74,40 @@
             system = "x86_64-linux";
             overlays = [ emacs-overlay.overlays.default ];
           };
+
           pkgs = import nixpkgs { system = "x86_64-linux"; };
+
+
+          x86_64-vm = iso: pkgs.writeScriptBin "run-nixos-vm-x86_64" ''
+
+          #!${pkgs.runtimeShell} \
+          ${pkgs.qemu_full}/bin/qemu-kvm \
+          -smp $(nproc) \
+          -cdrom ${iso}/iso/nixos.iso \
+          -nographic \
+          -m 8G
+
+          '';
+
+          aarch64-vm = iso: let
+            pkgs-x86_64 = import nixpkgs { system = "x86_64-linux"; };
+            pkgs-aarch64 = import nixpkgs { system = "aarch64-linux"; };
+            drive-flags = "format=raw,readonly=on";
+          in pkgs-x86_64.writeScriptBin "run-nixos-vm-aarch64" ''
+
+            #!${pkgs-x86_64.runtimeShell} \
+            ${pkgs-x86_64.qemu_full}/bin/qemu-system-aarch64 \
+            -machine virt \
+            -cpu cortex-a57 \
+            -m 2G \
+            -smp 4 \
+            -nographic \
+            -drive if=pflash,file=${pkgs-aarch64.OVMF.fd}/AAVMF/QEMU_EFI-pflash.raw,${drive-flags} \
+            -drive file=${iso}/iso/nixos.iso,${drive-flags}
+
+            '';
+
+
         in {
 
           emacs = emacs-pkgs.emacs-git.override {
@@ -109,22 +142,18 @@
               ];
           };
 
-          aarch64-minimal-vm =
-            let pkgs-x86_64 = import nixpkgs { system = "x86_64-linux"; };
-                pkgs-aarch64 = import nixpkgs { system = "aarch64-linux"; };
-                drive-flags = "format=raw,readonly=on";
-            in pkgs-x86_64.writeScriptBin "run-nixos-vm-aarch64" ''
+          aarch64-minimal-vm = aarch64-vm self.packages."x86_64-linux".aarch64-minimal-iso;
 
-            #!${pkgs-x86_64.runtimeShell} \
-            ${pkgs-x86_64.qemu_full}/bin/qemu-system-aarch64 \
-            -machine virt \
-            -cpu cortex-a57 \
-            -m 2G \
-            -smp 4 \
-            -nographic \
-            -drive if=pflash,file=${pkgs-aarch64.OVMF.fd}/AAVMF/QEMU_EFI-pflash.raw,${drive-flags} \
-            -drive file=${self.packages."x86_64-linux".aarch64-minimal-iso}/iso/nixos.iso,${drive-flags}
-            '';
+          x86_64-minimal-iso = nixos-generators.nixosGenerate rec {
+              system = "x86_64-linux";
+              format = "iso";
+              modules = [
+                ./minimal-base.nix
+                (platform {build = system; host = system;})
+              ];
+          };
+
+          x86_64-minimal-vm = x86_64-vm self.packages."x86_64-linux".x86_64-minimal-iso;
         };
     };
 }
