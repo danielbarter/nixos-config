@@ -124,9 +124,6 @@
   };
 
 
-
-  nixpkgs.hostPlatform = "x86_64-linux";
-
   # intel_gpu_top
   environment.systemPackages = [ pkgs.intel-gpu-tools ];
 

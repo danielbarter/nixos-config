@@ -21,11 +21,18 @@
           ./networking.nix
           ./users.nix
         ];
+
         flake-outputs-args-passthrough = system: {
           flake-outputs-args = outputs-args;
           flake = self;
           inherit system;
         };
+
+        platform = {build, host}: {...}: {
+          nixpkgs.buildPlatform.system = build;
+          nixpkgs.hostPlatform.system = host;
+        };
+
     in {
       nixosConfigurations = {
         jasper = nixpkgs.lib.nixosSystem rec {
@@ -35,6 +42,7 @@
             [
               ./jasper.nix
               ./sway-gui.nix
+              (platform {build = system; host = system;})
             ];
         };
 
@@ -45,6 +53,7 @@
             [
               ./punky.nix
               hosts.nixosModule { networking.stevenBlackHosts.enable = true; }
+              (platform {build = system; host = system;})
             ];
         };
 
@@ -54,6 +63,7 @@
           modules = core-modules ++
             [
               ./rupert.nix
+              (platform {build = system; host = system;})
             ];
         };
       };
@@ -86,16 +96,20 @@
             modules = core-modules ++ [
               ./replicant.nix
               ./sway-gui.nix
+              (platform {build = system; host = system;})
             ];
           };
 
-          aarch64-linux-iso = nixos-generators.nixosGenerate {
+          aarch64-minimal-iso = nixos-generators.nixosGenerate rec {
               system = "x86_64-linux";
               format = "iso";
-              modules = [ ./aarch64-linux-base-module.nix  ];
+              modules = [
+                ./minimal-base.nix
+                (platform {build = system; host = "aarch64-linux";})
+              ];
           };
 
-          aarch64-linux-vm =
+          aarch64-minimal-vm =
             let pkgs-x86_64 = import nixpkgs { system = "x86_64-linux"; };
                 pkgs-aarch64 = import nixpkgs { system = "aarch64-linux"; };
                 drive-flags = "format=raw,readonly=on";
@@ -109,7 +123,7 @@
             -smp 4 \
             -nographic \
             -drive if=pflash,file=${pkgs-aarch64.OVMF.fd}/AAVMF/QEMU_EFI-pflash.raw,${drive-flags} \
-            -drive file=${self.packages."x86_64-linux".aarch64-linux-iso}/iso/nixos.iso,${drive-flags}
+            -drive file=${self.packages."x86_64-linux".aarch64-minimal-iso}/iso/nixos.iso,${drive-flags}
             '';
         };
     };

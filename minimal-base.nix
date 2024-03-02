@@ -1,7 +1,5 @@
 {pkgs, lib, ...}: {
   system.stateVersion = "23.05";
-  nixpkgs.buildPlatform.system = "x86_64-linux";
-  nixpkgs.hostPlatform.system = "aarch64-linux";
 
   boot.loader = {
     systemd-boot.enable = true;
