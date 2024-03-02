@@ -42,7 +42,6 @@
             [
               ./jasper.nix
               ./sway-gui.nix
-              (platform {build = system; host = system;})
             ];
         };
 
@@ -53,7 +52,6 @@
             [
               ./punky.nix
               hosts.nixosModule { networking.stevenBlackHosts.enable = true; }
-              (platform {build = system; host = system;})
             ];
         };
 
@@ -63,7 +61,6 @@
           modules = core-modules ++
             [
               ./rupert.nix
-              (platform {build = system; host = system;})
             ];
         };
       };
@@ -129,7 +126,6 @@
             modules = core-modules ++ [
               ./replicant.nix
               ./sway-gui.nix
-              (platform {build = system; host = system;})
             ];
           };
 
@@ -149,7 +145,6 @@
               format = "iso";
               modules = [
                 ./minimal-base.nix
-                (platform {build = system; host = system;})
               ];
           };
 
