@@ -1,4 +1,4 @@
-{ config, pkgs, flake-outputs-args, flake, system,  ... }:
+{lib, config, pkgs, flake-outputs-args, flake, system,  ... }:
 
 {
   nix.settings.experimental-features = "nix-command flakes";
@@ -75,7 +75,15 @@
   # enable gpg
   programs.gnupg.agent = {
     enable = true;
+
+    # don't use default pinentry, since it depends on Qt
+    pinentryFlavor = null;
   };
+
+  # use pinentry-bemenu for pinentry
+  environment.etc."gnupg/gpg-agent.conf".text = lib.mkForce ''
+    pinentry-program ${pkgs.pinentry-bemenu}/bin/pinentry-bemenu
+  '';
 
   # RealtimeKit is a D-Bus system service that changes the scheduling
   # policy of user processes/threads to SCHED_RR (i.e. realtime scheduling
