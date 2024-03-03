@@ -19,7 +19,6 @@
     mako                      # FreeDesktop notifications
     libnotify                 # notify-send
     kanshi                    # sway hotplug functionality
-    wf-recorder               # screen recording
     bemenu
   ];
 

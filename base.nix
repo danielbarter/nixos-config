@@ -59,7 +59,6 @@
     cmake               # cmake autocomplete and emacs mode.
 
     (pass.withExtensions (exts: [exts.pass-otp]))
-    zbar # QRcode reader
 
     man-pages           # linux programmers man pages
     man-pages-posix     # posix man pages
