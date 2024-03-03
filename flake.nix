@@ -135,6 +135,8 @@
 
           replicant-vm = x86_64-vm self.packages."x86_64-linux".replicant-iso;
 
+          # currently broken because qt cross compiling sucks. Come back in a
+          # year or two
           aarch64-replicant-iso = nixos-generators.nixosGenerate rec {
             specialArgs = flake-outputs-args-passthrough system;
             format = "iso";
