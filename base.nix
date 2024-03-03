@@ -40,14 +40,12 @@
     binutils            # objdump, readelf and c++filt
     tmux                # terminal multiplexer
     git
-    git-lfs
     file
     strace
     pciutils            # lspci
     usbutils            # lsusb
     htop
     python3
-    nodejs
     nmap
     zip
     unzip
@@ -63,7 +61,6 @@
     (pass.withExtensions (exts: [exts.pass-otp]))
     zbar # QRcode reader
 
-    stdman              # c++ stdlib man pages
     man-pages           # linux programmers man pages
     man-pages-posix     # posix man pages
 
