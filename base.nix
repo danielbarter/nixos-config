@@ -71,8 +71,6 @@
     man.enable = true;
   };
 
-
-
   # RealtimeKit is a D-Bus system service that changes the scheduling
   # policy of user processes/threads to SCHED_RR (i.e. realtime scheduling
   # mode) on request. It is intended to be used as a secure mechanism to
@@ -80,6 +78,11 @@
   security.rtkit.enable = true;
   services.dbus.enable = true;
 
+  # enable gpg
+  programs.gnupg.agent = {
+    enable = true;
+    pinentryFlavor = "curses";
+  };
 
   # allow processes to persist after logout
   services.logind.killUserProcesses = false;
