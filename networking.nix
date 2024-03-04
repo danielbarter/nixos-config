@@ -67,6 +67,5 @@
   environment.systemPackages = with pkgs; [
     iw                  # linux tool for managing wireless networks
     wget
-    bind.dnsutils       # nslookup
   ];
 }
