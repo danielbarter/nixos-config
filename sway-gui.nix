@@ -2,7 +2,6 @@
 {
   environment.systemPackages = with pkgs; [
     alacritty                 # gpu accelerated terminal
-    gammastep                 # redshift
     zathura                   # pdf viewer
     glib                      # gsettings
     dracula-theme             # gtk theme
@@ -130,16 +129,6 @@
     export XDG_DATA_DIRS=${datadir}:$XDG_DATA_DIRS
     export _JAVA_AWT_WM_NONREPARENTING=1
     '';
-  };
-
-
-  # gammastep systemd service
-  systemd.user.services.gammastep = {
-    description = "gammastep daemon";
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = '' ${pkgs.gammastep}/bin/gammastep -O 4000 '';
-    };
   };
 
 
