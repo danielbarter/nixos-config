@@ -143,5 +143,19 @@
   };
 
 
+  # enable gpg
+  programs.gnupg.agent = {
+    enable = true;
+
+    # don't use default pinentry, since it depends on Qt
+    pinentryFlavor = null;
+  };
+
+  # use pinentry-bemenu for pinentry
+  environment.etc."gnupg/gpg-agent.conf".text = lib.mkForce ''
+    pinentry-program ${pkgs.pinentry-bemenu}/bin/pinentry-bemenu
+  '';
+
+
 }
 
