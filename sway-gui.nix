@@ -1,12 +1,8 @@
 { config, pkgs, lib, ... }:
 {
   environment.systemPackages = with pkgs; [
-    iwgtk
     alacritty                 # gpu accelerated terminal
-    pavucontrol               # pulseaudio control volume
-    pulseaudio                # pactl
     gammastep                 # redshift
-    xkeyboard_config          # useful man pages for sway
     zathura                   # pdf viewer
     glib                      # gsettings
     dracula-theme             # gtk theme
@@ -24,12 +20,12 @@
 
   # enable bluetooth
   hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
 
   # make udev rules for backlight
   programs.light.enable = true;
-  programs.firefox.enable = true;
 
+  # firefox integration
+  programs.firefox.enable = true;
 
   services.pipewire = {
     enable = true;
@@ -119,9 +115,6 @@
 
   };
 
-  # make sure pixbuf has access to an svg loader
-  services.xserver.gdk-pixbuf.modulePackages = [ pkgs.librsvg ];
-
   # enable sway window manager
   programs.sway = {
     enable = true;
@@ -139,8 +132,6 @@
     '';
   };
 
-  # useful program for printing keypresses
-  programs.wshowkeys.enable = true;
 
   # gammastep systemd service
   systemd.user.services.gammastep = {
