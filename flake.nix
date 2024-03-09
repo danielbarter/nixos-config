@@ -23,6 +23,7 @@
           ./base.nix
           ./networking.nix
           ./users.nix
+          ./nix-config.nix
         ];
 
         flake-outputs-args-passthrough = system: {
@@ -142,7 +143,10 @@
             specialArgs = flake-outputs-args-passthrough system;
             format = "iso";
             system = "x86_64-linux";
-            modules = core-modules ++ [
+            modules = [
+              ./base.nix
+              ./networking.nix
+              ./users.nix
               ./replicant.nix
               ./sway-gui.nix
               (platform {build = system; host = "aarch64-linux";})
