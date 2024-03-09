@@ -56,7 +56,15 @@
           modules = core-modules ++
             [
               ./punky.nix
-              hosts.nixosModule { networking.stevenBlackHosts.enable = true; }
+              hosts.nixosModule {
+                networking.stevenBlackHosts = {
+                  enable = true;
+                  blockFakenews = true;
+                  blockGambling = true;
+                  blockPorn = true;
+                  blockSocial = true;
+                };
+              }
               ./intel-gpu.nix
             ];
         };
