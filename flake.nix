@@ -131,7 +131,7 @@
             ];
           });
 
-          # build using ./utils/build_replicant_iso.sh
+          # before building run ./utils/pack_etc_nixos.sh
           replicant-iso = nixos-generators.nixosGenerate rec {
             specialArgs = flake-outputs-args-passthrough system;
             format = "iso";
@@ -147,6 +147,7 @@
 
           replicant-vm = x86_64-vm self.packages."x86_64-linux".replicant-iso;
 
+          # before building run ./utils/pack_etc_nixos.sh
           aarch64-replicant-iso = nixos-generators-unstable.nixosGenerate rec {
             specialArgs = flake-outputs-args-passthrough system;
             format = "iso";

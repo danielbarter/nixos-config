@@ -1,4 +1,4 @@
-build_new_replicant_iso() {
+pack_etc_nixos() {
     echo "packing up nixos configuration"
 
     # remove old encrypted config, if it exits
@@ -7,15 +7,12 @@ build_new_replicant_iso() {
     sudo zip -r /tmp/nixos.zip /etc/nixos
     gpg -c /tmp/nixos.zip
     sudo rm /tmp/nixos.zip
-
-    echo "generating iso"
-    nix build /etc/nixos#replicant-iso --impure
 }
 
 
-read -p "Building a new replicant iso. Continue (y/n)? " choice
+read -p "Packing up /etc/nixos. Continue (y/n)? " choice
 case "$choice" in
-    y|Y ) build_new_replicant_iso;;
+    y|Y ) pack_etc_nixos;;
     n|N ) echo "doing nothing";;
     * ) echo "invalid";;
 esac
