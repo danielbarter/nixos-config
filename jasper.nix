@@ -39,6 +39,9 @@
     extraConfig = "HandlePowerKey=suspend";
   };
 
+
+  program.adb.enable = true;
+
   hardware.enableRedistributableFirmware =  true;
   hardware.cpu.intel.updateMicrocode = true;
 
