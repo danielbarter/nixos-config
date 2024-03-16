@@ -40,7 +40,7 @@
   };
 
 
-  program.adb.enable = true;
+  programs.adb.enable = true;
 
   hardware.enableRedistributableFirmware =  true;
   hardware.cpu.intel.updateMicrocode = true;
