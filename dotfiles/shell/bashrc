@@ -25,7 +25,7 @@ inspect_function() {
     output_file="/tmp/$function_name.sh"
     type $function_name > $output_file # get source of function and write to output file
     sed -i '1d' $output_file # remove header
-    emacs -nw $output_file
+    $EDITOR $output_file
     unset function_name
     unset output_file
 }
