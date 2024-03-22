@@ -13,6 +13,12 @@ fuzzy_history() {
 }
 
 
+inspect_environment() {
+    # select an environment variable and then print it
+    var=$(env | awk -F "=" '{print $1}' | fzf)
+    printenv $var
+}
+
 inspect_function() {
     # select bash function and view its source
     function_name=$( declare -F | awk '{print $NF}' | fzf ) # get function name
@@ -20,12 +26,15 @@ inspect_function() {
     type $function_name > $output_file # get source of function and write to output file
     sed -i '1d' $output_file # remove header
     emacs -nw $output_file
+    unset function_name
+    unset output_file
 }
 
 
 disassemble() {
     flags="--disassemble="$2" -M intel --visualize-jumps=extended-color --no-show-raw-insn --no-addresses -w"
     objdump $flags "$1" | grep -v -E 'Disassembly of section|file format|^\s*$' | c++filt
+    unset flag
 
 }
 
@@ -39,6 +48,7 @@ fuzzy_disassemble() {
         disassemble $1 $symbol
         printf '\n'
     done
+    unset symbols
 }
 
 
