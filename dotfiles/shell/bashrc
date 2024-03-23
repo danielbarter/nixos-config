@@ -9,7 +9,12 @@ export HISTSIZE=
 export HISTFILE=~/.bash_eternal_history
 
 fuzzy_history() {
-    cat ~/.bash_eternal_history | fzf
+    local fuzzy_history_out=$( cat ~/.bash_eternal_history | fzf )
+    if [[ -n "$1" ]]; then
+        "$1" $fuzzy_history_out
+    else
+        echo $fuzzy_history_out
+    fi
 }
 
 
@@ -76,15 +81,15 @@ prompt_command() {
     history -a
 }
 
-prompts=(🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍈 🍒 🥭 🍍 🥥 🥝 🍅 🍆 🥑 🥦 🥬 🥒 🫑 🌽 🥕 🫒 🧄)
+PROMPTS=(🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍈 🍒 🥭 🍍 🥥 🥝 🍅 🍆 🥑 🥦 🥬 🥒 🫑 🌽 🥕 🫒 🧄)
+PROMPTS_SIZE=${#PROMPTS[@]}
 
 if is_pseudoterminal
 then
-    size=${#prompts[@]}
-    index=$(($RANDOM % $size))
-    prompt=${prompts[$index]}
+    PROMPT_INDEX=$(($RANDOM % $PROMPTS_SIZE))
+    PROMPT=${PROMPTS[$PROMPT_INDEX]}
     PROMPT_COMMAND='prompt_command'
-    PS1="${prompt} "
+    PS1="${PROMPT} "
 fi
 
 eval "$(direnv hook bash)"
