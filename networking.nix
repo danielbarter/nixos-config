@@ -1,4 +1,4 @@
-{ config, pkgs, flake, system, ... }:
+{ config, pkgs, flake, ... }:
 {
   services.resolved = {
     # use resolved for dns management

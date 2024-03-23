@@ -1,4 +1,4 @@
-{lib, config, pkgs, flake-outputs-args, flake, system,  ... }:
+{lib, config, pkgs, flake-outputs-args,  ... }:
 
 {
 

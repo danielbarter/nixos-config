@@ -28,10 +28,9 @@
           ./nix-config.nix
         ];
 
-        flake-outputs-args-passthrough = system: {
+        flake-outputs-args-passthrough = {
           flake-outputs-args = outputs-args;
           flake = self;
-          inherit system;
         };
 
         platform = {build, host}: {...}: {
@@ -42,7 +41,7 @@
     in {
       nixosConfigurations = {
         jasper = nixpkgs.lib.nixosSystem rec {
-          specialArgs = flake-outputs-args-passthrough system;
+          specialArgs = flake-outputs-args-passthrough;
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -53,7 +52,7 @@
         };
 
         punky = nixpkgs.lib.nixosSystem rec {
-          specialArgs =  flake-outputs-args-passthrough system;
+          specialArgs =  flake-outputs-args-passthrough;
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -72,7 +71,7 @@
         };
 
         rupert = nixpkgs.lib.nixosSystem rec {
-          specialArgs =  flake-outputs-args-passthrough system;
+          specialArgs =  flake-outputs-args-passthrough;
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -135,7 +134,7 @@
 
           # before building run ./utils/pack_etc_nixos.sh
           replicant-iso = nixos-generators.nixosGenerate rec {
-            specialArgs = flake-outputs-args-passthrough system;
+            specialArgs = flake-outputs-args-passthrough;
             format = "iso";
             system = "x86_64-linux";
             modules = core-modules ++ [
@@ -151,7 +150,7 @@
 
           # before building run ./utils/pack_etc_nixos.sh
           aarch64-replicant-iso = nixos-generators-unstable.nixosGenerate rec {
-            specialArgs = flake-outputs-args-passthrough system;
+            specialArgs = flake-outputs-args-passthrough;
             format = "iso";
             system = "x86_64-linux";
             modules = [

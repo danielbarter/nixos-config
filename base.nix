@@ -1,4 +1,4 @@
-{lib, config, pkgs, flake-outputs-args, flake, system,  ... }:
+{lib, config, pkgs, flake-outputs-args, flake,  ... }:
 
 {
 
@@ -35,7 +35,7 @@
     fzf                 # fuzzy searcher
     direnv
 
-    flake.packages."${system}".emacs
+    flake.packages."${hostPlatform.system}".emacs
     aspell
     aspellDicts.en
     cmake               # cmake autocomplete and emacs mode.
