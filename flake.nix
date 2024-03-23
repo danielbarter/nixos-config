@@ -80,6 +80,20 @@
         };
       };
 
+      packages."aarch64-linux" =
+        let
+          emacs-pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            crossSystem = "aarch64-linux";
+            overlays = [ emacs-overlay.overlays.default ];
+          };
+        in
+          {
+            emacs = emacs-pkgs.emacs-git.override {
+              withPgtk = true;
+            };
+          };
+
       packages."x86_64-linux" =
         let
           emacs-pkgs = import nixpkgs {
