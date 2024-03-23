@@ -82,10 +82,10 @@ prompt_command() {
 }
 
 PROMPTS=(🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍈 🍒 🥭 🍍 🥥 🥝 🍅 🍆 🥑 🥦 🥬 🥒 🫑 🌽 🥕 🫒 🧄)
-PROMPTS_SIZE=${#PROMPTS[@]}
 
 if is_pseudoterminal
 then
+    PROMPTS_SIZE=${#PROMPTS[@]}
     PROMPT_INDEX=$(($RANDOM % $PROMPTS_SIZE))
     PROMPT=${PROMPTS[$PROMPT_INDEX]}
     PROMPT_COMMAND='prompt_command'
