@@ -9,6 +9,8 @@ export HISTSIZE=
 export HISTFILE=~/.bash_eternal_history
 
 fuzzy_history() {
+    # if first argument is passed in, it is used as a hook to consume fuzzy_history_out
+    # eg fuzzy_history eval
     local fuzzy_history_out=$( cat ~/.bash_eternal_history | fzf )
     if [[ -n "$1" ]]; then
         "$1" $fuzzy_history_out
