@@ -9,11 +9,11 @@
         "nixpkgs-stable": "nixpkgs-stable"
       },
       "locked": {
-        "lastModified": 1711184681,
-        "narHash": "sha256-528hdf8FGxgM7qANlL+7+Pv5c9MP4obM4dCKAuLsf2s=",
+        "lastModified": 1711213350,
+        "narHash": "sha256-UKdhoZkS1I6jemmOpaUgt1qwdsZ6AtizHJx+WXsxRNE=",
         "owner": "nix-community",
         "repo": "emacs-overlay",
-        "rev": "5dc85425ccc2513d6a843bf58ddd104b5689b6c6",
+        "rev": "2d56af526e581cd6af4b28b508dbac970bf2f536",
         "type": "github"
       },
       "original": {
@@ -166,18 +166,17 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1711150879,
-        "narHash": "sha256-ueZMgDyEB7GMYcRb60iSfeQKHK/bhdGgTaGS8O3rMgQ=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "e16293361697cd07671db4ce7f1cfacb6eddfe70",
-        "type": "github"
+        "lastModified": 1711215377,
+        "narHash": "sha256-viBeB44A9jDSkKlMKNcsmCHjYQGcXkUgJnd7Hp7ZQCc=",
+        "ref": "refs/heads/staging",
+        "rev": "a07b53d2b8926f25e4b84eee1ba1450bb1698fd0",
+        "revCount": 602012,
+        "type": "git",
+        "url": "file:///home/danielbarter/nixpkgs"
       },
       "original": {
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "e16293361697cd07671db4ce7f1cfacb6eddfe70",
-        "type": "github"
+        "type": "git",
+        "url": "file:///home/danielbarter/nixpkgs"
       }
     },
     "root": {
