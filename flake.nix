@@ -1,9 +1,11 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/e16293361697cd07671db4ce7f1cfacb6eddfe70";
+
     nixos-generators.url = "github:nix-community/nixos-generators";
     nixos-generators-unstable.url = "github:nix-community/nixos-generators";
+
     hosts.url = "github:StevenBlack/hosts";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 
