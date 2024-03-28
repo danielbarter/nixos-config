@@ -22,7 +22,7 @@ fuzzy_history() {
 
 inspect_variable() {
     # select an environment variable and then print it
-    var=$(env | awk -F "=" '{print $1}' | fzf)
+    var=$(awk 'BEGIN {for (var in ENVIRON) print var}' | fzf)
     printenv $var
 }
 
