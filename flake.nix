@@ -1,5 +1,8 @@
 {
   inputs = {
+
+    # flake inputs can be overriden eg
+    # --override-input nixpkgs /home/danielbarter/nixpkgs
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixos-generators.url = "github:nix-community/nixos-generators";
     hosts.url = "github:StevenBlack/hosts";
