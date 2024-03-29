@@ -1,7 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
-    nixpkgs-unstable.url = "git+file:///home/danielbarter/nixpkgs";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     nixos-generators.url = "github:nix-community/nixos-generators";
     nixos-generators-unstable.url = "github:nix-community/nixos-generators";
