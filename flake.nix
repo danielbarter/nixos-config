@@ -164,10 +164,7 @@
             specialArgs = flake-outputs-args-passthrough;
             format = "iso";
             system = "x86_64-linux";
-            modules = [
-              ./base.nix
-              ./networking.nix
-              ./users.nix
+            modules = core-modules ++ [
               ./replicant.nix
               ./sway-gui.nix
               (platform {build = system; host = "aarch64-linux";})
