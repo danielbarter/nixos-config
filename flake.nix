@@ -1,24 +1,18 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-
     nixos-generators.url = "github:nix-community/nixos-generators";
-    nixos-generators-unstable.url = "github:nix-community/nixos-generators";
-
     hosts.url = "github:StevenBlack/hosts";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 
     # unify nixpkgs across inputs
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
-    nixos-generators-unstable.inputs.nixpkgs.follows = "nixpkgs-unstable";
     hosts.inputs.nixpkgs.follows = "nixpkgs";
     emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
-      self, nixpkgs, nixpkgs-unstable, nixos-generators,
-      nixos-generators-unstable, hosts, emacs-overlay
+      self, nixpkgs, nixos-generators, hosts, emacs-overlay
   } @ outputs-args:
 
     let core-modules = [
@@ -163,7 +157,7 @@
           replicant-vm = x86_64-vm self.packages."x86_64-linux".replicant-iso;
 
           # before building run ./utils/pack_etc_nixos.sh
-          aarch64-replicant-iso = nixos-generators-unstable.nixosGenerate rec {
+          aarch64-replicant-iso = nixos-generators.nixosGenerate rec {
             specialArgs = flake-outputs-args-passthrough;
             format = "iso";
             system = "x86_64-linux";
