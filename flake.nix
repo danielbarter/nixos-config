@@ -113,19 +113,18 @@
           '';
 
           aarch64-vm = iso: let
-            pkgs-x86_64 = import nixpkgs { system = "x86_64-linux"; };
-            pkgs-aarch64 = import nixpkgs { system = "aarch64-linux"; };
             drive-flags = "format=raw,readonly=on";
-          in pkgs-x86_64.writeScriptBin "aarch64-run-nixos-vm" ''
+            efi-flash = "${pkgs.pkgsCross.aarch64-multiplatform.OVMF.fd}/AAVMF/QEMU_EFI-pflash.raw";
+          in pkgs.writeScriptBin "aarch64-run-nixos-vm" ''
 
-            #!${pkgs-x86_64.runtimeShell} \
-            ${pkgs-x86_64.qemu_full}/bin/qemu-system-aarch64 \
+            #!${pkgs.runtimeShell} \
+            ${pkgs.qemu_full}/bin/qemu-system-aarch64 \
             -machine virt \
             -cpu cortex-a57 \
             -m 2G \
             -smp 4 \
             -nographic \
-            -drive if=pflash,file=${pkgs-aarch64.OVMF.fd}/AAVMF/QEMU_EFI-pflash.raw,${drive-flags} \
+            -drive if=pflash,file=${efi-flash},${drive-flags} \
             -drive file=${iso}/iso/nixos.iso,${drive-flags}
 
             '';
