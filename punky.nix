@@ -100,6 +100,15 @@
   };
 
 
+  # There are a lot of packages out there which compile and run
+  # binaries during configuration. In a completely pure environment
+  # this makes cross builds fail, and they are annoying to fix.  this
+  # is a build machine, and we do a lot of cross compiling, so
+  # allowing allowing automatic aarch64 emulation at the kernel layer.
+
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
+
   hardware.enableRedistributableFirmware =  true;
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
