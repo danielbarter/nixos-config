@@ -36,7 +36,7 @@
     direnv
     gdb
 
-    flake.packages."${hostPlatform.system}".emacs
+    emacs29-pgtk
     aspell
     aspellDicts.en
     cmake               # cmake autocomplete and emacs mode.
