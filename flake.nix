@@ -23,9 +23,13 @@
           ./nix-config.nix
         ];
 
-        flake-outputs-args-passthrough = {
+        # passthrough whether system has a gui or not
+        # currently only used to decide which emacs package
+        # to install
+        module-args = { gui ? true }: {
           flake-outputs-args = outputs-args;
           flake = self;
+          gui = gui;
         };
 
         platform = {build, host}: {...}: {
@@ -36,7 +40,7 @@
     in {
       nixosConfigurations = {
         jasper = nixpkgs.lib.nixosSystem rec {
-          specialArgs = flake-outputs-args-passthrough;
+          specialArgs = module-args;
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -47,7 +51,7 @@
         };
 
         punky = nixpkgs.lib.nixosSystem rec {
-          specialArgs =  flake-outputs-args-passthrough;
+          specialArgs =  module-args { gui = false; };
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -66,7 +70,7 @@
         };
 
         rupert = nixpkgs.lib.nixosSystem rec {
-          specialArgs =  flake-outputs-args-passthrough;
+          specialArgs =  module-args;
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -81,7 +85,7 @@
           pkgs = import nixpkgs { system = "x86_64-linux"; };
 
           x86_64-vm = iso: pkgs.writeScriptBin "x86_64-run-nixos-vm" ''
-            #!${pkgs.runtimeShell} \
+            #!${pkgs.runtimeShell}
             ${pkgs.qemu_full}/bin/qemu-kvm \
             -smp $(nproc) \
             -cdrom ${iso}/iso/nixos.iso \
@@ -93,7 +97,7 @@
             drive-flags = "format=raw,readonly=on";
             efi-flash = "${pkgs.pkgsCross.aarch64-multiplatform.OVMF.fd}/AAVMF/QEMU_EFI-pflash.raw";
           in pkgs.writeScriptBin "aarch64-run-nixos-vm" ''
-            #!${pkgs.runtimeShell} \
+            #!${pkgs.runtimeShell}
             ${pkgs.qemu_full}/bin/qemu-system-aarch64 \
             -machine virt \
             -cpu cortex-a57 \
@@ -108,7 +112,7 @@
 
           # before building run ./utils/pack_etc_nixos.sh
           x86_64-replicant-iso = nixos-generators.nixosGenerate rec {
-            specialArgs = flake-outputs-args-passthrough;
+            specialArgs = module-args;
             format = "iso";
             system = "x86_64-linux";
             modules = core-modules ++ [
@@ -122,12 +126,16 @@
 
           # before building run ./utils/pack_etc_nixos.sh
           aarch64-replicant-iso = nixos-generators.nixosGenerate rec {
-            specialArgs = flake-outputs-args-passthrough;
+            specialArgs = module-args { gui = false; };
             system = "x86_64-linux";
             format = "iso";
             modules = core-modules ++ [
               ./replicant.nix
               (platform {build = system; host = "aarch64-linux";})
+
+              # ideally, we would also like to cross compile a gui, but many components
+              # of the linux desktop stack are packaged in an ad-hoc way, which makes
+              # reliable cross compilation a hard.
             ];
           };
 

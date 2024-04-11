@@ -1,4 +1,4 @@
-{lib, config, pkgs, flake-outputs-args, flake,  ... }:
+{lib, config, pkgs, flake-outputs-args, flake, gui,  ... }:
 
 {
 
@@ -36,7 +36,7 @@
     direnv
     gdb
 
-    emacs29-pgtk
+    (if gui then emacs29-pgtk else emacs29-nox)
     aspell
     aspellDicts.en
     cmake               # cmake autocomplete and emacs mode.
