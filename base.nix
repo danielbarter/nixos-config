@@ -34,6 +34,7 @@
     radare2
     fzf                 # fuzzy searcher
     direnv
+    gdb
 
     flake.packages."${hostPlatform.system}".emacs
     aspell
@@ -71,5 +72,13 @@
 
   # allow processes to persist after logout
   services.logind.killUserProcesses = false;
+
+  systemd.coredump = {
+    enable = true;
+
+    # we store core dumps in the journal, because then they are retained
+    # for crashes which happen in sandboxes e.g nix build actions
+    extraConfig = "Storage=journal";
+  };
 
 }
