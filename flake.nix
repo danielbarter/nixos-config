@@ -107,7 +107,7 @@
         in {
 
           # before building run ./utils/pack_etc_nixos.sh
-          replicant-iso = nixos-generators.nixosGenerate rec {
+          x86_64-replicant-iso = nixos-generators.nixosGenerate rec {
             specialArgs = flake-outputs-args-passthrough;
             format = "iso";
             system = "x86_64-linux";
@@ -120,26 +120,19 @@
             ];
           };
 
-          aarch64-minimal-iso = nixos-generators.nixosGenerate rec {
+          # before building run ./utils/pack_etc_nixos.sh
+          aarch64-replicant-iso = nixos-generators.nixosGenerate rec {
               system = "x86_64-linux";
               format = "iso";
-              modules = [
-                ./minimal-base.nix
+              modules = core-modules ++ [
+                ./replicant.nix
                 (platform {build = system; host = "aarch64-linux";})
               ];
           };
 
-          x86_64-minimal-iso = nixos-generators.nixosGenerate rec {
-              system = "x86_64-linux";
-              format = "iso";
-              modules = [
-                ./minimal-base.nix
-              ];
-          };
 
-          replicant-vm = x86_64-vm self.packages."x86_64-linux".replicant-iso;
-          aarch64-minimal-vm = aarch64-vm self.packages."x86_64-linux".aarch64-minimal-iso;
-          x86_64-minimal-vm = x86_64-vm self.packages."x86_64-linux".x86_64-minimal-iso;
+          x86_64-replicant-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-iso;
+          aarch64-replicant-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-iso;
         };
     };
 }
