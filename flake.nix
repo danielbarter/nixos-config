@@ -112,22 +112,23 @@
             format = "iso";
             system = "x86_64-linux";
             modules = core-modules ++ [
+              ./replicant.nix
               # we are probably going to be running on some intel chip,
               # so make sure that we have VA-API drivers so firefox is happy
               ./intel-gpu.nix
-              ./replicant.nix
               ./sway-gui.nix
             ];
           };
 
           # before building run ./utils/pack_etc_nixos.sh
           aarch64-replicant-iso = nixos-generators.nixosGenerate rec {
-              system = "x86_64-linux";
-              format = "iso";
-              modules = core-modules ++ [
-                ./replicant.nix
-                (platform {build = system; host = "aarch64-linux";})
-              ];
+            specialArgs = flake-outputs-args-passthrough;
+            system = "x86_64-linux";
+            format = "iso";
+            modules = core-modules ++ [
+              ./replicant.nix
+              (platform {build = system; host = "aarch64-linux";})
+            ];
           };
 
 
