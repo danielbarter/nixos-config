@@ -133,9 +133,10 @@
               ./replicant.nix
               (platform {build = system; host = "aarch64-linux";})
 
-              # ideally, we would also like to cross compile a gui, but many components
-              # of the linux desktop stack are packaged in an ad-hoc way, which makes
-              # reliable cross compilation a hard.
+              # ideally, we would also cross compile a gui, but many
+              # components in the linux desktop stack are packaged in
+              # non standard ways, which makes reliable cross
+              # compilation hard.
             ];
           };
 
