@@ -13,8 +13,10 @@
   };
 
   environment.systemPackages = with pkgs; [
-    firefox
+    alacritty
   ];
+
+  programs.firefox.enable = true;
 
   programs.steam.enable = true;
 
@@ -97,7 +99,7 @@
 
   services.avahi.enable = false;
 
-  services.gnome.core-utilities.enable = false;
+  services.gnome.core-utilities.enable = true;
 
   boot.kernelModules = [ "hid-nintendo" ];
 

@@ -5,15 +5,17 @@
     # --override-input nixpkgs /home/danielbarter/nixpkgs
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixos-generators.url = "github:nix-community/nixos-generators";
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
     hosts.url = "github:StevenBlack/hosts";
 
     # unify nixpkgs across inputs
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
+    emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
     hosts.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
-      self, nixpkgs, nixos-generators, hosts
+      self, nixpkgs, nixos-generators, emacs-overlay, hosts
   } @ outputs-args:
 
     let core-modules = [
@@ -26,7 +28,7 @@
         # passthrough whether system has a gui or not
         # currently only used to decide which emacs package
         # to install
-        module-args = { gui ? true }: {
+        module-args = { gui }: {
           flake-outputs-args = outputs-args;
           flake = self;
           gui = gui;
@@ -40,7 +42,7 @@
     in {
       nixosConfigurations = {
         jasper = nixpkgs.lib.nixosSystem rec {
-          specialArgs = module-args;
+          specialArgs = module-args  { gui = true; };
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -70,7 +72,7 @@
         };
 
         rupert = nixpkgs.lib.nixosSystem rec {
-          specialArgs =  module-args;
+          specialArgs =  module-args  { gui = true; };
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -112,7 +114,7 @@
 
           # before building run ./utils/pack_etc_nixos.sh
           x86_64-replicant-iso = nixos-generators.nixosGenerate rec {
-            specialArgs = module-args;
+            specialArgs = module-args { gui = true; };
             format = "iso";
             system = "x86_64-linux";
             modules = core-modules ++ [
