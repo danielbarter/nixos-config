@@ -126,7 +126,7 @@
       fsType = "vfat";
     };
 
-    "/home/danielbarter/LLM" = {
+    "/home/danielbarter/ML" = {
       device = "/dev/disk/by-uuid/308bd10e-7a18-4610-8c7d-757a098ef2dc";
       fsType = "ext4";
     };
