@@ -93,7 +93,23 @@ if wireless_interfaces:
     get_ssid_and_link_quality(first_interface)
 
 
+def bluetooth_connection_status():
+    bluetoothctl_devices_paired = check_output(['bluetoothctl', 'devices', 'Paired']).decode(
+        encoding='ascii')[:-1]
+    device_lines = bluetoothctl_devices_paired.split('\n')
+    device_addresses = [ line[7:24] for line in device_lines ]
+    for device_address in device_addresses:
+        device_info = check_output(['bluetoothctl', 'info', device_address]).decode(encoding='ascii')
+        connected_regex = re.compile('Connected: .*')
+        maybe_connected_match = connected_regex.search(device_info)
+        if maybe_connected_match:
+            yes_or_no = maybe_connected_match.group(0)[11:]
+            if yes_or_no == 'yes':
+                device_name_regexp = re.compile('Alias: .*')
+                device_name = device_name_regexp.search(device_info).group(0)[7:]
+                to_display.append(' '.join(['🟦', device_name, device_address]))
 
+bluetooth_connection_status()
 
 # sometimes these sym links are named differently
 try:
