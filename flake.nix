@@ -3,7 +3,7 @@
 
     # flake inputs can be overriden eg
     # --override-input nixpkgs /home/danielbarter/nixpkgs
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-generators.url = "github:nix-community/nixos-generators";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     hosts.url = "github:StevenBlack/hosts";

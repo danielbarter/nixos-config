@@ -67,10 +67,7 @@
   # enable gpg
   programs.gnupg.agent = {
     enable = true;
-
-    # soon, will become
-    # pinentryPackage = pkgs.pinentry-curses;
-    pinentryFlavor = "curses";
+    pinentryPackage = pkgs.pinentry-curses;
   };
 
   # allow processes to persist after logout
