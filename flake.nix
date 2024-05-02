@@ -5,17 +5,15 @@
     # --override-input nixpkgs /home/danielbarter/nixpkgs
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-generators.url = "github:nix-community/nixos-generators";
-    emacs-overlay.url = "github:nix-community/emacs-overlay";
     hosts.url = "github:StevenBlack/hosts";
 
     # unify nixpkgs across inputs
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
-    emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
     hosts.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
-      self, nixpkgs, nixos-generators, emacs-overlay, hosts
+      self, nixpkgs, nixos-generators, hosts
   } @ outputs-args:
 
     let core-modules = [

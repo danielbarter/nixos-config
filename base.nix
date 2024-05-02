@@ -17,8 +17,6 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  # use git emacs
-  nixpkgs.overlays = [ flake-outputs-args.emacs-overlay.overlays.default ];
 
   # List packages installed in system profile
   environment.systemPackages = with pkgs; [
@@ -39,7 +37,7 @@
     direnv
     gdb
 
-    (if gui then (emacs-git.override { withPgtk = true;}) else emacs-git-nox)
+    (if gui then emacs29-pgtk else emacs29-nox)
     aspell
     aspellDicts.en
     cmake               # cmake autocomplete and emacs mode.
