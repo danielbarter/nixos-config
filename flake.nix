@@ -4,16 +4,14 @@
     # flake inputs can be overriden eg
     # --override-input nixpkgs /home/danielbarter/nixpkgs
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixos-generators.url = "github:nix-community/nixos-generators";
     hosts.url = "github:StevenBlack/hosts";
 
     # unify nixpkgs across inputs
-    nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
     hosts.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
-      self, nixpkgs, nixos-generators, hosts
+      self, nixpkgs, hosts
   } @ outputs-args:
 
     let core-modules = [
@@ -84,6 +82,18 @@
         let
           pkgs = import nixpkgs { system = "x86_64-linux"; };
 
+          iso-module = { modulesPath, ... }: {
+            imports = [
+              "${toString modulesPath}/installer/cd-dvd/iso-image.nix"
+            ];
+
+            isoImage = {
+              makeEfiBootable = true;
+              makeUsbBootable = true;
+            };
+
+          };
+
           x86_64-vm = iso: pkgs.writeScriptBin "x86_64-run-nixos-vm" ''
             #!${pkgs.runtimeShell}
             ${pkgs.qemu_full}/bin/qemu-kvm \
@@ -111,25 +121,25 @@
         in {
 
           # before building run ./utils/pack_etc_nixos.sh
-          x86_64-replicant-iso = nixos-generators.nixosGenerate rec {
+          x86_64-replicant-iso = (nixpkgs.lib.nixosSystem rec {
             specialArgs = module-args { gui = true; };
-            format = "iso";
             system = "x86_64-linux";
             modules = core-modules ++ [
+              iso-module
               ./replicant.nix
               # we are probably going to be running on some intel chip,
               # so make sure that we have VA-API drivers so firefox is happy
               ./intel-gpu.nix
               ./sway-gui.nix
             ];
-          };
+          }).config.system.build.isoImage;
 
           # before building run ./utils/pack_etc_nixos.sh
-          aarch64-replicant-iso = nixos-generators.nixosGenerate rec {
+          aarch64-replicant-iso = (nixpkgs.lib.nixosSystem  rec {
             specialArgs = module-args { gui = false; };
             system = "x86_64-linux";
-            format = "iso";
             modules = core-modules ++ [
+              iso-module
               ./replicant.nix
               (platform {build = system; host = "aarch64-linux";})
 
@@ -138,7 +148,7 @@
               # non standard ways, which makes reliable cross
               # compilation hard.
             ];
-          };
+          }).config.system.build.isoImage;
 
 
           x86_64-replicant-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-iso;
