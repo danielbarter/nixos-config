@@ -106,7 +106,7 @@
   # is a build machine, and we do a lot of cross compiling, so
   # allowing allowing automatic aarch64 emulation at the kernel layer.
 
-  # boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
 
   hardware.enableRedistributableFirmware =  true;
