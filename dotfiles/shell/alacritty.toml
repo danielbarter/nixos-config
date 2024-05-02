@@ -78,3 +78,8 @@ program = "bash"
 
 [window]
 dynamic_title = true
+
+[keyboard]
+bindings = [
+         { key = "Space", mods="Control|Shift", action = "None" }
+]
