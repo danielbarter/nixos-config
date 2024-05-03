@@ -21,31 +21,27 @@
           ./nix-config.nix
         ];
 
-        # passthrough whether system has a gui or not
-        # currently only used to decide which emacs package
-        # to install
-        module-args = { gui }: {
+
+        # pass through flake outputs
+        flake-args = {
           flake-outputs-args = outputs-args;
           flake = self;
-          gui = gui;
         };
 
         iso-module = { modulesPath, ... }: {
           imports = [
             "${toString modulesPath}/installer/cd-dvd/iso-image.nix"
           ];
-        };
-
-
-        platform = {build, host}: {...}: {
-          nixpkgs.buildPlatform.system = build;
-          nixpkgs.hostPlatform.system = host;
+          isoImage = {
+            makeEfiBootable = true;
+            makeUsbBootable = true;
+          };
         };
 
     in {
       nixosConfigurations = {
         jasper = nixpkgs.lib.nixosSystem rec {
-          specialArgs = module-args  { gui = true; };
+          specialArgs = flake-args;
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -56,7 +52,7 @@
         };
 
         punky = nixpkgs.lib.nixosSystem rec {
-          specialArgs =  module-args { gui = false; };
+          specialArgs =  flake-args;
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -75,7 +71,7 @@
         };
 
         rupert = nixpkgs.lib.nixosSystem rec {
-          specialArgs =  module-args  { gui = true; };
+          specialArgs =  flake-args;
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -84,7 +80,7 @@
         };
 
         x86_64-replicant = nixpkgs.lib.nixosSystem rec {
-          specialArgs = module-args { gui = true; };
+          specialArgs = flake-args;
           system = "x86_64-linux";
           modules = core-modules ++ [
             iso-module
@@ -96,6 +92,15 @@
           ];
         };
 
+        aarch64-replicant = nixpkgs.lib.nixosSystem  rec {
+          specialArgs = flake-args;
+          system = "aarch64-linux";
+          modules = core-modules ++ [
+            iso-module
+            ./replicant.nix
+            ./sway-gui.nix
+            ];
+        };
       };
 
 
@@ -131,24 +136,7 @@
 
           # before building run ./utils/pack_etc_nixos.sh
           x86_64-replicant-iso = self.nixosConfigurations.x86_64-replicant.config.system.build.isoImage;
-
-          # before building run ./utils/pack_etc_nixos.sh
-          aarch64-replicant-iso = (nixpkgs.lib.nixosSystem  rec {
-            specialArgs = module-args { gui = false; };
-            system = "x86_64-linux";
-            modules = core-modules ++ [
-              iso-module
-              ./replicant.nix
-              (platform {build = system; host = "aarch64-linux";})
-
-              # ideally, we would also cross compile a gui, but many
-              # components in the linux desktop stack are packaged in
-              # non standard ways, which makes reliable cross
-              # compilation hard.
-            ];
-          }).config.system.build.isoImage;
-
-
+          aarch64-replicant-iso = self.nixosConfigurations.aarch64-replicant.config.system.build.isoImage;
           x86_64-replicant-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-iso;
           aarch64-replicant-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-iso;
         };

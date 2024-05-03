@@ -100,12 +100,9 @@
   };
 
 
-  # There are a lot of packages out there which compile and run
-  # binaries during configuration. In a completely pure environment
-  # this makes cross builds fail, and they are annoying to fix. This
-  # is a build machine, and we do a lot of cross compiling, so
-  # allowing allowing automatic aarch64 emulation at the kernel layer.
-
+  # punky is a build machine, and this lets us build nixos images
+  # for other platforms, without needing to cross compile (which tends to be
+  # pretty unreliable for full systems).
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
 

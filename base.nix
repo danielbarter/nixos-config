@@ -1,4 +1,4 @@
-{lib, config, pkgs, flake-outputs-args, flake, gui,  ... }:
+{lib, config, pkgs, flake-outputs-args, flake,  ... }:
 
 {
 
@@ -23,7 +23,7 @@
     binutils            # objdump, readelf and c++filt
     tmux                # terminal multiplexer
     git
-    file
+ file
     strace
     pciutils            # lspci
     usbutils            # lsusb
@@ -36,8 +36,7 @@
     fzf                 # fuzzy searcher
     direnv
     gdb
-
-    (if gui then emacs29-pgtk else emacs29-nox)
+    emacs29-pgtk
     aspell
     aspellDicts.en
     cmake               # cmake autocomplete and emacs mode.
