@@ -23,7 +23,7 @@
     binutils            # objdump, readelf and c++filt
     tmux                # terminal multiplexer
     git
- file
+    file
     strace
     pciutils            # lspci
     usbutils            # lsusb
