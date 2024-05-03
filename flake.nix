@@ -30,6 +30,13 @@
           gui = gui;
         };
 
+        iso-module = { modulesPath, ... }: {
+          imports = [
+            "${toString modulesPath}/installer/cd-dvd/iso-image.nix"
+          ];
+        };
+
+
         platform = {build, host}: {...}: {
           nixpkgs.buildPlatform.system = build;
           nixpkgs.hostPlatform.system = host;
@@ -75,24 +82,26 @@
               ./rupert.nix
             ];
         };
+
+        x86_64-replicant = nixpkgs.lib.nixosSystem rec {
+          specialArgs = module-args { gui = true; };
+          system = "x86_64-linux";
+          modules = core-modules ++ [
+            iso-module
+            ./replicant.nix
+            # we are probably going to be running on some intel chip,
+            # so make sure that we have VA-API drivers so firefox is happy
+            ./intel-gpu.nix
+            ./sway-gui.nix
+          ];
+        };
+
       };
 
 
       packages."x86_64-linux" =
         let
           pkgs = import nixpkgs { system = "x86_64-linux"; };
-
-          iso-module = { modulesPath, ... }: {
-            imports = [
-              "${toString modulesPath}/installer/cd-dvd/iso-image.nix"
-            ];
-
-            isoImage = {
-              makeEfiBootable = true;
-              makeUsbBootable = true;
-            };
-
-          };
 
           x86_64-vm = iso: pkgs.writeScriptBin "x86_64-run-nixos-vm" ''
             #!${pkgs.runtimeShell}
@@ -121,18 +130,7 @@
         in {
 
           # before building run ./utils/pack_etc_nixos.sh
-          x86_64-replicant-iso = (nixpkgs.lib.nixosSystem rec {
-            specialArgs = module-args { gui = true; };
-            system = "x86_64-linux";
-            modules = core-modules ++ [
-              iso-module
-              ./replicant.nix
-              # we are probably going to be running on some intel chip,
-              # so make sure that we have VA-API drivers so firefox is happy
-              ./intel-gpu.nix
-              ./sway-gui.nix
-            ];
-          }).config.system.build.isoImage;
+          x86_64-replicant-iso = self.nixosConfigurations.x86_64-replicant.config.system.build.isoImage;
 
           # before building run ./utils/pack_etc_nixos.sh
           aarch64-replicant-iso = (nixpkgs.lib.nixosSystem  rec {
