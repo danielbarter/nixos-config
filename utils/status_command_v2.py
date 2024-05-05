@@ -8,16 +8,6 @@ class BarSegment(ABC):
     interface for a segment of the status bar
     """
 
-    @staticmethod
-    @abstractmethod
-    def run() -> bool:
-        """
-        used to decide whether to instantiate the bar segment, for example, checking if
-        all the relevent commands are present in the path
-        """
-        pass
-
-
     @abstractmethod
     def __init__(self):
         """
@@ -34,33 +24,36 @@ class BarSegment(ABC):
 
 
 class LoadAverage(BarSegment):
-    @staticmethod
-    def run() -> bool:
-        uptime_path = shutil.which("uptime")
-        if uptime_path is None:
-            return False
-        else:
-            return True
 
     def __init__(self):
-        self.output = check_output(["uptime"]).decode(encoding="ascii")
+        self.output = open("/proc/loadavg", "r").readlines()
 
     def display(self):
-        output_split = self.output.split(" ")
-        load_average_per_min =  output_split[-3][0:-1]
-        load_average_per_five_min =  output_split[-2][0:-1]
-        load_average_per_fifteen_min = output_split[-1][0:-1]
+        output_split = self.output[0].split(" ")
+        load_average_per_min =  output_split[0]
+        load_average_per_five_min =  output_split[1]
+        load_average_per_fifteen_min = output_split[2]
         return f"{load_average_per_min} {load_average_per_five_min} {load_average_per_fifteen_min}"
 
 
-bar_segment_classes = [ LoadAverage ]
+class Ram(BarSegment):
+
+    def __init__(self):
+        self.output = open("/proc/meminfo","r").readlines()
+
+    def display(self):
+        mem_total = int(self.output[0].split(" ")[-2])
+        mem_avaliable = int(self.output[2].split(" ")[-2])
+        mem_used = mem_total - mem_avaliable
+        return f"💾{int(mem_used * 100 / mem_total)}%"
+
+
+bar_segment_classes = [ LoadAverage, Ram ]
 to_display = []
 
 for bar_segment_class in bar_segment_classes:
-    if bar_segment_class.run():
-        bar_segment = bar_segment_class()
-        to_display.append(bar_segment.display())
-
+    bar_segment = bar_segment_class()
+    to_display.append(bar_segment.display())
 
 print("   ".join(to_display))
 
