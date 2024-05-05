@@ -12,8 +12,10 @@ class BarSegment(ABC):
     @abstractmethod
     def run() -> bool:
         """
-        method to decide if BarSegment should be used. For example, if we are not
-        on a laptop, we don't need to try and get battery stats
+        used to decide whether to instantiate the bar segment, for
+        example, checking if all the relevent commands are present in
+        the path, or if we are not on a laptop, we don't need to try
+        and get battery stats
         """
         pass
 
