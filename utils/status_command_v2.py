@@ -8,6 +8,15 @@ class BarSegment(ABC):
     interface for a segment of the status bar
     """
 
+    @staticmethod
+    @abstractmethod
+    def run() -> bool:
+        """
+        method to decide if BarSegment should be used. For example, if we are not
+        on a laptop, we don't need to try and get battery stats
+        """
+        pass
+
     @abstractmethod
     def __init__(self):
         """
@@ -24,6 +33,9 @@ class BarSegment(ABC):
 
 
 class LoadAverage(BarSegment):
+    @staticmethod
+    def run():
+        return True
 
     def __init__(self):
         self.output = open("/proc/loadavg", "r").readlines()
@@ -37,6 +49,9 @@ class LoadAverage(BarSegment):
 
 
 class Ram(BarSegment):
+    @staticmethod
+    def run():
+        return True
 
     def __init__(self):
         self.output = open("/proc/meminfo","r").readlines()
@@ -52,8 +67,9 @@ bar_segment_classes = [ LoadAverage, Ram ]
 to_display = []
 
 for bar_segment_class in bar_segment_classes:
-    bar_segment = bar_segment_class()
-    to_display.append(bar_segment.display())
+    if bar_segment_class.run():
+        bar_segment = bar_segment_class()
+        to_display.append(bar_segment.display())
 
 print("   ".join(to_display))
 
