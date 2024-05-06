@@ -3,6 +3,7 @@ import shutil
 from subprocess import check_output, run
 from glob import glob
 from time import localtime, strftime
+import json
 
 class BarSegment(ABC):
     """
@@ -105,7 +106,34 @@ class Time(BarSegment):
     def display(self):
         return  strftime('%H:%M %a %b %d', localtime())
 
-bar_segment_classes = [ LoadAverage, Ram, Battery, Time ]
+
+class Network(BarSegment):
+    @staticmethod
+    def run():
+        if shutil.which("ip") is None:
+            return False
+        else:
+            return True
+
+    def __init__(self):
+        ip_addr_json = check_output(["ip", "-j", "addr"]).decode(encoding="ascii")
+        self.ip_addr = json.loads(ip_addr_json)
+
+    def display(self):
+        result = []
+        for interface in self.ip_addr:
+            if interface["operstate"] == "UP":
+                interface_name = interface["ifname"]
+                address = ""
+                for addr in interface["addr_info"]:
+                    if addr["family"] == "inet":
+                        address = addr["local"]
+
+                result.append(f"{interface_name} {address}")
+
+        return ";".join(result)
+
+bar_segment_classes = [ LoadAverage, Ram, Network, Battery, Time ]
 segment_seperator = "   "
 to_display = []
 
