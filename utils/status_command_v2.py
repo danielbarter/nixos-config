@@ -15,23 +15,15 @@ class BarSegment(ABC):
     @abstractmethod
     def run() -> bool:
         """
-        used to decide whether to instantiate the bar segment, for
-        example, checking if all the relevent commands are present in
-        the path, or if we are not on a laptop, we don't need to try
-        and get battery stats
+        used to decide whether to display the bar segment, for
+        example, checking if all the relevent commands or files are
+        present
         """
         pass
 
+    @staticmethod
     @abstractmethod
-    def __init__(self):
-        """
-        on object instantiation, we aquire resources or spawn processes
-        to populate the bar segment
-        """
-        pass
-
-    @abstractmethod
-    def display(self) -> str:
+    def display() -> str:
         """
         method called when the bar segment is displayed
         """
@@ -43,11 +35,10 @@ class LoadAverage(BarSegment):
     def run():
         return True
 
-    def __init__(self):
-        self.output = open("/proc/loadavg", "r").readlines()
-
-    def display(self):
-        output_split = self.output[0].split(" ")
+    @staticmethod
+    def display():
+        output = open("/proc/loadavg", "r").readlines()
+        output_split = output[0].split(" ")
         load_average_per_min =  output_split[0]
         load_average_per_five_min =  output_split[1]
         load_average_per_fifteen_min = output_split[2]
@@ -59,12 +50,11 @@ class Ram(BarSegment):
     def run():
         return True
 
-    def __init__(self):
-        self.output = open("/proc/meminfo","r").readlines()
-
-    def display(self):
-        mem_total = int(self.output[0].split(" ")[-2])
-        mem_avaliable = int(self.output[2].split(" ")[-2])
+    @staticmethod
+    def display():
+        output = open("/proc/meminfo","r").readlines()
+        mem_total = int(output[0].split(" ")[-2])
+        mem_avaliable = int(output[2].split(" ")[-2])
         mem_used = mem_total - mem_avaliable
         return f"💾{int(mem_used * 100 / mem_total)}%"
 
@@ -75,25 +65,25 @@ class Battery(BarSegment):
         battery_capacity_path = glob("/sys/class/power_supply/BAT?/capacity")
         return len(battery_capacity_path) > 0
 
-    def __init__(self):
+    @staticmethod
+    def display():
         battery_capacity_path = glob("/sys/class/power_supply/BAT?/capacity")[0]
         battery_status_path = glob("/sys/class/power_supply/BAT?/status")[0]
-        self.battery_capacity = open(battery_capacity_path, "r").read().rstrip()
-        self.battery_status = open(battery_status_path, "r").read().rstrip()
+        battery_capacity = open(battery_capacity_path, "r").read().rstrip()
+        battery_status = open(battery_status_path, "r").read().rstrip()
 
-    def display(self):
-        if self.battery_status == 'Charging':
+        if battery_status == 'Charging':
             battery_icon = '⚡'
         else:
             battery_icon = '🔋'
 
         # if low battery, send notifaction
-        if (self.battery_status != 'Charging' and int(self.battery_capacity) < 5):
+        if (battery_status != 'Charging' and int(battery_capacity) < 5):
             run(
                 ['notify-send', '--urgency=critical', '--expire-time=2500', 'low battery!']
             )
 
-        return battery_icon + self.battery_capacity + '%'
+        return battery_icon + battery_capacity + '%'
 
 
 class Time(BarSegment):
@@ -101,10 +91,8 @@ class Time(BarSegment):
     def run():
         return True
 
-    def __init__(self):
-        pass
-
-    def display(self):
+    @staticmethod
+    def display():
         return  strftime('%H:%M %a %b %d', localtime())
 
 
@@ -116,13 +104,12 @@ class Network(BarSegment):
         else:
             return True
 
-    def __init__(self):
+    @staticmethod
+    def display():
         ip_addr_json = check_output(["ip", "-j", "addr"]).decode(encoding="ascii")
-        self.ip_addr = json.loads(ip_addr_json)
-
-    def display(self):
+        ip_addr = json.loads(ip_addr_json)
         result = []
-        for interface in self.ip_addr:
+        for interface in ip_addr:
             if interface["operstate"] == "UP":
                 interface_name = interface["ifname"]
                 address = None
@@ -145,20 +132,24 @@ class Wireless(BarSegment):
         else:
             return True
 
-    def __init__(self):
-        self.bus = dbus.SystemBus()
+    @staticmethod
+    def display():
+        result = []
+        bus = dbus.SystemBus()
 
-    def display(self):
-        manager = dbus.Interface(
-            self.bus.get_object("net.connman.iwd", "/"), "org.freedesktop.DBus.ObjectManager"
-        )
+        # get all dbus objects managed by iwd
+        objects = dbus.Interface(
+            bus.get_object("net.connman.iwd", "/"), "org.freedesktop.DBus.ObjectManager"
+        ).GetManagedObjects()
 
-        managed_objects = manager.GetManagedObjects()
-        for path, interfaces in managed_objects.items():
-            if "net.connman.iwd.Device" in interfaces:
-                device = dbus.Interface(self.bus.get_object('net.connman.iwd', path), 'net.connman.iwd.Device')
-                breakpoint()
-        return ""
+        for path, attributes in objects.items():
+
+            if "net.connman.iwd.Station" in attributes:
+                station = attributes["net.connman.iwd.Station"]
+                connected_network = objects[station["ConnectedNetwork"]]
+
+
+        return ";".join(result)
 
 bar_segment_classes = [ LoadAverage, Ram, Network, Wireless, Battery, Time ]
 segment_seperator = "   "
@@ -166,8 +157,7 @@ to_display = []
 
 for bar_segment_class in bar_segment_classes:
     if bar_segment_class.run():
-        bar_segment = bar_segment_class()
-        to_display.append(bar_segment.display())
+        to_display.append(bar_segment_class.display())
 
 print(segment_seperator.join(to_display))
 
