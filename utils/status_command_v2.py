@@ -22,7 +22,8 @@ class BarSegment(ABC):
     @abstractmethod
     def __init__(self):
         """
-        on object instantiation, external processes are spawned and outputs are collected
+        on object instantiation, we read from the proc or sys
+        filesystem, or spawn an external process which does this
         """
         pass
 
