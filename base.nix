@@ -28,7 +28,7 @@
     pciutils            # lspci
     usbutils            # lsusb
     htop
-    python3
+   (python3.withPackages ( p: [ p.dbus-python ]))
     nmap
     zip
     unzip

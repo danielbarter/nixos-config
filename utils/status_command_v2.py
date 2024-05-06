@@ -4,6 +4,7 @@ from subprocess import check_output, run
 from glob import glob
 from time import localtime, strftime
 import json
+import dbus
 
 class BarSegment(ABC):
     """
@@ -24,8 +25,8 @@ class BarSegment(ABC):
     @abstractmethod
     def __init__(self):
         """
-        on object instantiation, we read from the proc or sys
-        filesystem, or spawn an external process which does this
+        on object instantiation, we aquire resources or spawn processes
+        to populate the bar segment
         """
         pass
 
@@ -136,7 +137,30 @@ class Network(BarSegment):
 
         return ";".join(result)
 
-bar_segment_classes = [ LoadAverage, Ram, Network, Battery, Time ]
+class Wireless(BarSegment):
+    @staticmethod
+    def run():
+        if shutil.which("iwctl") is None:
+            return False
+        else:
+            return True
+
+    def __init__(self):
+        self.bus = dbus.SystemBus()
+
+    def display(self):
+        manager = dbus.Interface(
+            self.bus.get_object("net.connman.iwd", "/"), "org.freedesktop.DBus.ObjectManager"
+        )
+
+        managed_objects = manager.GetManagedObjects()
+        for path, interfaces in managed_objects.items():
+            if "net.connman.iwd.Device" in interfaces:
+                device = dbus.Interface(self.bus.get_object('net.connman.iwd', path), 'net.connman.iwd.Device')
+                breakpoint()
+        return ""
+
+bar_segment_classes = [ LoadAverage, Ram, Network, Wireless, Battery, Time ]
 segment_seperator = "   "
 to_display = []
 
