@@ -124,12 +124,15 @@ class Network(BarSegment):
         for interface in self.ip_addr:
             if interface["operstate"] == "UP":
                 interface_name = interface["ifname"]
-                address = ""
+                address = None
+                subnet_prefix = None
                 for addr in interface["addr_info"]:
                     if addr["family"] == "inet":
                         address = addr["local"]
+                        subnet_prefix = addr["prefixlen"]
 
-                result.append(f"{interface_name} {address}")
+                if address is not None:
+                    result.append(f"{interface_name} {address}/{subnet_prefix}")
 
         return ";".join(result)
 
