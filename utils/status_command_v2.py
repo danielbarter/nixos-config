@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 import shutil
 from subprocess import check_output, run
-
+from glob import glob
+from time import localtime, strftime
 
 class BarSegment(ABC):
     """
@@ -66,7 +67,46 @@ class Ram(BarSegment):
         return f"💾{int(mem_used * 100 / mem_total)}%"
 
 
-bar_segment_classes = [ LoadAverage, Ram ]
+class Battery(BarSegment):
+    @staticmethod
+    def run():
+        battery_capacity_path = glob("/sys/class/power_supply/BAT?/capacity")
+        return len(battery_capacity_path) > 0
+
+    def __init__(self):
+        battery_capacity_path = glob("/sys/class/power_supply/BAT?/capacity")[0]
+        battery_status_path = glob("/sys/class/power_supply/BAT?/status")[0]
+        self.battery_capacity = open(battery_capacity_path, "r").read().rstrip()
+        self.battery_status = open(battery_status_path, "r").read().rstrip()
+
+    def display(self):
+        if self.battery_status == 'Charging':
+            battery_icon = '⚡'
+        else:
+            battery_icon = '🔋'
+
+        # if low battery, send notifaction
+        if (self.battery_status != 'Charging' and int(self.battery_capacity) < 5):
+            run(
+                ['notify-send', '--urgency=critical', '--expire-time=2500', 'low battery!']
+            )
+
+        return battery_icon + self.battery_capacity + '%'
+
+
+class Time(BarSegment):
+    @staticmethod
+    def run():
+        return True
+
+    def __init__(self):
+        pass
+
+    def display(self):
+        return  strftime('%H:%M %a %b %d', localtime())
+
+bar_segment_classes = [ LoadAverage, Ram, Battery, Time ]
+segment_seperator = "   "
 to_display = []
 
 for bar_segment_class in bar_segment_classes:
@@ -74,5 +114,5 @@ for bar_segment_class in bar_segment_classes:
         bar_segment = bar_segment_class()
         to_display.append(bar_segment.display())
 
-print("   ".join(to_display))
+print(segment_seperator.join(to_display))
 
