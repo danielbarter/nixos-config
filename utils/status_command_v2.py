@@ -195,7 +195,7 @@ class Bluetooth(BarSegment):
             if "org.bluez.Device1" in interfaces:
                 device = interfaces["org.bluez.Device1"]
                 if device["Connected"]:
-                    result.append(device["Name"] + " " + device["Address"])
+                    result.append(device["Alias"] + " " + device["Address"])
 
 
         return "🟦 " +  "|".join(result)
