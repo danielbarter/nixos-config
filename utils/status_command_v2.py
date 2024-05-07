@@ -124,6 +124,23 @@ class Network(BarSegment):
 
         return ";".join(result)
 
+def rssi_to_color(rssi):
+    signal_strength_dBm = rssi / 100
+
+    min_signal_power_dBm = -100
+    max_signal_power_dBm = -20
+    signal_power_range = max_signal_power_dBm - min_signal_power_dBm
+    signal_strength_percent = 100 * ( signal_strength_dBm - min_signal_power_dBm ) / signal_power_range
+
+    signal_strength_icon = '🔴'
+    if signal_strength_percent > 33:
+        signal_strength_icon = '🟠'
+    if signal_strength_percent > 66:
+        signal_strength_icon = '🟢'
+
+    return signal_strength_icon
+
+
 class Wireless(BarSegment):
     @staticmethod
     def run():
@@ -142,11 +159,15 @@ class Wireless(BarSegment):
             bus.get_object("net.connman.iwd", "/"), "org.freedesktop.DBus.ObjectManager"
         ).GetManagedObjects()
 
-        for path, attributes in objects.items():
+        for path, interfaces in objects.items():
 
-            if "net.connman.iwd.Station" in attributes:
-                station = attributes["net.connman.iwd.Station"]
-                connected_network = objects[station["ConnectedNetwork"]]
+            if "net.connman.iwd.Station" in interfaces:
+                station = dbus.Interface(bus.get_object("net.connman.iwd",path),"net.connman.iwd.Station")
+
+                for network_path, rssi in station.GetOrderedNetworks():
+                    network = objects[network_path]
+                    ssid = network["net.connman.iwd.Network"]["Name"]
+                    result.append(rssi_to_color(rssi) + " " + ssid)
 
 
         return ";".join(result)
