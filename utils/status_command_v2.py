@@ -6,6 +6,9 @@ from time import localtime, strftime
 import json
 import dbus
 
+# connect to the system dbus
+bus = dbus.SystemBus()
+
 class BarSegment(ABC):
     """
     interface for a segment of the status bar
@@ -122,7 +125,7 @@ class Network(BarSegment):
                 if address is not None:
                     result.append(f"{interface_name} {address}/{subnet_prefix}")
 
-        return ";".join(result)
+        return "|".join(result)
 
 def rssi_to_color(rssi):
     signal_strength_dBm = rssi / 100
@@ -152,7 +155,6 @@ class Wireless(BarSegment):
     @staticmethod
     def display():
         result = []
-        bus = dbus.SystemBus()
 
         # get all dbus objects managed by iwd
         objects = dbus.Interface(
@@ -170,9 +172,35 @@ class Wireless(BarSegment):
                     result.append(rssi_to_color(rssi) + " " + ssid)
 
 
-        return ";".join(result)
+        return "|".join(result)
 
-bar_segment_classes = [ LoadAverage, Ram, Network, Wireless, Battery, Time ]
+class Bluetooth(BarSegment):
+    @staticmethod
+    def run():
+        if shutil.which("bluetoothctl") is None:
+            return False
+        else:
+            return True
+
+    @staticmethod
+    def display():
+        result = []
+
+        # get all dbus objects managed by bluez
+        objects = dbus.Interface(
+            bus.get_object("org.bluez", "/"), "org.freedesktop.DBus.ObjectManager"
+        ).GetManagedObjects()
+
+        for _, interfaces in objects.items():
+            if "org.bluez.Device1" in interfaces:
+                device = interfaces["org.bluez.Device1"]
+                if device["Connected"]:
+                    result.append(device["Name"] + " " + device["Address"])
+
+
+        return "🟦 " +  "|".join(result)
+
+bar_segment_classes = [ LoadAverage, Ram, Network, Wireless, Bluetooth, Battery, Time ]
 segment_seperator = "   "
 to_display = []
 
