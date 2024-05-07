@@ -1,144 +1,212 @@
-import re
-
-from os.path import isfile
-from time import localtime, strftime
+from abc import ABC, abstractmethod
+import shutil
 from subprocess import check_output, run
 from glob import glob
+from time import localtime, strftime
+import json
+import dbus
 
+# connect to the system dbus
+bus = dbus.SystemBus()
+
+class BarSegment(ABC):
+    """
+    interface for a segment of the status bar
+    """
+
+    @staticmethod
+    @abstractmethod
+    def run() -> bool:
+        """
+        used to decide whether to display the bar segment, for
+        example, checking if all the relevent commands or files are
+        present
+        """
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def display() -> str:
+        """
+        method called when the bar segment is displayed
+        """
+        pass
+
+
+class LoadAverage(BarSegment):
+    @staticmethod
+    def run():
+        return True
+
+    @staticmethod
+    def display():
+        output = open("/proc/loadavg", "r").readlines()
+        output_split = output[0].split(" ")
+        load_average_per_min =  output_split[0]
+        load_average_per_five_min =  output_split[1]
+        load_average_per_fifteen_min = output_split[2]
+        return f"{load_average_per_min} {load_average_per_five_min} {load_average_per_fifteen_min}"
+
+
+class Ram(BarSegment):
+    @staticmethod
+    def run():
+        return True
+
+    @staticmethod
+    def display():
+        output = open("/proc/meminfo","r").readlines()
+        mem_total = int(output[0].split(" ")[-2])
+        mem_avaliable = int(output[2].split(" ")[-2])
+        mem_used = mem_total - mem_avaliable
+        return f"💾{int(mem_used * 100 / mem_total)}%"
+
+
+class Battery(BarSegment):
+    @staticmethod
+    def run():
+        battery_capacity_path = glob("/sys/class/power_supply/BAT?/capacity")
+        return len(battery_capacity_path) > 0
+
+    @staticmethod
+    def display():
+        battery_capacity_path = glob("/sys/class/power_supply/BAT?/capacity")[0]
+        battery_status_path = glob("/sys/class/power_supply/BAT?/status")[0]
+        battery_capacity = open(battery_capacity_path, "r").read().rstrip()
+        battery_status = open(battery_status_path, "r").read().rstrip()
+
+        if battery_status == 'Charging':
+            battery_icon = '⚡'
+        else:
+            battery_icon = '🔋'
+
+        # if low battery, send notifaction
+        if (battery_status != 'Charging' and int(battery_capacity) < 5):
+            run(
+                ['notify-send', '--urgency=critical', '--expire-time=2500', 'low battery!']
+            )
+
+        return battery_icon + battery_capacity + '%'
+
+
+class Time(BarSegment):
+    @staticmethod
+    def run():
+        return True
+
+    @staticmethod
+    def display():
+        return  strftime('%H:%M %a %b %d', localtime())
+
+
+class Network(BarSegment):
+    @staticmethod
+    def run():
+        if shutil.which("ip") is None:
+            return False
+        else:
+            return True
+
+    @staticmethod
+    def display():
+        ip_addr_json = check_output(["ip", "-j", "addr"]).decode(encoding="ascii")
+        ip_addr = json.loads(ip_addr_json)
+        result = []
+        for interface in ip_addr:
+            if interface["operstate"] == "UP":
+                interface_name = interface["ifname"]
+                address = None
+                subnet_prefix = None
+                for addr in interface["addr_info"]:
+                    if addr["family"] == "inet":
+                        address = addr["local"]
+                        subnet_prefix = addr["prefixlen"]
+
+                if address is not None:
+                    result.append(f"{interface_name} {address}/{subnet_prefix}")
+
+        return "|".join(result)
+
+def rssi_to_color(rssi):
+    signal_strength_dBm = rssi / 100
+
+    min_signal_power_dBm = -100
+    max_signal_power_dBm = -20
+    signal_power_range = max_signal_power_dBm - min_signal_power_dBm
+    signal_strength_percent = 100 * ( signal_strength_dBm - min_signal_power_dBm ) / signal_power_range
+
+    signal_strength_icon = '🔴'
+    if signal_strength_percent > 33:
+        signal_strength_icon = '🟠'
+    if signal_strength_percent > 66:
+        signal_strength_icon = '🟢'
+
+    return signal_strength_icon
+
+
+class Wireless(BarSegment):
+    @staticmethod
+    def run():
+        if shutil.which("iwctl") is None:
+            return False
+        else:
+            return True
+
+    @staticmethod
+    def display():
+        result = []
+
+        # get all dbus objects managed by iwd
+        objects = dbus.Interface(
+            bus.get_object("net.connman.iwd", "/"), "org.freedesktop.DBus.ObjectManager"
+        ).GetManagedObjects()
+
+        for path, interfaces in objects.items():
+
+            if "net.connman.iwd.Station" in interfaces:
+                station = dbus.Interface(bus.get_object("net.connman.iwd",path),"net.connman.iwd.Station")
+
+                for network_path, rssi in station.GetOrderedNetworks():
+                    network = objects[network_path]
+                    ssid = network["net.connman.iwd.Network"]["Name"]
+                    result.append(rssi_to_color(rssi) + " " + ssid)
+
+
+        return "|".join(result)
+
+class Bluetooth(BarSegment):
+    @staticmethod
+    def run():
+        if shutil.which("bluetoothctl") is None:
+            return False
+        else:
+            return True
+
+    @staticmethod
+    def display():
+        result = []
+
+        # get all dbus objects managed by bluez
+        objects = dbus.Interface(
+            bus.get_object("org.bluez", "/"), "org.freedesktop.DBus.ObjectManager"
+        ).GetManagedObjects()
+
+        for _, interfaces in objects.items():
+            if "org.bluez.Device1" in interfaces:
+                device = interfaces["org.bluez.Device1"]
+                if device["Connected"]:
+                    result.append(device["Alias"] + " " + device["Address"])
+
+
+        return "🟦 " +  "|".join(result)
+
+bar_segment_classes = [ LoadAverage, Ram, Network, Wireless, Bluetooth, Battery, Time ]
+segment_seperator = "   "
 to_display = []
 
-def get_load_average():
-    load_average_output = check_output(['uptime']).decode(encoding='ascii').split(' ')
+for bar_segment_class in bar_segment_classes:
+    if bar_segment_class.run():
+        to_display.append(bar_segment_class.display())
 
-    load_average_per_min =  load_average_output[-3][0:-1]
-    load_average_per_five_min =  load_average_output[-2][0:-1]
-    load_average_per_fifteen_min = load_average_output[-1][0:-1]
+print(segment_seperator.join(to_display))
 
-    to_display.append('{} {} {}'.format(
-        load_average_per_min,
-        load_average_per_five_min,
-        load_average_per_fifteen_min))
-
-get_load_average()
-
-
-def get_ram_stats():
-    free_output = check_output(['free', '-m']).decode(encoding='ascii').split('\n')
-    mem_line = [s for s in free_output[1].split(' ') if s != '']
-    total = mem_line[1]
-    used = mem_line[2]
-    ram_bar = '💾' + str(int(int(used) * 100 / int(total))) + '%'
-    to_display.append(ram_bar)
-
-get_ram_stats()
-
-
-
-def get_wireless_interface_names():
-    """ Extract wireless device names from /proc/net/wireless.
-
-        Returns empty list if no devices are present.
-    """
-    device_regex = re.compile('[a-z0-9]*:')
-    ifnames = []
-
-    fp = open('/proc/net/wireless', 'r')
-    for line in fp:
-        maybe_Match = device_regex.search(line)
-        if maybe_Match:
-            ifnames.append(maybe_Match.group(0)[:-1])
-    return ifnames
-
-def get_ssid_and_link_quality(interface):
-    wifi_display = []
-
-    iwlink_output = check_output(['iw','dev',interface,'link']).decode(encoding='ascii')
-    ipaddr_output = check_output(['ip','addr','show','dev',interface]).decode(encoding='ascii')
-
-    link_quality_regex = re.compile('signal: .*dBm')
-    maybe_link_quality_match = link_quality_regex.search(iwlink_output)
-    if maybe_link_quality_match:
-        signal_strength_dBm = int(maybe_link_quality_match.group(0)[8:-4])
-
-        min_signal_power_dBm = -100
-        max_signal_power_dBm = -20
-        signal_power_range = max_signal_power_dBm - min_signal_power_dBm
-        signal_strength_percent = 100 * ( signal_strength_dBm - min_signal_power_dBm ) / signal_power_range
-
-        signal_strength_icon = '🔴'
-        if signal_strength_percent > 33:
-            signal_strength_icon = '🟠'
-        if signal_strength_percent > 66:
-            signal_strength_icon = '🟢'
-
-        wifi_display.append(signal_strength_icon)
-
-    ssid_regex = re.compile('SSID: .*')
-    maybe_ssid_match = ssid_regex.search(iwlink_output)
-    if maybe_ssid_match:
-        wifi_display.append(maybe_ssid_match.group(0)[6:])
-
-    local_ipv4_regex = re.compile('inet \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/\d{1,2}')
-    maybe_ipv4_match = local_ipv4_regex.search(ipaddr_output)
-    if maybe_ipv4_match:
-        wifi_display.append(maybe_ipv4_match.group(0)[5:])
-
-    to_display.append(' '.join(wifi_display))
-
-wireless_interfaces = get_wireless_interface_names()
-
-if wireless_interfaces:
-    # hopefully there aren't two active wireless interfaces....
-    first_interface = wireless_interfaces[0]
-    get_ssid_and_link_quality(first_interface)
-
-
-def bluetooth_connection_status():
-    bluetoothctl_devices_paired = check_output(['bluetoothctl', 'devices', 'Paired']).decode(
-        encoding='ascii')[:-1]
-    device_lines = bluetoothctl_devices_paired.split('\n')
-    device_addresses = [ line[7:24] for line in device_lines ]
-    for device_address in device_addresses:
-        device_info = check_output(['bluetoothctl', 'info', device_address]).decode(encoding='ascii')
-        connected_regex = re.compile('Connected: .*')
-        maybe_connected_match = connected_regex.search(device_info)
-        if maybe_connected_match:
-            yes_or_no = maybe_connected_match.group(0)[11:]
-            if yes_or_no == 'yes':
-                device_name_regexp = re.compile('Alias: .*')
-                device_name = device_name_regexp.search(device_info).group(0)[7:]
-                to_display.append(' '.join(['🟦', device_name, device_address]))
-
-bluetooth_connection_status()
-
-# sometimes these sym links are named differently
-try:
-    battery_capacity_path = glob('/sys/class/power_supply/BAT?/capacity')[0]
-    battery_status_path = glob('/sys/class/power_supply/BAT?/status')[0]
-except IndexError:
-    battery_capacity_path = ""
-
-if isfile(battery_capacity_path):
-    battery_capacity_file = open(battery_capacity_path, 'r')
-    battery_capacity = battery_capacity_file.read().rstrip()
-
-    battery_status_file = open(battery_status_path, 'r')
-    battery_status = battery_status_file.read().rstrip()
-    if battery_status == 'Charging':
-        battery_icon = '⚡'
-    else:
-        battery_icon = '🔋'
-
-    if (battery_status != 'Charging' and int(battery_capacity) < 5):
-        run(
-            ['notify-send', '--urgency=critical', '--expire-time=2500', 'low battery!']
-        )
-
-    battery_bar = battery_icon + battery_capacity + '%'
-    to_display.append(battery_bar)
-
-time_bar = strftime('%H:%M %a %b %d', localtime())
-to_display.append(time_bar)
-
-
-print('   '.join(to_display))
