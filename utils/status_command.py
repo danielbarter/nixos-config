@@ -14,17 +14,6 @@ class BarSegment(ABC):
     """
     interface for a segment of the status bar
     """
-
-    @staticmethod
-    @abstractmethod
-    def run() -> bool:
-        """
-        used to decide whether to display the bar segment, for
-        example, checking if all the relevent commands or files are
-        present
-        """
-        pass
-
     @staticmethod
     @abstractmethod
     def display() -> Optional[str]:
@@ -35,9 +24,6 @@ class BarSegment(ABC):
 
 
 class LoadAverage(BarSegment):
-    @staticmethod
-    def run():
-        return True
 
     @staticmethod
     def display():
@@ -50,9 +36,6 @@ class LoadAverage(BarSegment):
 
 
 class Ram(BarSegment):
-    @staticmethod
-    def run():
-        return True
 
     @staticmethod
     def display():
@@ -64,13 +47,13 @@ class Ram(BarSegment):
 
 
 class Battery(BarSegment):
-    @staticmethod
-    def run():
-        battery_capacity_path = glob("/sys/class/power_supply/BAT?/capacity")
-        return len(battery_capacity_path) > 0
 
     @staticmethod
     def display():
+        battery_capacity_path = glob("/sys/class/power_supply/BAT?/capacity")
+        if len(battery_capacity_path) == 0:
+            return None
+
         battery_capacity_path = glob("/sys/class/power_supply/BAT?/capacity")[0]
         battery_status_path = glob("/sys/class/power_supply/BAT?/status")[0]
         battery_capacity = open(battery_capacity_path, "r").read().rstrip()
@@ -91,9 +74,6 @@ class Battery(BarSegment):
 
 
 class Time(BarSegment):
-    @staticmethod
-    def run():
-        return True
 
     @staticmethod
     def display():
@@ -101,15 +81,12 @@ class Time(BarSegment):
 
 
 class Network(BarSegment):
-    @staticmethod
-    def run():
-        if shutil.which("ip") is None:
-            return False
-        else:
-            return True
 
     @staticmethod
     def display():
+        if shutil.which("ip") is None:
+            return None
+
         ip_addr_json = check_output(["ip", "-j", "addr"]).decode(encoding="ascii")
         ip_addr = json.loads(ip_addr_json)
         result = []
@@ -149,15 +126,12 @@ def rssi_to_color(rssi):
 
 
 class Wireless(BarSegment):
-    @staticmethod
-    def run():
-        if shutil.which("iwctl") is None:
-            return False
-        else:
-            return True
 
     @staticmethod
     def display():
+        if shutil.which("iwctl") is None:
+            return None
+
         result = []
 
         # get all dbus objects managed by iwd
@@ -182,15 +156,12 @@ class Wireless(BarSegment):
             return None
 
 class Bluetooth(BarSegment):
-    @staticmethod
-    def run():
-        if shutil.which("bluetoothctl") is None:
-            return False
-        else:
-            return True
 
     @staticmethod
     def display():
+        if shutil.which("bluetoothctl") is None:
+            return None
+
         result = []
 
         # get all dbus objects managed by bluez
@@ -214,10 +185,9 @@ segment_seperator = "   "
 to_display = []
 
 for bar_segment_class in bar_segment_classes:
-    if bar_segment_class.run():
-        bar_segment_str = bar_segment_class.display()
-        if bar_segment_str:
-            to_display.append(bar_segment_str)
+    bar_segment_str = bar_segment_class.display()
+    if bar_segment_str:
+        to_display.append(bar_segment_str)
 
 print(segment_seperator.join(to_display))
 
