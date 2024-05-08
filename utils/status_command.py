@@ -18,7 +18,8 @@ class BarSegment(ABC):
     @abstractmethod
     def display() -> Optional[str]:
         """
-        method called when the bar segment is displayed
+        method to display bar segment. If None is returned, then
+        nothing to display.
         """
         pass
 
