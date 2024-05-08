@@ -5,6 +5,7 @@ from glob import glob
 from time import localtime, strftime
 import json
 import dbus
+from typing import Optional
 
 # connect to the system dbus
 bus = dbus.SystemBus()
@@ -26,7 +27,7 @@ class BarSegment(ABC):
 
     @staticmethod
     @abstractmethod
-    def display() -> str:
+    def display() -> Optional[str]:
         """
         method called when the bar segment is displayed
         """
@@ -125,7 +126,10 @@ class Network(BarSegment):
                 if address is not None:
                     result.append(f"{interface_name} {address}/{subnet_prefix}")
 
-        return "|".join(result)
+        if len(result) > 0:
+            return "|".join(result)
+        else:
+            return None
 
 def rssi_to_color(rssi):
     signal_strength_dBm = rssi / 100
@@ -172,7 +176,10 @@ class Wireless(BarSegment):
                     result.append(rssi_to_color(rssi) + " " + ssid)
 
 
-        return "|".join(result)
+        if len(result) > 0:
+            return "|".join(result)
+        else:
+            return None
 
 class Bluetooth(BarSegment):
     @staticmethod
@@ -197,8 +204,10 @@ class Bluetooth(BarSegment):
                 if device["Connected"]:
                     result.append(device["Alias"] + " " + device["Address"])
 
-
-        return "🟦 " +  "|".join(result)
+        if len(result) > 0:
+            return "🟦 " +  "|".join(result)
+        else:
+            return None
 
 bar_segment_classes = [ LoadAverage, Ram, Network, Wireless, Bluetooth, Battery, Time ]
 segment_seperator = "   "
@@ -206,7 +215,9 @@ to_display = []
 
 for bar_segment_class in bar_segment_classes:
     if bar_segment_class.run():
-        to_display.append(bar_segment_class.display())
+        bar_segment_str = bar_segment_class.display()
+        if bar_segment_str:
+            to_display.append(bar_segment_str)
 
 print(segment_seperator.join(to_display))
 
