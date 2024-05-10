@@ -190,8 +190,8 @@ class Volume(BarSegment):
             return None
 
         volume_output = check_output(["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]).decode(encoding="ascii")
-        volume = volume_output[-3:-1]
-        return "🔊" + volume + "%"
+        volume = volume_output[8:-1]
+        return "🔊" + volume
 
 
 

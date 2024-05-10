@@ -71,6 +71,14 @@ toggle_pwd() {
     fi
 }
 
+mute() {
+    wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+}
+
+volume() {
+    wpctl set-volume @DEFAULT_AUDIO_SINK@ $1
+}
+
 prompt_command() {
     if [ $SHOW_PWD == yes ]
     then
