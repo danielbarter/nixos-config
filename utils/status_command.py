@@ -181,7 +181,31 @@ class Bluetooth(BarSegment):
         else:
             return None
 
-bar_segment_classes = [ LoadAverage, Ram, Network, Wireless, Bluetooth, Battery, Time ]
+
+class Volume(BarSegment):
+
+    @staticmethod
+    def display():
+        if shutil.which("wpctl") is None:
+            return None
+
+        volume_output = check_output(["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]).decode(encoding="ascii")
+        volume = volume_output[-3:-1]
+        return "🔊" + volume + "%"
+
+
+
+bar_segment_classes = [
+    LoadAverage,
+    Ram,
+    Network,
+    Wireless,
+    Bluetooth,
+    Volume,
+    Battery,
+    Time
+]
+
 segment_seperator = "   "
 to_display = []
 
