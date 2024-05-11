@@ -18,6 +18,7 @@
   };
 
 
+  # store for nixos-x13s
   nix.settings = {
     substituters = [
       "https://nixos-x13s.cachix.org"
