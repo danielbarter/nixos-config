@@ -1,5 +1,23 @@
 {
   "nodes": {
+    "flake-parts": {
+      "inputs": {
+        "nixpkgs-lib": "nixpkgs-lib"
+      },
+      "locked": {
+        "lastModified": 1714641030,
+        "narHash": "sha256-yzcRNDoyVP7+SCNX0wmuDju1NUCt8Dz9+lyUXEI0dbI=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "e5d10a24b66c3ea8f150e47dfdb0416ab7c3390e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
     "hosts": {
       "inputs": {
         "nixpkgs": [
@@ -20,6 +38,27 @@
         "type": "github"
       }
     },
+    "nixos-x13s": {
+      "inputs": {
+        "flake-parts": "flake-parts",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1715009478,
+        "narHash": "sha256-o2ZnB7TIGqawzrFCex+anAopOy/PA4qSJ788hZbbm4g=",
+        "ref": "refs/heads/main",
+        "rev": "8e01e9917f038ea72bdc37b130ba1a0fa82a84f3",
+        "revCount": 62,
+        "type": "git",
+        "url": "https://codeberg.org/adamcstephens/nixos-x13s"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://codeberg.org/adamcstephens/nixos-x13s"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1715087517,
@@ -36,9 +75,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-lib": {
+      "locked": {
+        "lastModified": 1714640452,
+        "narHash": "sha256-QBx10+k6JWz6u7VsohfSw8g8hjdBZEf8CFzXH1/1Z94=",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/50eb7ecf4cd0a5756d7275c8ba36790e5bd53e33.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/50eb7ecf4cd0a5756d7275c8ba36790e5bd53e33.tar.gz"
+      }
+    },
     "root": {
       "inputs": {
         "hosts": "hosts",
+        "nixos-x13s": "nixos-x13s",
         "nixpkgs": "nixpkgs"
       }
     }

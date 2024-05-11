@@ -6,12 +6,18 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     hosts.url = "github:StevenBlack/hosts";
 
+    # module for lenovo x13s
+    # mainline support for x13s is constantly improving, so eventually,
+    # this won't be necessary
+    nixos-x13s.url = "git+https://codeberg.org/adamcstephens/nixos-x13s";
+
     # unify nixpkgs across inputs
     hosts.inputs.nixpkgs.follows = "nixpkgs";
+    nixos-x13s.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
-      self, nixpkgs, hosts
+      self, nixpkgs, hosts, nixos-x13s
   } @ outputs-args:
 
     let core-modules = [
@@ -99,6 +105,9 @@
             iso-module
             ./replicant.nix
             ./sway-gui.nix
+            nixos-x13s.nixosModules.default {
+              nixos-x13s.enable = true;
+            }
             ];
         };
       };
