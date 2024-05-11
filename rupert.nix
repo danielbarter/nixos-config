@@ -132,7 +132,6 @@
 
   swapDevices = [ ];
 
-  hardware.enableRedistributableFirmware = true;
   hardware.bluetooth.enable = true;
 
   # enabling gnome

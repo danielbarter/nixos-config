@@ -106,7 +106,6 @@
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
 
-  hardware.enableRedistributableFirmware =  true;
   boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
@@ -129,7 +128,7 @@
     };
   };
 
-  hardware.cpu.intel.updateMicrocode = config.hardware.enableRedistributableFirmware;
+  hardware.cpu.intel.updateMicrocode = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

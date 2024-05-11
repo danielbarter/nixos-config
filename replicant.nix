@@ -19,8 +19,6 @@
   ];
 
 
-  hardware.enableAllFirmware = true;
-
   networking = {
     hostName = "replicant";
   };
