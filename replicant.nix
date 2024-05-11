@@ -19,11 +19,12 @@
   ];
 
 
+  hardware.enableAllFirmware = true;
+
   networking = {
     hostName = "replicant";
   };
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # catchall network config. Configure whatever interface is present
   systemd.network.networks = {
