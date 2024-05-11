@@ -147,8 +147,9 @@ class Wireless(BarSegment):
 
                 for network_path, rssi in station.GetOrderedNetworks():
                     network = objects[network_path]
-                    ssid = network["net.connman.iwd.Network"]["Name"]
-                    result.append(rssi_to_color(rssi) + " " + ssid)
+                    if network["net.connman.iwd.Network"]["Connected"]:
+                        ssid = network["net.connman.iwd.Network"]["Name"]
+                        result.append(rssi_to_color(rssi) + " " + ssid)
 
 
         if len(result) > 0:
