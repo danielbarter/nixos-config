@@ -13,7 +13,6 @@
 
     # unify nixpkgs across inputs
     hosts.inputs.nixpkgs.follows = "nixpkgs";
-    nixos-x13s.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = {
@@ -32,16 +31,6 @@
         flake-args = {
           flake-outputs-args = outputs-args;
           flake = self;
-        };
-
-        iso-module = { modulesPath, ... }: {
-          imports = [
-            "${toString modulesPath}/installer/cd-dvd/iso-image.nix"
-          ];
-          isoImage = {
-            makeEfiBootable = true;
-            makeUsbBootable = true;
-          };
         };
 
     in {
@@ -89,7 +78,6 @@
           specialArgs = flake-args;
           system = "x86_64-linux";
           modules = core-modules ++ [
-            iso-module
             ./replicant.nix
             # we are probably going to be running on some intel chip,
             # so make sure that we have VA-API drivers so firefox is happy
@@ -102,7 +90,6 @@
           specialArgs = flake-args;
           system = "aarch64-linux";
           modules = core-modules ++ [
-            iso-module
             ./replicant.nix
             ./sway-gui.nix
             nixos-x13s.nixosModules.default {

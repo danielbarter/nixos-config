@@ -1,8 +1,19 @@
-{pkgs, ...}: {
+{pkgs, modulesPath, ...}: {
   system.stateVersion = "23.05";
 
   # set password to be empty for root
   users.users.root.initialPassword = "";
+
+
+
+  imports = [
+    "${toString modulesPath}/installer/cd-dvd/iso-image.nix"
+  ];
+
+  isoImage = {
+    makeEfiBootable = true;
+    makeUsbBootable = true;
+  };
 
 
   # add encrypted, zipped nixos config to iso
@@ -36,3 +47,5 @@
     };
   };
 }
+
+
