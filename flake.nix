@@ -153,7 +153,7 @@
           marmaduke-iso = self.nixosConfigurations.marmaduke.config.system.build.isoImage;
           x86_64-replicant-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-iso;
           aarch64-replicant-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-iso;
-          marmaduke-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-iso;
+          marmaduke-vm = aarch64-vm self.packages."x86_64-linux".marmaduke-iso;
         };
     };
 }
