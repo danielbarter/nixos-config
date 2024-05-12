@@ -17,17 +17,6 @@
     '';
   };
 
-
-  # store for nixos-x13s
-  nix.settings = {
-    substituters = [
-      "https://nixos-x13s.cachix.org"
-    ];
-    trusted-public-keys = [
-      "nixos-x13s.cachix.org-1:SzroHbidolBD3Sf6UusXp12YZ+a5ynWv0RtYF0btFos="
-    ];
-  };
-
   # serve DNS stub on local network
   services.resolved.extraConfig = ''
        DNSStubListenerExtra=192.168.1.12
