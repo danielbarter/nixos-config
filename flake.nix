@@ -87,6 +87,10 @@
                 "${toString modulesPath}/installer/cd-dvd/iso-image.nix"
               ];
               nixpkgs.config.allowUnfree = true;
+              isoImage = {
+                makeEfiBootable = true;
+                makeUsbBootable = true;
+              };
             })
           ];
 
