@@ -35,7 +35,8 @@
 
     in {
       nixosConfigurations = {
-        jasper = nixpkgs.lib.nixosSystem rec {
+
+        jasper = nixpkgs.lib.nixosSystem {
           specialArgs = flake-args;
           system = "x86_64-linux";
           modules = core-modules ++
@@ -46,7 +47,7 @@
             ];
         };
 
-        punky = nixpkgs.lib.nixosSystem rec {
+        punky = nixpkgs.lib.nixosSystem {
           specialArgs =  flake-args;
           system = "x86_64-linux";
           modules = core-modules ++
@@ -65,7 +66,7 @@
             ];
         };
 
-        rupert = nixpkgs.lib.nixosSystem rec {
+        rupert = nixpkgs.lib.nixosSystem {
           specialArgs =  flake-args;
           system = "x86_64-linux";
           modules = core-modules ++
@@ -74,7 +75,18 @@
             ];
         };
 
-        x86_64-replicant = nixpkgs.lib.nixosSystem rec {
+        marmaduke = nixpkgs.lib.nixosSystem {
+          specialArgs = flake-args;
+          system = "aarch64-linux";
+          modules = core-modules ++ [
+            nixos-x13s.nixosModules.default {
+              nixos-x13s.enable = true;
+            }
+          ];
+
+        };
+
+        x86_64-replicant = nixpkgs.lib.nixosSystem {
           specialArgs = flake-args;
           system = "x86_64-linux";
           modules = core-modules ++ [
@@ -86,17 +98,16 @@
           ];
         };
 
-        aarch64-replicant = nixpkgs.lib.nixosSystem  rec {
+        aarch64-replicant = nixpkgs.lib.nixosSystem {
           specialArgs = flake-args;
           system = "aarch64-linux";
           modules = core-modules ++ [
             ./replicant.nix
             ./sway-gui.nix
-            nixos-x13s.nixosModules.default {
-              nixos-x13s.enable = true;
-            }
-            ];
+          ];
         };
+
+
       };
 
 
