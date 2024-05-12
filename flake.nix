@@ -80,7 +80,11 @@
           system = "aarch64-linux";
           modules = [
             nixos-x13s.nixosModules.default {
-              nixos-x13s.enable = true;
+              nixos-x13s = {
+                enable = true;
+                kernel = "mainline";
+              };
+
             }
             ({modulesPath,...}: {
               imports = [
