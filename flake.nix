@@ -11,7 +11,7 @@
   };
 
   outputs = {
-      self, nixpkgs, hosts, nixos-x13s
+      self, nixpkgs, hosts
   } @ outputs-args:
 
     let core-modules = [
