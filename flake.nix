@@ -6,11 +6,6 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     hosts.url = "github:StevenBlack/hosts";
 
-    # module for lenovo x13s
-    # mainline support for x13s is constantly improving, so eventually,
-    # this won't be necessary
-    nixos-x13s.url = "git+https://codeberg.org/adamcstephens/nixos-x13s";
-
     # unify nixpkgs across inputs
     hosts.inputs.nixpkgs.follows = "nixpkgs";
   };
@@ -73,24 +68,6 @@
             [
               ./rupert.nix
             ];
-        };
-
-        marmaduke = nixpkgs.lib.nixosSystem {
-          specialArgs = flake-args;
-          system = "aarch64-linux";
-          modules = core-modules ++ [
-            ./marmaduke.nix
-            ./sway-gui.nix
-
-            nixos-x13s.nixosModules.default {
-              nixos-x13s = {
-                enable = true;
-                kernel = "jhovold";
-              };
-
-            }
-          ];
-
         };
 
         x86_64-replicant = nixpkgs.lib.nixosSystem {

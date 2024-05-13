@@ -7,16 +7,6 @@
     secretKeyFile = "/etc/nixos/secrets/binary-cache/cache-priv-key.pem";
   };
 
-  # nixos-x13s cache
-  nix.settings = {
-    substituters = [
-      "https://nixos-x13s.cachix.org"
-    ];
-    trusted-public-keys = [
-      "nixos-x13s.cachix.org-1:SzroHbidolBD3Sf6UusXp12YZ+a5ynWv0RtYF0btFos="
-    ];
-  };
-
 
   # dnssd for nix store
   environment.etc = {
