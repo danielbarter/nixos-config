@@ -42,7 +42,7 @@
           title NixOS
           linux /EFI/nixos/kernel.efi
           initrd /EFI/nixos/initrd.efi
-          options init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams}
+          options init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams} console=tty0 console=ttyS0
           '';
 
           "/EFI/nixos/kernel.efi".source =
