@@ -75,10 +75,13 @@
             ];
         };
 
-        marmaduke-bootstrap = nixpkgs.lib.nixosSystem {
+        marmaduke = nixpkgs.lib.nixosSystem {
           specialArgs = flake-args;
           system = "aarch64-linux";
-          modules = [
+          modules = core-modules ++ [
+            ./marmaduke.nix
+            ./sway-gui.nix
+
             nixos-x13s.nixosModules.default {
               nixos-x13s = {
                 enable = true;
@@ -86,28 +89,6 @@
               };
 
             }
-
-            ({modulesPath, config, ...}: {
-              imports = [
-                "${toString modulesPath}/installer/cd-dvd/iso-image.nix"
-              ];
-              nixpkgs.config.allowUnfree = true;
-              isoImage = {
-                makeEfiBootable = true;
-                makeUsbBootable = true;
-
-                contents = let
-                  dtbName = "sc8280xp-lenovo-thinkpad-x13s.dtb";
-                  dtb = "${config.boot.kernelPackages.kernel}/dtbs/qcom/${dtbName}";
-                in [
-                  {
-                    source = dtb;
-                    target = "/" + dtbName;
-                  }
-                ];
-
-              };
-            })
           ];
 
         };
@@ -170,7 +151,6 @@
           # before building run ./utils/pack_etc_nixos.sh
           x86_64-replicant-iso = self.nixosConfigurations.x86_64-replicant.config.system.build.isoImage;
           aarch64-replicant-iso = self.nixosConfigurations.aarch64-replicant.config.system.build.isoImage;
-          marmaduke-iso = self.nixosConfigurations.marmaduke-bootstrap.config.system.build.isoImage;
           x86_64-replicant-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-iso;
           aarch64-replicant-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-iso;
         };
