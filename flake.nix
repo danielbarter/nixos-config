@@ -99,11 +99,14 @@
         let
           pkgs = import nixpkgs { system = "x86_64-linux"; };
 
-          x86_64-vm = iso: pkgs.writeScriptBin "x86_64-run-nixos-vm" ''
+          x86_64-vm = image: pkgs.writeScriptBin "x86_64-run-nixos-vm" ''
             #!${pkgs.runtimeShell}
-            ${pkgs.qemu_full}/bin/qemu-kvm \
+            cp ${image}/image.raw /tmp/image.raw
+            chmod +w /tmp/image.raw
+            ${pkgs.qemu}/bin/qemu-kvm \
             -smp $(nproc) \
-            -cdrom ${iso}/iso/nixos.iso \
+            -bios ${pkgs.OVMF.fd}/FV/OVMF.fd \
+            -drive file=/tmp/image.raw,format=raw \
             -nographic \
             -m 8G
           '';
@@ -113,7 +116,7 @@
             efi-flash = "${pkgs.pkgsCross.aarch64-multiplatform.OVMF.fd}/AAVMF/QEMU_EFI-pflash.raw";
           in pkgs.writeScriptBin "aarch64-run-nixos-vm" ''
             #!${pkgs.runtimeShell}
-            ${pkgs.qemu_full}/bin/qemu-system-aarch64 \
+            ${pkgs.qemu}/bin/qemu-system-aarch64 \
             -machine virt \
             -cpu cortex-a57 \
             -m 2G \
@@ -126,10 +129,11 @@
         in {
 
           # before building run ./utils/pack_etc_nixos.sh
-          x86_64-replicant-iso = self.nixosConfigurations.x86_64-replicant.config.system.build.isoImage;
-          aarch64-replicant-iso = self.nixosConfigurations.aarch64-replicant.config.system.build.isoImage;
-          x86_64-replicant-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-iso;
-          aarch64-replicant-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-iso;
+          x86_64-replicant-image = self.nixosConfigurations.x86_64-replicant.config.system.build.image;
+          x86_64-replicant-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-image;
+
+          # aarch64-replicant-iso = self.nixosConfigurations.aarch64-replicant.config.system.build.isoImage;
+          # aarch64-replicant-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-iso;
         };
     };
 }

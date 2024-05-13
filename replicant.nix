@@ -1,33 +1,9 @@
-{pkgs, modulesPath, ...}: {
+{pkgs, modulesPath, lib, config, ...}: {
+
   system.stateVersion = "23.05";
 
   # set password to be empty for root
   users.users.root.initialPassword = "";
-
-
-
-  imports = [
-    "${toString modulesPath}/installer/cd-dvd/iso-image.nix"
-  ];
-
-  isoImage = {
-    makeEfiBootable = true;
-    makeUsbBootable = true;
-  };
-
-
-  # add encrypted, zipped nixos config to iso
-  isoImage.contents = [
-    {
-      source = /tmp/nixos.zip.gpg;
-      target = "nixos.zip.gpg";
-    }
-
-    {
-      source = ./utils/setup_replicant_iso.sh;
-      target = "setup_replicant_iso.sh";
-    }
-  ];
 
 
   networking = {
@@ -46,6 +22,55 @@
       };
     };
   };
+
+
+  boot.loader.grub.enable = false;
+
+  fileSystems."/".device = "/dev/disk/by-label/nixos";
+
+  imports = [ "${modulesPath}/image/repart.nix" ];
+
+  image.repart = let efiArch = pkgs.stdenv.hostPlatform.efiArch; in {
+    name = "image";
+    partitions = {
+      "esp" = {
+        contents = {
+          "/EFI/BOOT/BOOT${lib.toUpper efiArch}.EFI".source =
+            "${pkgs.systemd}/lib/systemd/boot/efi/systemd-boot${efiArch}.efi";
+
+          "/loader/entries/nixos.conf".source = pkgs.writeText "nixos.conf" ''
+          title NixOS
+          linux /EFI/nixos/kernel.efi
+          initrd /EFI/nixos/initrd.efi
+          options init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams}
+          '';
+
+          "/EFI/nixos/kernel.efi".source =
+            "${config.boot.kernelPackages.kernel}/${config.system.boot.loader.kernelFile}";
+
+          "/EFI/nixos/initrd.efi".source =
+            "${config.system.build.initialRamdisk}/${config.system.boot.loader.initrdFile}";
+        };
+        repartConfig = {
+          Type = "esp";
+          Format = "vfat";
+          SizeMinBytes = "96M";
+        };
+      };
+
+      "root" = {
+        storePaths = [ config.system.build.toplevel ];
+        repartConfig = {
+          Type = "root";
+          Format = "ext4";
+          Label = "nixos";
+          Minimize = "guess";
+        };
+      };
+    };
+  };
+
+
 }
 
 
