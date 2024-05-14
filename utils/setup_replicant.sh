@@ -1,4 +1,4 @@
-setup_replicant_iso() {
+setup_replicant() {
     echo "set root password:"
     passwd root
 
@@ -6,11 +6,10 @@ setup_replicant_iso() {
     passwd danielbarter
 
     echo "unpacking nixos configuration"
-    cd /etc
+    cd /
     # removing existing empty nixos config
-    rmdir /etc/nixos
-    gpg /etc/nixos.zip.gpg
-    unzip /etc/nixos.zip
+    gpg /nixos.zip.gpg
+    unzip /nixos.zip
 
     cd /etc/nixos
 
@@ -27,9 +26,9 @@ setup_replicant_iso() {
     echo "all done!"
 }
 
-read -p "Setting up replicant iso. Continue (y/n)? " choice
+read -p "Setting up replicant. Continue (y/n)? " choice
 case "$choice" in
-    y|Y ) setup_replicant_iso;;
+    y|Y ) setup_replicant;;
     n|N ) echo "doing nothing";;
     * ) echo "invalid";;
 esac
