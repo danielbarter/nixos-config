@@ -38,7 +38,7 @@
           "/EFI/BOOT/BOOT${lib.toUpper efiArch}.EFI".source =
             "${pkgs.systemd}/lib/systemd/boot/efi/systemd-boot${efiArch}.efi";
 
-          "/loader/entries/loader.conf".source = pkgs.writeText "loader.conf" ''
+          "/loader/loader.conf".source = pkgs.writeText "loader.conf" ''
           default nixos.conf
           timeout 10
           '';
