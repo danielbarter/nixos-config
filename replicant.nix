@@ -28,7 +28,7 @@
   boot.initrd.systemd.enable = true;
 
   # need ext4 kernel module to mount root filesystem in stage 1
-  boot.initrd.availableKernelModules = [ "ext4" ];
+  boot.initrd.availableKernelModules = [ "ext4" "usb_storage" "usbhid" ];
 
   fileSystems."/".device = "/dev/disk/by-label/nixos";
 
