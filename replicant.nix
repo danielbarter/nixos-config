@@ -25,6 +25,10 @@
 
 
   boot.loader.grub.enable = false;
+  boot.initrd.systemd.enable = true;
+
+  # need ext4 kernel module to mount root filesystem in stage 1
+  boot.initrd.availableKernelModules = [ "ext4" ];
 
   fileSystems."/".device = "/dev/disk/by-label/nixos";
 
