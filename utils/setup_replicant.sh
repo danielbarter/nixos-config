@@ -6,13 +6,11 @@ setup_replicant_iso() {
     passwd danielbarter
 
     echo "unpacking nixos configuration"
-    cd /tmp
-    cp /iso/nixos.zip.gpg /tmp/nixos.zip.gpg
-    gpg nixos.zip.gpg
-    unzip nixos.zip
-
+    cd /etc
+    # removing existing empty nixos config
     rmdir /etc/nixos
-    mv /tmp/etc/nixos /etc/nixos
+    gpg /etc/nixos.zip.gpg
+    unzip /etc/nixos.zip
 
     cd /etc/nixos
 

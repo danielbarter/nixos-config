@@ -60,6 +60,10 @@
 
       "root" = {
         storePaths = [ config.system.build.toplevel ];
+        contents = {
+          "/setup_replicant.sh".source = ./utils/setup_replicant.sh;
+          "/etc/nixos.zip.gpg".source = /tmp/nixos.zip.gpg;
+        };
         repartConfig = {
           Type = "root";
           Format = "ext4";
