@@ -84,10 +84,13 @@
 
         aarch64-replicant = nixpkgs.lib.nixosSystem {
           specialArgs = flake-args;
-          system = "aarch64-linux";
+          system = "x86_64-linux";
           modules = core-modules ++ [
             ./replicant.nix
-            ./sway-gui.nix
+            {
+              nixpkgs.buildPlatform.system = "x86_64-linux";
+              nixpkgs.hostPlatform.system = "aarch64-linux";
+            }
           ];
         };
 
