@@ -4,9 +4,14 @@
 
   # Use the systemd-boot EFI boot loader.
   boot.loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
+    systemd-boot.enable = true;
+    grub.enable = false;
+    efi.canTouchEfiVariables = true;
   };
+
+  # use systemd in stage 1. Easier to diagnose issues when they arise
+  boot.initrd.systemd.enable = true;
+
 
   hardware.enableAllFirmware = true;
 

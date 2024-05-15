@@ -23,14 +23,22 @@
     };
   };
 
-
-  boot.loader.grub.enable = false;
-  boot.initrd.systemd.enable = true;
-
-  # need ext4 kernel module to mount root filesystem in stage 1
+  # need ext4 kernel module to mount nix store in stage 1
   boot.initrd.availableKernelModules = [ "ext4" "usb_storage" "usbhid" ];
 
-  fileSystems."/".device = "/dev/disk/by-label/nixos";
+  fileSystems."/boot".device = "/dev/disk/by-label/ESP";
+  fileSystems."/nix/store".device = "/dev/disk/by-label/nix-store";
+  fileSystems."/setup".device = "/dev/disk/by-label/setup";
+
+  # root should be a filesystem contained in ram so that machine operation is
+  # not cripplingly slow
+  fileSystems."/" = {
+    label = "root";
+    fsType = "tmpfs";
+    options = [
+      "size=4G"
+    ];
+  };
 
   imports = [ "${modulesPath}/image/repart.nix" ];
 
@@ -50,8 +58,8 @@
 
 
           "/loader/loader.conf".source = pkgs.writeText "loader.conf" ''
-          default nixos.conf
-          timeout 10
+          timeout menu-force
+          default nixos
           '';
 
           "/loader/entries/nixos_console.conf".source = pkgs.writeText "nixos_console.conf" ''
@@ -68,6 +76,7 @@
           options init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams}
           '';
 
+
         };
         repartConfig = {
           Type = "esp";
@@ -76,17 +85,28 @@
         };
       };
 
-      "root" = {
+      "nix-store" = {
         storePaths = [ config.system.build.toplevel ];
+        stripNixStorePrefix = true;
+        repartConfig = {
+          Type = "linux-generic";
+          Format = "ext4";
+          Label = "nix-store";
+          Minimize = "guess";
+        };
+      };
+
+      "setup" = {
         contents = {
           # add encrypted zipped nixos config to iso
           "/setup_replicant.sh".source = ./utils/setup_replicant.sh;
           "/nixos.zip.gpg".source = /tmp/nixos.zip.gpg;
         };
+
         repartConfig = {
-          Type = "root";
+          Type = "linux-generic";
           Format = "ext4";
-          Label = "nixos";
+          Label = "setup";
           Minimize = "guess";
         };
       };
