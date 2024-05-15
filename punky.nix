@@ -100,9 +100,6 @@
   };
 
 
-  # punky is a build machine, and this lets us build nixos images
-  # for other platforms, without needing to cross compile (which tends to be
-  # pretty unreliable for full systems).
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
 
