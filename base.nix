@@ -1,4 +1,4 @@
-{lib, config, pkgs, flake-outputs-args, flake,  ... }:
+{lib, config, pkgs, flake-outputs-args, flake, gui,  ... }:
 
 {
 
@@ -35,7 +35,8 @@
     pciutils            # lspci
     usbutils            # lsusb
     htop
-   (python3.withPackages ( p: [ p.dbus-python ]))
+    # we use dbus-python for the sway status bar
+    (if gui then (python3.withPackages ( p: [ p.dbus-python ])) else python3)
     nmap
     zip
     unzip
@@ -43,7 +44,7 @@
     fzf                 # fuzzy searcher
     direnv
     gdb
-    emacs29-pgtk
+    (if gui then emacs29-pgtk else emacs29-nox)
     aspell
     aspellDicts.en
     cmake               # cmake autocomplete and emacs mode.

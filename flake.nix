@@ -23,16 +23,17 @@
 
 
         # pass through flake outputs
-        flake-args = {
+        flake-args = { gui }: {
           flake-outputs-args = outputs-args;
           flake = self;
+          inherit gui;
         };
 
     in {
       nixosConfigurations = {
 
         jasper = nixpkgs.lib.nixosSystem {
-          specialArgs = flake-args;
+          specialArgs = flake-args { gui = true; };
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -43,7 +44,7 @@
         };
 
         punky = nixpkgs.lib.nixosSystem {
-          specialArgs =  flake-args;
+          specialArgs =  flake-args  { gui = false; };
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -62,7 +63,7 @@
         };
 
         rupert = nixpkgs.lib.nixosSystem {
-          specialArgs =  flake-args;
+          specialArgs =  flake-args { gui = true; };
           system = "x86_64-linux";
           modules = core-modules ++
             [
@@ -71,7 +72,7 @@
         };
 
         x86_64-replicant = nixpkgs.lib.nixosSystem {
-          specialArgs = flake-args;
+          specialArgs = flake-args { gui = true; };
           system = "x86_64-linux";
           modules = core-modules ++ [
             ./replicant.nix
@@ -83,7 +84,7 @@
         };
 
         aarch64-replicant = nixpkgs.lib.nixosSystem {
-          specialArgs = flake-args;
+          specialArgs = flake-args { gui = false; };
           system = "x86_64-linux";
           modules = core-modules ++ [
             ./replicant.nix
