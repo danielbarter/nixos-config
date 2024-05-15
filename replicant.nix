@@ -26,7 +26,7 @@
   # need ext4 kernel module to mount nix store in stage 1
   boot.initrd.availableKernelModules = [ "ext4" "usb_storage" "usbhid" ];
 
-  fileSystems."/boot".device = "/dev/disk/by-label/ESP";
+  fileSystems."/efi".device = "/dev/disk/by-label/EFI";
   fileSystems."/nix/store".device = "/dev/disk/by-label/nix-store";
   fileSystems."/setup".device = "/dev/disk/by-label/setup";
 
@@ -45,7 +45,7 @@
   image.repart = let efiArch = pkgs.stdenv.hostPlatform.efiArch; in {
     name = "image";
     partitions = {
-      "esp" = {
+      "efi" = {
         contents = {
           "/EFI/BOOT/BOOT${lib.toUpper efiArch}.EFI".source =
             "${pkgs.systemd}/lib/systemd/boot/efi/systemd-boot${efiArch}.efi";
@@ -82,6 +82,7 @@
           Type = "esp";
           Format = "vfat";
           SizeMinBytes = "96M";
+          Label = "EFI";
         };
       };
 
