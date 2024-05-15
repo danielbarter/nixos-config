@@ -1,4 +1,4 @@
-{config, pkgs, ...}:
+{ config, pkgs, ... }:
 {
 
   services.nix-serve = {
@@ -7,20 +7,19 @@
     secretKeyFile = "/etc/nixos/secrets/binary-cache/cache-priv-key.pem";
   };
 
-
   # dnssd for nix store
   environment.etc = {
     "systemd/dnssd/nix_store.dnssd".text = ''
-    [Service]
-    Name=nix_store
-    Type=_http._tcp
-    Port=5000
+      [Service]
+      Name=nix_store
+      Type=_http._tcp
+      Port=5000
     '';
   };
 
   # serve DNS stub on local network
   services.resolved.extraConfig = ''
-       DNSStubListenerExtra=192.168.1.12
+    DNSStubListenerExtra=192.168.1.12
   '';
 
   # bonding ethernet and wireless (with ethernet as primary)
@@ -73,11 +72,19 @@
         };
 
         addresses = [
-          { addressConfig = { Address = "192.168.1.12/24"; }; }
+          {
+            addressConfig = {
+              Address = "192.168.1.12/24";
+            };
+          }
         ];
 
         routes = [
-          { routeConfig = { Gateway = "192.168.1.1"; }; }
+          {
+            routeConfig = {
+              Gateway = "192.168.1.1";
+            };
+          }
         ];
       };
     };
@@ -96,14 +103,23 @@
     };
 
     # DNS used by resolved. resolvectl status
-    nameservers = [ "1.1.1.1" "8.8.8.8" ];
+    nameservers = [
+      "1.1.1.1"
+      "8.8.8.8"
+    ];
   };
-
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
-
-  boot.initrd.availableKernelModules = [ "xhci_pci" "thunderbolt" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
+  boot.initrd.availableKernelModules = [
+    "xhci_pci"
+    "thunderbolt"
+    "ahci"
+    "nvme"
+    "usbhid"
+    "usb_storage"
+    "sd_mod"
+  ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
@@ -134,5 +150,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.11"; # Did you read the comment?
-
 }

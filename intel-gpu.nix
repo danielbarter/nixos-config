@@ -1,4 +1,4 @@
-{pkgs,...}:
+{ pkgs, ... }:
 {
   # intel_gpu_top
   environment.systemPackages = [ pkgs.intel-gpu-tools ];

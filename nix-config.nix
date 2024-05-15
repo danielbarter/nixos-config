@@ -1,4 +1,10 @@
-{lib, config, pkgs, flake-outputs-args,  ... }:
+{
+  lib,
+  config,
+  pkgs,
+  flake-outputs-args,
+  ...
+}:
 
 {
 
@@ -9,17 +15,19 @@
     nixPath = [ "nixpkgs=${flake-outputs-args.nixpkgs.outPath}" ];
 
     # wipe the default flake reg, and set it to be our system nixpkgs
-    extraOptions = let
-      emptyFlakeRegistry = pkgs.writeText "flake-registry.json"
-        (builtins.toJSON { flakes = []; version = 2; });
+    extraOptions =
+      let
+        emptyFlakeRegistry = pkgs.writeText "flake-registry.json" (
+          builtins.toJSON {
+            flakes = [ ];
+            version = 2;
+          }
+        );
       in
       ''
         flake-registry = ${emptyFlakeRegistry};
-    '';
-
+      '';
   };
 
   nix.registry.nixpkgs.flake = flake-outputs-args.nixpkgs;
-
-
 }

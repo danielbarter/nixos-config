@@ -1,4 +1,9 @@
-{ config, pkgs, flake, ... }:
+{
+  config,
+  pkgs,
+  flake,
+  ...
+}:
 {
   services.resolved = {
     # use resolved for dns management
@@ -14,7 +19,10 @@
     llmnr = "false";
 
     # if not set, resolved defaults to its own list
-    fallbackDns = [ "1.1.1.1" "8.8.8.8" ];
+    fallbackDns = [
+      "1.1.1.1"
+      "8.8.8.8"
+    ];
   };
 
   # enable systemd networking for all hosts
@@ -49,7 +57,6 @@
         };
       };
     };
-
   };
 
   # Enable the OpenSSH daemon.
@@ -63,9 +70,8 @@
 
   programs.ssh.extraConfig = builtins.readFile ./dotfiles/ssh/config;
 
-
   environment.systemPackages = with pkgs; [
-    iw                  # linux tool for managing wireless networks
+    iw # linux tool for managing wireless networks
     wget
   ];
 }
