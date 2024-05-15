@@ -141,7 +141,7 @@
           x86_64-replicant-image = self.nixosConfigurations.x86_64-replicant.config.system.build.image;
           x86_64-replicant-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-image;
           aarch64-replicant-image = self.nixosConfigurations.aarch64-replicant.config.system.build.image;
-          # aarch64-replicant-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-iso;
+          aarch64-replicant-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-image;
         };
     };
 }
