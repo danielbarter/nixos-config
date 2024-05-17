@@ -18,7 +18,10 @@
   };
 
   # use systemd in stage 1. Easier to diagnose issues when they arise
-  boot.initrd.systemd.enable = true;
+  boot.initrd.systemd = {
+    enable = true;
+    emergencyAccess = true;
+  };
 
   hardware.enableAllFirmware = true;
 
