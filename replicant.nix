@@ -66,7 +66,6 @@
 
             "/loader/loader.conf".source = pkgs.writeText "loader.conf" ''
               timeout menu-force
-              default nixos
             '';
 
             "/loader/entries/nixos_console.conf".source = pkgs.writeText "nixos_console.conf" ''
