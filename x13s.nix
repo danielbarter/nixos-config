@@ -9,6 +9,7 @@
 
   boot = {
 
+    loader.efi.canTouchEfiVariables = lib.mkForce false;
 
     initrd.availableKernelModules = [
       "i2c-core"
