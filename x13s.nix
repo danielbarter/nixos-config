@@ -17,6 +17,12 @@ in {
     };
 
     initrd = {
+      # use systemd in stage 1. Easier to diagnose issues when they arise
+      systemd = {
+        enable = true;
+        emergencyAccess = true;
+      };
+
       availableKernelModules = [
         "i2c-core"
         "i2c-hid"
@@ -32,12 +38,6 @@ in {
         "usb_storage"
         "usbhid"
       ];
-
-      # use systemd in stage 1. Easier to diagnose issues when they arise
-      systemd = {
-        enable = true;
-        emergencyAccess = true;
-      };
     };
 
     kernelPackages = pkgs.linuxPackages_latest;
