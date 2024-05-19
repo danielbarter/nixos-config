@@ -97,13 +97,18 @@
           };
 
           x13s = nixpkgs.lib.nixosSystem {
+            specialArgs = flake-args { gui = false; };
             system = "x86_64-linux";
-            modules = [
+            modules = core-modules ++ [
               ./x13s.nix
-              {
+              ./replicant.nix
+              ({config, ...}: let
+                dtb = "${config.boot.kernelPackages.kernel}/dtbs/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb";
+              in {
                 nixpkgs.buildPlatform.system = "x86_64-linux";
                 nixpkgs.hostPlatform.system = "aarch64-linux";
-              }
+                image.repart.partitions."efi".contents."/x13s.dtb".source = dtb;
+              })
             ];
           };
 

@@ -7,7 +7,7 @@
 }:
 {
 
-  system.stateVersion = "23.05";
+  system.stateVersion = "24.05";
 
   # set password to be empty for root
   users.users.root.initialPassword = "";
