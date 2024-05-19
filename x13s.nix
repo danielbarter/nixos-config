@@ -6,8 +6,7 @@
   ...
 }:
 let dtb = "${config.boot.kernelPackages.kernel}/dtbs/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb";
-{
-
+in {
 
   boot = {
 
@@ -17,10 +16,7 @@ let dtb = "${config.boot.kernelPackages.kernel}/dtbs/qcom/sc8280xp-lenovo-thinkp
       grub.enable = false;
     };
 
-    # use systemd in stage 1. Easier to diagnose issues when they arise
-    initrd.systemd = {
-      enable = true;
-      emergencyAccess = true;
+    initrd = {
       availableKernelModules = [
         "i2c-core"
         "i2c-hid"
@@ -36,6 +32,12 @@ let dtb = "${config.boot.kernelPackages.kernel}/dtbs/qcom/sc8280xp-lenovo-thinkp
         "usb_storage"
         "usbhid"
       ];
+
+      # use systemd in stage 1. Easier to diagnose issues when they arise
+      systemd = {
+        enable = true;
+        emergencyAccess = true;
+      };
     };
 
     kernelPackages = pkgs.linuxPackages_latest;
