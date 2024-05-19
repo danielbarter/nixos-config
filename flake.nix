@@ -95,6 +95,18 @@
               }
             ];
           };
+
+          x13s = nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules = [
+              ./x13s.nix
+              {
+                nixpkgs.buildPlatform.system = "x86_64-linux";
+                nixpkgs.hostPlatform.system = "aarch64-linux";
+              }
+            ];
+          };
+
         };
 
       packages."x86_64-linux" =
@@ -142,6 +154,7 @@
           x86_64-replicant-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-image;
           aarch64-replicant-image = self.nixosConfigurations.aarch64-replicant.config.system.build.image;
           aarch64-replicant-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-image;
+          x13s-image = self.nixosConfigurations.x13s.config.system.build.image;
         };
     };
 }
