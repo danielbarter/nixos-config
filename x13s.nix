@@ -28,7 +28,6 @@ in {
         "i2c-hid"
         "i2c-hid-of"
         "i2c-qcom-geni"
-        "pcie-qcom"
         "phy-qcom-qmp-combo"
         "phy-qcom-qmp-pcie"
         "phy-qcom-qmp-usb"
@@ -46,6 +45,7 @@ in {
       "pd_ignore_unused"
       "arm64.nopauth"
       "dtb=x13s.dtb"
+      "efi=noruntime"
     ];
 
   };
