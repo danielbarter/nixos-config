@@ -58,11 +58,14 @@
       partitions = {
         "efi" = {
           contents = {
-            "/EFI/BOOT/BOOT${lib.toUpper efiArch}.EFI".source = "${pkgs.systemd}/lib/systemd/boot/efi/systemd-boot${efiArch}.efi";
+            "/EFI/BOOT/BOOT${lib.toUpper efiArch}.EFI".source =
+              "${pkgs.systemd}/lib/systemd/boot/efi/systemd-boot${efiArch}.efi";
 
-            "/EFI/nixos/kernel.efi".source = "${config.boot.kernelPackages.kernel}/${config.system.boot.loader.kernelFile}";
+            "/EFI/nixos/kernel.efi".source =
+              "${config.boot.kernelPackages.kernel}/${config.system.boot.loader.kernelFile}";
 
-            "/EFI/nixos/initrd.efi".source = "${config.system.build.initialRamdisk}/${config.system.boot.loader.initrdFile}";
+            "/EFI/nixos/initrd.efi".source =
+              "${config.system.build.initialRamdisk}/${config.system.boot.loader.initrdFile}";
 
             "/loader/loader.conf".source = pkgs.writeText "loader.conf" ''
               timeout menu-force
