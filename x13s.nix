@@ -7,8 +7,6 @@
 }:
 {
 
-  hardware.enableAllFirmware = lib.mkForce false;
-
   boot = {
 
     loader.efi.canTouchEfiVariables = lib.mkForce false;
