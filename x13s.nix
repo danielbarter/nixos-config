@@ -11,6 +11,9 @@
 
     loader.efi.canTouchEfiVariables = lib.mkForce false;
 
+
+    # see https://github.com/jhovold/linux
+    # and https://kernel-recipes.org/en/2023/schedule/the-arm-laptop-project
     initrd.availableKernelModules = [
       "i2c-core"
       "i2c-hid"
