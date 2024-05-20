@@ -16,22 +16,25 @@
       "i2c-hid"
       "i2c-hid-of"
       "i2c-qcom-geni"
-      "pcie-qcom"
       "phy-qcom-qmp-combo"
       "phy-qcom-qmp-pcie"
       "phy-qcom-qmp-usb"
       "phy-qcom-snps-femto-v2"
       "phy-qcom-usb-hs"
+      "nvme"
+      "leds_qcom_lpg"
+      "pwm_bl"
+      "qrtr"
+      "pmic_glink_altmode"
+      "gpio_sbu_mux"
+      "gpucc_sc8280xp"
+      "dispcc_sc8280xp"
+      "phy_qcom_edp"
+      "panel_edp"
+      "msm"
     ];
 
-    kernelPackages = pkgs.linuxPackagesFor (pkgs.buildLinux {
-      version = "6.9.0-rc7";
-      defconfig = "johan_defconfig";
-      src = pkgs.fetchurl {
-        url = "https://github.com/jhovold/linux/archive/refs/heads/wip/sc8280xp-6.9-rc7.tar.gz";
-        hash = "sha256-2cPRW6KXRVzJFIlIt+FgjmjSETuYSDFzRPPuxpvp/lM=";
-      };
-    });
+    kernelPackages = pkgs.linuxPackages_latest;
 
     kernelParams = [
       "clk_ignore_unused"
