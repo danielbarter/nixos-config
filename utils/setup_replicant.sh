@@ -6,7 +6,7 @@ setup_replicant() {
     passwd danielbarter
 
     echo "unpacking nixos configuration"
-    cp /setup/nixos.zip.gpg /nixos.zip.gpg
+    cp /nix/store/*-nixos.zip.gpg /nixos.zip.gpg
     cd /
     # removing existing empty nixos config
     gpg /nixos.zip.gpg

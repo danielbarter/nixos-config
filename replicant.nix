@@ -37,7 +37,6 @@
 
   fileSystems."/efi".device = "/dev/disk/by-label/EFI";
   fileSystems."/nix/store".device = "/dev/disk/by-label/nix-store";
-  fileSystems."/setup".device = "/dev/disk/by-label/setup";
 
   # root should be a filesystem contained in ram so that machine operation is
   # not cripplingly slow
@@ -94,27 +93,16 @@
         };
 
         "nix-store" = {
-          storePaths = [ config.system.build.toplevel ];
+          storePaths = [
+            config.system.build.toplevel
+            ./utils/setup_replicant.sh
+            /tmp/nixos.zip.gpg
+          ];
           stripNixStorePrefix = true;
           repartConfig = {
             Type = "linux-generic";
             Format = "ext4";
             Label = "nix-store";
-            Minimize = "guess";
-          };
-        };
-
-        "setup" = {
-          contents = {
-            # add encrypted zipped nixos config to iso
-            "/setup_replicant.sh".source = ./utils/setup_replicant.sh;
-            "/nixos.zip.gpg".source = /tmp/nixos.zip.gpg;
-          };
-
-          repartConfig = {
-            Type = "linux-generic";
-            Format = "ext4";
-            Label = "setup";
             Minimize = "guess";
           };
         };
