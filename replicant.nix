@@ -101,7 +101,6 @@
             Format = "ext4";
             Label = "nix-store";
             Minimize = "guess";
-            Grow = "+100%";
           };
         };
 
