@@ -15,7 +15,7 @@
       self,
       nixpkgs,
       hosts,
-    }@outputs-args:
+    }:
     {
 
       nixosConfigurations =
@@ -26,19 +26,9 @@
             ./users.nix
             ./nix-config.nix
           ];
-
-          # pass through flake outputs
-          flake-args =
-            { gui }:
-            {
-              flake-outputs-args = outputs-args;
-              flake = self;
-              inherit gui;
-            };
         in
         {
           jasper = nixpkgs.lib.nixosSystem {
-            specialArgs = flake-args { gui = true; };
             system = "x86_64-linux";
             modules = core-modules ++ [
               ./jasper.nix
@@ -48,7 +38,6 @@
           };
 
           punky = nixpkgs.lib.nixosSystem {
-            specialArgs = flake-args { gui = false; };
             system = "x86_64-linux";
             modules = core-modules ++ [
               ./punky.nix
@@ -67,13 +56,11 @@
           };
 
           rupert = nixpkgs.lib.nixosSystem {
-            specialArgs = flake-args { gui = true; };
             system = "x86_64-linux";
             modules = core-modules ++ [ ./rupert.nix ];
           };
 
           x86_64-replicant = nixpkgs.lib.nixosSystem {
-            specialArgs = flake-args { gui = true; };
             system = "x86_64-linux";
             modules = core-modules ++ [
               ./replicant.nix
@@ -85,7 +72,6 @@
           };
 
           aarch64-replicant-cross = nixpkgs.lib.nixosSystem {
-            specialArgs = flake-args { gui = false; };
             system = "x86_64-linux";
             modules = core-modules ++ [
               ./replicant.nix
@@ -97,7 +83,6 @@
           };
 
           aarch64-replicant = nixpkgs.lib.nixosSystem {
-            specialArgs = flake-args { gui = true; };
             system = "aarch64-linux";
             modules = core-modules ++ [
               ./replicant.nix

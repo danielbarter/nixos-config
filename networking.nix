@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  flake,
   ...
 }:
 {
@@ -47,8 +46,6 @@
     useNetworkd = true;
     wireless.iwd = {
 
-      # run developer mode of iwd
-      # package = flake.packages."${system}".iwd-with-developer-mode;
       enable = true;
       settings = {
         General = {
