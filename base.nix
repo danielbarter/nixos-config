@@ -32,7 +32,7 @@
 
   # List packages installed in system profile
   environment.systemPackages = with pkgs;
-    let gui = config.programs.sway.enable;
+    let sway-enabled = config.programs.sway.enable;
     in [
       binutils # objdump, readelf and c++filt
       tmux # terminal multiplexer
@@ -43,7 +43,7 @@
       usbutils # lsusb
       htop
       # we use dbus-python for the sway status bar
-      (if gui then (python3.withPackages (p: [ p.dbus-python ])) else python3)
+      (if sway-enabled then (python3.withPackages (p: [ p.dbus-python ])) else python3)
       nmap
       zip
       unzip
@@ -51,7 +51,7 @@
       fzf # fuzzy searcher
       direnv
       gdb
-      (if gui then emacs29-pgtk else emacs29-nox)
+      (if sway-enabled then emacs29-pgtk else emacs29-nox)
       aspell
       aspellDicts.en
       cmake # cmake autocomplete and emacs mode.
