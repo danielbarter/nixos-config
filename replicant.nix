@@ -5,7 +5,20 @@
   config,
   ...
 }:
-{
+let setup-replicant = builtins.path {
+      path = ./utils/setup_replicant.sh;
+      name = "setup_replicant.sh";
+    };
+    replicant-nixos-config = builtins.path {
+      path = /tmp/nixos.zip.gpg;
+      name = "nixos.zip.gpg";
+    };
+in {
+
+  environment.variables = {
+    SETUP_REPLICANT = setup-replicant;
+    REPLICANT_NIXOS_CONFIG = replicant-nixos-config;
+  };
 
   system.stateVersion = "24.05";
 
@@ -101,8 +114,8 @@
         "nix-store" = {
           storePaths = [
             config.system.build.toplevel
-            ./utils/setup_replicant.sh
-            /tmp/nixos.zip.gpg
+            setup-replicant
+            replicant-nixos-config
           ];
           stripNixStorePrefix = true;
           repartConfig = {
