@@ -6,6 +6,7 @@
 }:
 {
   environment.systemPackages =
+    # if sway is enabled, we include more packages
     let sway-enabled = config.programs.sway.enable;
     in [
       pkgs.tmux # terminal multiplexer
