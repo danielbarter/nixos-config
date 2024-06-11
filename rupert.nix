@@ -8,8 +8,6 @@
     };
   };
 
-  environment.systemPackages = [ pkgs.alacritty ];
-
   programs.firefox.enable = true;
 
   programs.steam.enable = true;
