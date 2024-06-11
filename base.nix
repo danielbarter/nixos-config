@@ -29,36 +29,6 @@
   nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile
-  environment.systemPackages = with pkgs;
-    let sway-enabled = config.programs.sway.enable;
-    in [
-      binutils # objdump, readelf and c++filt
-      tmux # terminal multiplexer
-      git
-      file
-      strace
-      pciutils # lspci
-      usbutils # lsusb
-      htop
-      # we use dbus-python for the sway status bar
-      (if sway-enabled then (python3.withPackages (p: [ p.dbus-python ])) else python3)
-      nmap
-      zip
-      unzip
-      radare2
-      fzf # fuzzy searcher
-      direnv
-      gdb
-      (if sway-enabled then emacs29-pgtk else emacs29-nox)
-      aspell
-      aspellDicts.en
-      cmake # cmake autocomplete and emacs mode.
-
-      (pass.withExtensions (exts: [ exts.pass-otp ]))
-
-      man-pages # linux programmers man pages
-      man-pages-posix # posix man pages
-    ];
 
   documentation = {
     dev.enable = true;
