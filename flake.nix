@@ -22,7 +22,7 @@
         let
           core-modules = [
             ./base.nix
-            ./packages-minimal.nix
+            ./packages.nix
             ./networking.nix
             ./users.nix
             ./nix-config.nix
