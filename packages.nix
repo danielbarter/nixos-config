@@ -53,7 +53,7 @@
 
       pkgs.iw # linux tool for managing wireless networks
 
-    ] ++ lib.optional dev-machine [
+    ] ++ lib.optionals dev-machine [
 
       pkgs.binutils # objdump, readelf and c++filt
       pkgs.strace
