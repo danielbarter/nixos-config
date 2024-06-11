@@ -5,11 +5,18 @@
   ...
 }:
 {
-  environment.systemPackages =
+
+  options.dev-machine = lib.mkOption {
+    type = lib.types.bool;
+    default = false;
+    description = "flag for specifying whether to include development packages in systemPackages";
+  };
+
+  config.environment.systemPackages =
     # if sway is enabled, we include more packages
     let sway-enabled = config.programs.sway.enable;
         iwd-enabled = config.networking.wireless.iwd.enable;
-        dev-machine = true;
+        dev-machine = config.dev-machine;
     in [
 
       pkgs.tmux # terminal multiplexer

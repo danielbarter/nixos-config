@@ -6,6 +6,9 @@
 }:
 
 {
+
+  dev-machine = true;
+
   nix = {
     settings = {
       substituters = [ "http://punky.meow:5000" ];
