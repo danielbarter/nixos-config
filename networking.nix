@@ -67,8 +67,8 @@
 
   programs.ssh.extraConfig = builtins.readFile ./dotfiles/ssh/config;
 
-  environment.systemPackages = with pkgs; [
-    iw # linux tool for managing wireless networks
-    wget
+  environment.systemPackages = [
+    pkgs.iw # linux tool for managing wireless networks
+    pkgs.wget
   ];
 }

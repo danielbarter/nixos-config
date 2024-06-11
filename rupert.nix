@@ -8,7 +8,7 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [ alacritty ];
+  environment.systemPackages = [ pkgs.alacritty ];
 
   programs.firefox.enable = true;
 

@@ -6,11 +6,11 @@
   # enabling opencl and VA-API GPU drivers
   hardware.opengl = {
     enable = true;
-    extraPackages = with pkgs; [
-      intel-compute-runtime
-      intel-vaapi-driver
-      libvdpau-va-gl
-      intel-media-driver
+    extraPackages = [
+      pkgs.intel-compute-runtime
+      pkgs.intel-vaapi-driver
+      pkgs.libvdpau-va-gl
+      pkgs.intel-media-driver
     ];
   };
 }

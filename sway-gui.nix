@@ -1,25 +1,24 @@
 {
-  config,
   pkgs,
   lib,
   ...
 }:
 {
-  environment.systemPackages = with pkgs; [
-    alacritty # gpu accelerated terminal
-    zathura # pdf viewer
-    glib # gsettings
-    dracula-theme # gtk theme
-    gnome3.adwaita-icon-theme # default gnome icons
-    swaylock
-    swayidle
-    grim # screenshot functionality
-    slurp # screenshot functionality
-    wl-clipboard
-    mako # FreeDesktop notifications
-    libnotify # notify-send
-    kanshi # sway hotplug functionality
-    bemenu
+  environment.systemPackages = [
+    pkgs.alacritty # gpu accelerated terminal
+    pkgs.zathura # pdf viewer
+    pkgs.glib # gsettings
+    pkgs.dracula-theme # gtk theme
+    pkgs.gnome3.adwaita-icon-theme # default gnome icons
+    pkgs.swaylock
+    pkgs.swayidle
+    pkgs.grim # screenshot functionality
+    pkgs.slurp # screenshot functionality
+    pkgs.wl-clipboard
+    pkgs.mako # FreeDesktop notifications
+    pkgs.libnotify # notify-send
+    pkgs.kanshi # sway hotplug functionality
+    pkgs.bemenu
   ];
 
   # enable bluetooth
@@ -52,11 +51,11 @@
   fonts = {
     enableDefaultPackages = true;
 
-    packages = with pkgs; [
-      source-code-pro
-      source-sans-pro
-      source-serif-pro
-      noto-fonts-emoji
+    packages = [
+      pkgs.source-code-pro
+      pkgs.source-sans-pro
+      pkgs.source-serif-pro
+      pkgs.noto-fonts-emoji
     ];
 
     fontconfig = {
