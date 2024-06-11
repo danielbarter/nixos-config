@@ -35,6 +35,8 @@
       pkgs.cmake # cmake autocomplete and emacs mode.
       pkgs.man-pages # linux programmers man pages
       pkgs.man-pages-posix # posix man pages
+      pkgs.pyright
+      pkgs.nixd
     ];
 
 }
