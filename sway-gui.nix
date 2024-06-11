@@ -4,22 +4,6 @@
   ...
 }:
 {
-  environment.systemPackages = [
-    pkgs.alacritty # gpu accelerated terminal
-    pkgs.zathura # pdf viewer
-    pkgs.glib # gsettings
-    pkgs.dracula-theme # gtk theme
-    pkgs.gnome3.adwaita-icon-theme # default gnome icons
-    pkgs.swaylock
-    pkgs.swayidle
-    pkgs.grim # screenshot functionality
-    pkgs.slurp # screenshot functionality
-    pkgs.wl-clipboard
-    pkgs.mako # FreeDesktop notifications
-    pkgs.libnotify # notify-send
-    pkgs.kanshi # sway hotplug functionality
-    pkgs.bemenu
-  ];
 
   # enable bluetooth
   hardware.bluetooth.enable = true;
