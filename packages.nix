@@ -15,6 +15,8 @@
   config.environment.systemPackages =
     # if sway is enabled, we include more packages
     let sway-enabled = config.programs.sway.enable;
+        gnome-enabled = config.services.xserver.desktopManager.gnome.enable;
+        gui-enabled = sway-enabled || gnome-enabled;
         iwd-enabled = config.networking.wireless.iwd.enable;
         dev-machine = config.dev-machine;
     in with pkgs; [
@@ -34,15 +36,18 @@
       zip
       unzip
       fzf # fuzzy searcher
-      (if sway-enabled then emacs29-pgtk else emacs29-nox)
+      (if gui-enabled then emacs29-pgtk else emacs29-nox)
       aspell
       aspellDicts.en
       (pass.withExtensions (exts: [ exts.pass-otp ]))
 
-    ] ++ lib.optionals sway-enabled [
+    ] ++ lib.optionals gui-enabled [
 
       alacritty # gpu accelerated terminal
       zathura # pdf viewer
+
+    ] ++ lib.optionals sway-enabled [
+
       glib # gsettings
       dracula-theme # gtk theme
       gnome3.adwaita-icon-theme # default gnome icons
