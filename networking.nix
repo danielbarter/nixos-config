@@ -35,6 +35,8 @@
   # give wireless cards time to turn on
   systemd.services.iwd.serviceConfig.ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
 
+  environment.systemPackages = [ pkgs.iw ];
+
   networking = {
 
     # disable various default nixos networking components

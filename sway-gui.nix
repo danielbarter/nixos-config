@@ -101,6 +101,22 @@
     };
   };
 
+
+  environment.systemPackages = with pkgs; [
+      glib # gsettings
+      dracula-theme # gtk theme
+      gnome3.adwaita-icon-theme # default gnome icons
+      swaylock
+      swayidle
+      grim # screenshot functionality
+      slurp # screenshot functionality
+      wl-clipboard
+      mako # FreeDesktop notifications
+      libnotify # notify-send
+      kanshi # sway hotplug functionality
+      bemenu
+  ];
+
   # enable sway window manager
   programs.sway = {
     enable = true;

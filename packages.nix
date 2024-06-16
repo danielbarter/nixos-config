@@ -46,25 +46,6 @@
       alacritty # gpu accelerated terminal
       zathura # pdf viewer
 
-    ] ++ lib.optionals sway-enabled [
-
-      glib # gsettings
-      dracula-theme # gtk theme
-      gnome3.adwaita-icon-theme # default gnome icons
-      swaylock
-      swayidle
-      grim # screenshot functionality
-      slurp # screenshot functionality
-      wl-clipboard
-      mako # FreeDesktop notifications
-      libnotify # notify-send
-      kanshi # sway hotplug functionality
-      bemenu
-
-    ] ++ lib.optionals iwd-enabled [
-
-      iw # linux tool for managing wireless networks
-
     ] ++ lib.optionals dev-machine [
 
       binutils # objdump, readelf and c++filt
