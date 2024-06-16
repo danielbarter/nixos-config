@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from abc import ABC, abstractmethod
 import shutil
 from subprocess import check_output, run
