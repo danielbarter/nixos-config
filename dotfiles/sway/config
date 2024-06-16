@@ -264,7 +264,7 @@ bindsym $mod+r mode "resize"
 
 bar {
     position top
-    status_command while python /etc/nixos/utils/status_command.py; do sleep 5; done
+    status_command while status_command; do sleep 5; done
     height 25
     colors {
         background $Background

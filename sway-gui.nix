@@ -103,7 +103,7 @@
 
 
   environment.systemPackages = with pkgs; [
-    (callPackage ./status-command.nix)
+    (callPackage ./status-command.nix {})
     glib # gsettings
     dracula-theme # gtk theme
     gnome3.adwaita-icon-theme # default gnome icons
