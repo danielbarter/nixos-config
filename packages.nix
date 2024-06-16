@@ -17,7 +17,6 @@
     let sway-enabled = config.programs.sway.enable;
         gnome-enabled = config.services.xserver.desktopManager.gnome.enable;
         gui-enabled = sway-enabled || gnome-enabled;
-        iwd-enabled = config.networking.wireless.iwd.enable;
         dev-machine = config.dev-machine;
     in with pkgs; [
 
@@ -29,10 +28,7 @@
       pciutils # lspci
       usbutils # lsusb
       nmap
-
-      # we use dbus-python for the sway status bar
-      (if sway-enabled then (python3.withPackages (p: [ p.dbus-python ])) else python3)
-
+      python3
       zip
       unzip
       fzf # fuzzy searcher
