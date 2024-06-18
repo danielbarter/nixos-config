@@ -3,7 +3,7 @@
 
     # flake inputs can be overriden eg
     # --override-input nixpkgs /home/danielbarter/nixpkgs
-    nixpkgs.url = "github:NixOS/nixpkgs/release-24.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     hosts.url = "github:StevenBlack/hosts";
 
     # unify nixpkgs across inputs
