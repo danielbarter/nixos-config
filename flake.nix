@@ -26,6 +26,7 @@
             ./networking.nix
             ./users.nix
             ./nix-config.nix
+            { nix.nixPath = [ "nixpkgs=${nixpkgs.outPath}" ]; }
           ];
         in
         {
