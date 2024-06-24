@@ -3,6 +3,11 @@
 
   dev-machine = true;
 
+  boot.tmp = {
+    useTmpfs = true;
+    tmpfsSize = "20G";
+  };
+
   services.nix-serve = {
     enable = true;
     port = 5000;
