@@ -4,7 +4,7 @@
   environment.systemPackages = [ pkgs.intel-gpu-tools ];
 
   # enabling opencl and VA-API GPU drivers
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
     extraPackages = [
       pkgs.intel-compute-runtime

@@ -8,6 +8,9 @@
     tmpfsSize = "20G";
   };
 
+  # building lots of derivations at once tends to unearth concurrency bugs in build systems
+  nix.settings.max-jobs = 2;
+
   services.nix-serve = {
     enable = true;
     port = 5000;
@@ -80,17 +83,13 @@
 
         addresses = [
           {
-            addressConfig = {
-              Address = "192.168.1.12/24";
-            };
+            Address = "192.168.1.12/24";
           }
         ];
 
         routes = [
           {
-            routeConfig = {
-              Gateway = "192.168.1.1";
-            };
+            Gateway = "192.168.1.1";
           }
         ];
       };
