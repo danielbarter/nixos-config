@@ -3,11 +3,6 @@
 
   dev-machine = true;
 
-  boot.tmp = {
-    useTmpfs = true;
-    tmpfsSize = "20G";
-  };
-
   # building lots of derivations at once tends to unearth concurrency bugs in build systems
   nix.settings.max-jobs = 2;
 
