@@ -102,14 +102,15 @@
             image:
             pkgs.writeScriptBin "x86_64-run-nixos-vm" ''
               #!${pkgs.runtimeShell}
-              cp ${image}/image.raw /tmp/image.raw
-              chmod +w /tmp/image.raw
+              cp ${image}/image.raw /dev/shm/image.raw
+              chmod +w /dev/shm/image.raw
               ${pkgs.qemu}/bin/qemu-kvm \
               -smp $(nproc) \
               -bios ${pkgs.OVMF.fd}/FV/OVMF.fd \
-              -drive file=/tmp/image.raw,format=raw \
+              -drive file=/dev/shm/image.raw,format=raw \
               -nographic \
               -m 8G
+              rm /dev/shm/image.raw
             '';
 
           aarch64-vm =
@@ -120,8 +121,8 @@
             in
             pkgs.writeScriptBin "aarch64-run-nixos-vm" ''
               #!${pkgs.runtimeShell}
-              cp ${image}/image.raw /tmp/image.raw
-              chmod +w /tmp/image.raw
+              cp ${image}/image.raw /dev/shm/image.raw
+              chmod +w /dev/shm/image.raw
               ${pkgs.qemu}/bin/qemu-system-aarch64 \
               -machine virt \
               -cpu cortex-a57 \
@@ -129,7 +130,8 @@
               -smp 4 \
               -nographic \
               -drive if=pflash,file=${efi-flash},${drive-flags} \
-              -drive file=/tmp/image.raw,${drive-flags}
+              -drive file=/dev/shm/image.raw,${drive-flags}
+              rm /dev/shm/image.raw
             '';
         in
         {

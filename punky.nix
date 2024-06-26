@@ -3,6 +3,9 @@
 
   dev-machine = true;
 
+  # we use /dev/shm as a staging area for raw disk images, so the extra space is nice
+  boot.devShmSize = "75%";
+
   # building lots of derivations at once tends to unearth concurrency bugs in build systems
   nix.settings.max-jobs = 2;
 
