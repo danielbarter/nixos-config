@@ -123,6 +123,9 @@
     enable = true;
     wrapperFeatures.gtk = true;
 
+    # clearout default packages
+    extraPackages = [];
+
     # extra session environment variables
     # we need add gsettings-desktop-schemas to XDG_DATA_DIRS so gsettings works
     # we need to set _JAVA_AWT_WM_NONREPARENTING=1 so java GUI apps aren't broken
