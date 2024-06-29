@@ -46,21 +46,7 @@ set $Purple            #bd93f9
 set $Red               #ff5555
 set $Yellow            #f1fa8c
 
-set $menu bemenu-run \
-          --fn "SourceCodePro Regular 11" \
-          --line-height=25 \
-          --tb=$Background \
-          --tf=$Foreground \
-          --fb=$Background \
-          --ff=$Purple \
-          --nb=$Background \
-          --nf=$Foreground \
-          --hb=$Background \
-          --hf=$Purple \
-          --sb=$Background \
-          --ab=$Background \
-          --af=$Foreground
-
+set $menu fuzzel --config=/etc/nixos/dotfiles/sway/fuzzel.ini
 
 output * bg $Background solid_color
 

@@ -115,7 +115,7 @@
     mako # FreeDesktop notifications
     libnotify # notify-send
     kanshi # sway hotplug functionality
-    bemenu
+    fuzzel
   ];
 
   # enable sway window manager
