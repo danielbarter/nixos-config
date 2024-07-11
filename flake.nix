@@ -35,6 +35,7 @@
             modules = core-modules ++ [
               ./jasper.nix
               ./sway-gui.nix
+              ./sound.nix
               ./intel-gpu.nix
             ];
           };
@@ -54,6 +55,7 @@
                 };
               }
               ./intel-gpu.nix
+              ./sound.nix
             ];
           };
 
@@ -70,6 +72,7 @@
               # so make sure that we have VA-API drivers so firefox is happy
               ./intel-gpu.nix
               ./sway-gui.nix
+              ./sound.nix
             ];
           };
 
@@ -89,6 +92,7 @@
             modules = core-modules ++ [
               ./replicant.nix
               ./sway-gui.nix
+              ./sound.nix
             ];
           };
 

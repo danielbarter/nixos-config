@@ -9,8 +9,6 @@
 
   dev-machine = true;
 
-  environment.systemPackages = [ pkgs.mpg123 ];
-
   nix = {
     settings = {
       substituters = [ "http://punky.meow:5000" ];

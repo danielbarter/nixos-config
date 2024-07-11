@@ -5,21 +5,12 @@
 }:
 {
 
-  # enable bluetooth
-  hardware.bluetooth.enable = true;
 
   # make udev rules for backlight
   programs.light.enable = true;
 
   # firefox integration
   programs.firefox.enable = true;
-
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
 
   # xdg-desktop-portal works by exposing a series of D-Bus interfaces
   # known as portals under a well-known name
