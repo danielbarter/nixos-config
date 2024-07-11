@@ -13,6 +13,9 @@
 
     wireplumber = {
       enable = true;
+
+      # by default, headless bluetooth is disabled
+      # see https://pipewire.pages.freedesktop.org/wireplumber/daemon/configuration/bluetooth.html
       configPackages = [
         (pkgs.writeTextDir "share/wireplumber/wireplumber.conf.d/10-bluez-seat.conf" ''
           wireplumber.profiles = {
@@ -20,7 +23,7 @@
               monitor.bluez.seat-monitoring = disabled
             }
           }
-       '')
+          '')
       ];
     };
   };
