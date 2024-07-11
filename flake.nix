@@ -61,7 +61,7 @@
 
           rupert = nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
-            modules = core-modules ++ [ ./rupert.nix ];
+            modules = core-modules ++ [ ./rupert.nix ./sound.nix ];
           };
 
           x86_64-replicant = nixpkgs.lib.nixosSystem {

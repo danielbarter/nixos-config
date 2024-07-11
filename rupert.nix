@@ -132,7 +132,6 @@
 
   swapDevices = [ ];
 
-  hardware.bluetooth.enable = true;
 
   # enabling gnome
   services.xserver.enable = true;
