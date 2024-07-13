@@ -30,7 +30,7 @@ $ gpg --import /etc/nixos/secrets/gpg/privkey.asc /etc/nixos/public/gpg/public.a
 
 # secrets are generated as follows:
 $ gpg --full-generate-key
-$ gpg --output public.asc --armor --export <email>
-$ gpg --output privkey.asc --armor --export-secret-key <email>
+$ gpg --output public.asc --armor --export <fingerprint>
+$ gpg --output privkey.asc --armor --export-secret-key <fingerprint>
 $ ssh-keygen
 ```
