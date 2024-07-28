@@ -7,7 +7,11 @@
   boot.devShmSize = "75%";
 
   # building lots of derivations at once tends to unearth concurrency bugs in build systems
-  nix.settings.max-jobs = 2;
+  # also, this machine is also constantly streaming music, which we don't want to interupt
+  nix.settings = {
+    max-jobs = 2;
+    cores = 4;
+  };
 
   services.nix-serve = {
     enable = true;
