@@ -10,7 +10,7 @@
   # also, this machine is also constantly streaming music, which we don't want to interupt
   nix.settings = {
     max-jobs = 2;
-    cores = 4;
+    cores = 2;
   };
 
   services.nix-serve = {
