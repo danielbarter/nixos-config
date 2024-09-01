@@ -138,9 +138,7 @@
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
 
-  # seems as if somewhere inside gnome configuration pulseaudio is
-  # being enabled.  need to manually disable it
-  hardware.pulseaudio.enable = false;
+  hardware.bluetooth.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
