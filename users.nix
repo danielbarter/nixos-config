@@ -14,6 +14,7 @@
       linger = true;
       isNormalUser = true;
       extraGroups = [
+        "wheel"
         "video"
         "audio"
       ];
