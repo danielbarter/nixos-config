@@ -1,9 +1,14 @@
 {
   pkgs,
+  config,
   ...
 }:
 
 {
+
+
+  # store all debug symbols on dev machines
+  environment.enableDebugInfo = config.dev-machine;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader = {
