@@ -6,9 +6,23 @@
 
 {
 
-
   # store all debug symbols on dev machines
   environment.enableDebugInfo = config.dev-machine;
+
+  # switch to doas instead of sudo
+  security = {
+    doas = {
+      enable = true;
+      extraRules = [
+        {
+          users = ["danielbarter"];
+          keepEnv = true; # retain user environment variables
+          persist = true; # only require password verification once
+        }
+      ];
+    };
+    sudo.enable = false;
+  };
 
   # Use the systemd-boot EFI boot loader.
   boot.loader = {

@@ -4,9 +4,9 @@ pack_etc_nixos() {
     # remove old encrypted config, if it exits
     rm -f /tmp/nixos.zip.gpg
 
-    sudo zip -r /tmp/nixos.zip /etc/nixos
+    doas zip -r /tmp/nixos.zip /etc/nixos
     gpg -c /tmp/nixos.zip
-    sudo rm /tmp/nixos.zip
+    doas rm /tmp/nixos.zip
 }
 
 

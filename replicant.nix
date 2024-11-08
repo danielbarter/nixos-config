@@ -109,8 +109,8 @@ in {
         # resize the store partition after copying onto a
         # drive.
         # $ nix-shell -p cloud-utils
-        # $ sudo growpart /dev/sda 2
-        # $ sudo resize2fs /dev/sda2
+        # $ doas growpart /dev/sda 2
+        # $ doas resize2fs /dev/sda2
         "nix-store" = {
           storePaths = [
             config.system.build.toplevel
