@@ -3,20 +3,27 @@ chown -R danielbarter /etc/nixos
 chgrp -R wheel /etc/nixos
 
 # LAN cache private key needs to be owned by nix-serve
-# if id nix-serve
-# then
-#     chown nix-serve /etc/nixos/secrets/binary-cache/cache-priv-key.pem
-#     chgrp nix-serve /etc/nixos/secrets/binary-cache/cache-priv-key.pem
-# fi
+if id nix-serve
+then
+    chown nix-serve /etc/nixos/secrets/binary-cache/cache-priv-key.pem
+    chgrp nix-serve /etc/nixos/secrets/binary-cache/cache-priv-key.pem
+fi
 
+# 660 for all files not in secrets
+for file in $(find /etc/nixos -not -path /etc/nixos/secrets -type f)
+do
+    chmod 660 $file
+done
+
+# 600 for all files in secrets
 for file in $(find /etc/nixos/secrets -type f)
 do
     chmod 600 $file
 done
 
 
-for file in $(find /etc/nixos/secrets -type d)
+for file in $(find /etc/nixos -type d)
 do
-    chmod 755 $file
+    chmod 775 $file
 done
 

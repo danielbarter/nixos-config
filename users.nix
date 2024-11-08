@@ -8,6 +8,10 @@
       ];
     };
 
+    root = {
+      extraGroups = [ "wheel" ];
+    };
+
     danielbarter = {
 
       # creates /var/lib/systemd/linger/danielbarter
