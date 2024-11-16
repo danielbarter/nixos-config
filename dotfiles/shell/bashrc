@@ -11,6 +11,8 @@ export HISTFILE=~/.bash_eternal_history
 # add autocomplete for doas
 complete -cf doas
 
+alias sudo='doas'
+
 fuzzy_history() {
     # if first argument is passed in, it is used as a hook to consume fuzzy_history_out
     # eg fuzzy_history eval
