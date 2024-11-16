@@ -10,7 +10,7 @@ then
 fi
 
 # 660 for all files not in secrets
-for file in $(find /etc/nixos -not -path /etc/nixos/secrets -type f)
+for file in $(find /etc/nixos -path /etc/nixos/secrets -prune -o -type f -print)
 do
     chmod 660 $file
 done
