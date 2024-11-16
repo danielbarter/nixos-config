@@ -26,4 +26,4 @@ root = rev-parse --show-toplevel
 [pull]
         rebase = false
 [safe]
-	directory = /etc/nixos/.git
+	directory = /etc/nixos

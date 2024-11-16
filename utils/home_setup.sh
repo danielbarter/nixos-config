@@ -8,7 +8,10 @@ ln -sf /etc/nixos/dotfiles/shell/bash_profile /home/danielbarter/.bash_profile
 ln -sf /etc/nixos/dotfiles/shell/tmux.conf /home/danielbarter/.tmux.conf
 
 # git config
+# more recent versions of nix require /etc/nixos to be marked as a safe repo for root
 ln -sf /etc/nixos/dotfiles/git/gitconfig /home/danielbarter/.gitconfig
+doas ln -sf /etc/nixos/dotfiles/git/gitconfig /root/.gitconfig
+
 
 # create socket directory for ssh
 mkdir -p /home/danielbarter/.ssh/sockets
