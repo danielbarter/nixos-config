@@ -21,6 +21,12 @@ do
     chmod 600 $file
 done
 
+# 770 for files in utils
+for file in $(find /etc/nixos/utils -type f -print)
+do
+    chmod 770 $file
+done
+
 
 for file in $(find /etc/nixos -type d)
 do
