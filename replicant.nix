@@ -54,7 +54,6 @@ in {
   # root should be a filesystem contained in ram so that machine operation is
   # not cripplingly slow
   fileSystems."/" = {
-    label = "root";
     fsType = "tmpfs";
     options = [ "size=4G" ];
   };
