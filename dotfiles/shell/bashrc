@@ -1,4 +1,4 @@
-export EDITOR="emacs -nw"
+export EDITOR=hx
 
 # environment variable with path to system nixpkgs
 export NIXPKGS=${NIX_PATH:8}

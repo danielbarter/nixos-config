@@ -12,7 +12,7 @@ root = rev-parse --show-toplevel
 	name = Daniel Barter
 
 [core]
-        editor = "emacs -nw"
+        editor = hx
 
 [grep]
 	linenumber = true

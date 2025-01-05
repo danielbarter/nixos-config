@@ -32,7 +32,6 @@
       zip
       unzip
       fzf # fuzzy searcher
-      (if gui-enabled then emacs29-pgtk else emacs29-nox)
       helix
       aspell
       aspellDicts.en
@@ -50,7 +49,6 @@
       radare2
       direnv
       gdb
-      cmake # cmake autocomplete and emacs mode.
       man-pages # linux programmers man pages
       man-pages-posix # posix man pages
       pyright
