@@ -1,6 +1,6 @@
 # symlink emacs config into home
 ln -sf /etc/nixos/dotfiles/emacs/emacs.el /home/danielbarter/.emacs.el
-ln -sf /etc/nixos/dotfiles/helix/config.toml /home/danielbarter/.config/helix/config.toml
+ln -sf /etc/nixos/dotfiles/helix /home/danielbarter/.config/helix
 
 # symlink shell config files into home
 ln -sf /etc/nixos/dotfiles/shell/alacritty.toml /home/danielbarter/.alacritty.toml

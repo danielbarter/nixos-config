@@ -1,0 +1,6 @@
+[language-server.pyright]
+command = "pyright-langserver"
+
+[[language]]
+name = "python"
+language-servers = [ "pyright" ]
