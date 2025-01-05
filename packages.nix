@@ -33,6 +33,7 @@
       unzip
       fzf # fuzzy searcher
       (if gui-enabled then emacs29-pgtk else emacs29-nox)
+      helix
       aspell
       aspellDicts.en
       (pass.withExtensions (exts: [ exts.pass-otp ]))
