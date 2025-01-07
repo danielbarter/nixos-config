@@ -3,3 +3,5 @@ theme = "dracula"
 [editor]
 true-color = true
 
+[editor.soft-wrap]
+enable = true
