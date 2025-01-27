@@ -23,7 +23,9 @@
     enable = true;
     host = "0.0.0.0";
     port = 11111;
-    models = "/home/danielbarter/ML/models";
+    user = "ollama";
+    models = "/ML/models";
+    home = "/ML";
   };
 
   # dnssd for nix store
@@ -150,7 +152,7 @@
       fsType = "vfat";
     };
 
-    "/home/danielbarter/ML" = {
+    "/ML" = {
       device = "/dev/disk/by-uuid/308bd10e-7a18-4610-8c7d-757a098ef2dc";
       fsType = "ext4";
     };
