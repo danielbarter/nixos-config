@@ -19,6 +19,12 @@
     secretKeyFile = "/etc/nixos/secrets/binary-cache/cache-priv-key.pem";
   };
 
+  services.ollama = {
+    enable = true;
+    host = "0.0.0.0";
+    port = 11111;
+  };
+
   # dnssd for nix store
   environment.etc = {
     "systemd/dnssd/nix_store.dnssd".text = ''
