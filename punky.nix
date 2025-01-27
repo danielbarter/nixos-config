@@ -23,6 +23,7 @@
     enable = true;
     host = "0.0.0.0";
     port = 11111;
+    models = "/home/danielbarter/ML/models";
   };
 
   # dnssd for nix store
