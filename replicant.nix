@@ -48,14 +48,39 @@ in {
     "usbhid"
   ];
 
+  # boot partition
   fileSystems."/efi".device = "/dev/disk/by-label/EFI";
-  fileSystems."/nix/store".device = "/dev/disk/by-label/nix-store";
 
   # root should be a filesystem contained in ram so that machine operation is
   # not cripplingly slow
   fileSystems."/" = {
     fsType = "tmpfs";
     options = [ "size=4G" ];
+  };
+
+  # we put the nix store on an overlay filesystem with the lower part in the
+  # device image, and the upper part a temp filesystem. this prevents operations
+  # which write to the store from being crippilingly slow
+  fileSystems."/nix-store-lower" = {
+    device = "/dev/disk/by-label/nix-store-lower";
+    neededForBoot = true;
+  };
+
+  fileSystems."/nix-store-upper" = {
+    fsType = "tmpfs";
+    options = [ "size=4G" ];
+    neededForBoot = true;
+  };
+
+
+  fileSystems."/nix/store" = {
+    overlay = {
+      lowerdir = [ "/nix-store-lower" ];
+      upperdir = "/nix-store-upper/diff";
+      workdir = "/nix-store-upper/work";
+    };
+    # make sure that we don't try and mount nix store before its parts are mounted
+    depends = [ "/nix-store-lower" "/nix-store-upper" ];
   };
 
   imports = [ "${modulesPath}/image/repart.nix" ];
@@ -110,7 +135,7 @@ in {
         # $ nix-shell -p cloud-utils
         # $ doas growpart /dev/sda 2
         # $ doas resize2fs /dev/sda2
-        "nix-store" = {
+        "nix-store-lower" = {
           storePaths = [
             config.system.build.toplevel
             setup-replicant
@@ -120,7 +145,7 @@ in {
           repartConfig = {
             Type = "linux-generic";
             Format = "ext4";
-            Label = "nix-store";
+            Label = "nix-store-lower";
             Minimize = "guess";
           };
         };
