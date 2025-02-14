@@ -59,6 +59,11 @@ fuzzy_disassemble() {
     done
 }
 
+nix_closure_size() {
+    # compute the closure size of anything which evaluates to a derivation
+    local closure=$(nix-store -qR --include-outputs $(nix-instantiate $1))
+    nix-store -q --size $closure | awk '{ a+=$1 } END { print a / (1000 * 1000) }'
+}
 
 # determine if shell is pseudoterminal
 is_pseudoterminal() {
