@@ -19,6 +19,8 @@
     secretKeyFile = "/etc/nixos/secrets/binary-cache/cache-priv-key.pem";
   };
 
+  # clients run with
+  # OLLAMA_HOST=punky.meow:11111 ollama list
   services.ollama = {
     enable = true;
     host = "0.0.0.0";
