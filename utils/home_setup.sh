@@ -1,4 +1,5 @@
 # symlink helix config into home
+mkdir -p /home/danielbarter/.config
 ln -sf /etc/nixos/dotfiles/helix /home/danielbarter/.config/helix
 
 # symlink shell config files into home
