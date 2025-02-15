@@ -20,7 +20,7 @@
   };
 
   systemd.services.llama-cpp = let
-    ollama-vulkan = pkgs.llama-cpp.override {vulkanSupport = true;};
+    llama-vulkan = pkgs.llama-cpp.override {vulkanSupport = true;};
     model_file = "/ML/deepseek_r1_distill_qwen_14b.gguf";
     layers = "49";
     network_config = "--host 0.0.0.0 --port 80";
@@ -29,7 +29,7 @@
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
       Type = "simple";
-      ExecStart = "${ollama-vulkan}/bin/llama-server -m ${model_file} -ngl ${layers} ${network_config}";
+      ExecStart = "${llama-vulkan}/bin/llama-server -m ${model_file} -ngl ${layers} ${network_config}";
     };
   };
 
