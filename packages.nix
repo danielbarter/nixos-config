@@ -53,6 +53,7 @@
       man-pages-posix # posix man pages
       pyright
       nixd
+      git-lfs
 
     ];
 }
