@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs,... }:
 {
 
   dev-machine = true;
@@ -21,6 +21,9 @@
 
   # clients run with
   # OLLAMA_HOST=punky.meow:11111 ollama list
+  # currently, ollama does not support Vulkan backend,
+  # but we can run the ollama downloaded models using llama.cpp
+  # in server mode.
   services.ollama = {
     enable = true;
     host = "0.0.0.0";
@@ -28,6 +31,22 @@
     user = "ollama";
     models = "/ML/models";
     home = "/ML";
+  };
+
+  systemd.services.llama-cpp = let
+    ollama-vulkan = pkgs.llama-cpp.override {vulkanSupport = true;};
+    # we manage models weights with ollama, since it is really good at that.
+    # this is deepseek-r1:14b which has 49 layers
+    model_file = "/ML/models/blobs/sha256-6e9f90f02bb3b39b59e81916e8cfce9deb45aeaeb9a54a5be4414486b907dc1e";
+    layers = "49";
+  in
+   {
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${ollama-vulkan}/bin/llama-server -m ${model_file} -ngl ${layers} --host 0.0.0.0";
+    };
   };
 
   # dnssd for nix store
