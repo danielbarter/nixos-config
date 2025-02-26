@@ -26,7 +26,6 @@
     network_config = "--host 0.0.0.0 --port 80";
   in {
     after = [ "network.target" ];
-    wantedBy = [ "multi-user.target" ];
     serviceConfig = {
       Type = "simple";
       ExecStart = "${llama-vulkan}/bin/llama-server -m ${model_file} -ngl ${layers} ${network_config}";
