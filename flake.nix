@@ -122,47 +122,36 @@
         let
           pkgs = import nixpkgs { system = "x86_64-linux"; };
 
-          x86_64-vm =
-            image:
-            let
-              efi-flash = "${pkgs.OVMF.fd}/FV/OVMF_CODE.fd";
-            in
-            pkgs.writeScriptBin "x86_64-run-nixos-vm" ''
-              #!${pkgs.runtimeShell}
-              cp ${image}/image.raw /dev/shm/image.raw
-              chmod +w /dev/shm/image.raw
+          x86_64-vm-params = {
+            script-name = "x86_64-run-nixos-vm";
+            qemu-invocation = "${pkgs.qemu}/bin/qemu-kvm";
+            efi-flash = "${pkgs.OVMF.fd}/FV/OVMF_CODE.fd";
+          };
 
-              ${pkgs.qemu}/bin/qemu-kvm \
-              -drive file=${efi-flash},readonly=on,if=pflash \
-              -drive file=/dev/shm/image.raw,format=raw \
-              -smp 4 \
-              -nographic \
-              -m 4G
+          aarch64-vm-params = {
+            script-name = "aarch64-run-nixos-vm";
+            qemu-invocation = "${pkgs.qemu}/bin/qemu-system-aarch64 -cpu cortex-a57 -machine virt";
+            efi-flash = "${pkgs.pkgsCross.aarch64-multiplatform.OVMF.fd}/FV/AAVMF_CODE.fd";
+          };
 
-              rm /dev/shm/image.raw
-            '';
 
-          aarch64-vm =
-            image:
-            let
-              efi-flash = "${pkgs.pkgsCross.aarch64-multiplatform.OVMF.fd}/FV/AAVMF_CODE.fd";
-            in
-            pkgs.writeScriptBin "aarch64-run-nixos-vm" ''
-              #!${pkgs.runtimeShell}
-              cp ${image}/image.raw /dev/shm/image.raw
-              chmod +w /dev/shm/image.raw
+          vm = arch-params: image: pkgs.writeScriptBin arch-params.script-name ''
+            #!${pkgs.runtimeShell}
+            cp ${image}/image.raw /dev/shm/image.raw
+            chmod +w /dev/shm/image.raw
 
-              ${pkgs.qemu}/bin/qemu-system-aarch64 \
-              -drive file=${efi-flash},readonly=on,if=pflash \
-              -drive file=/dev/shm/image.raw,format=raw \
-              -cpu cortex-a57 \
-              -machine virt \
-              -smp 4 \
-              -nographic \
-              -m 4G
+            ${arch-params.qemu-invocation} \
+            -drive file=${arch-params.efi-flash},readonly=on,if=pflash \
+            -drive file=/dev/shm/image.raw,format=raw \
+            -smp 4 \
+            -nographic \
+            -m 4G
+            
+            rm /dev/shm/image.raw
+          '';
 
-              rm /dev/shm/image.raw
-            '';
+          x86_64-vm = vm x86_64-vm-params;
+          aarch64-vm = vm aarch64-vm-params;
         in
         {
 
