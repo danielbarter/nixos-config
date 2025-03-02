@@ -32,9 +32,9 @@
 
           replicant-core-modules = core-modules ++ [ ./replicant.nix ];
 
-          replicant = { system, host ? system, extra-modules ? [] }: nixpkgs.lib.nixosSystem {
+          replicant-minimal = { system, host }: nixpkgs.lib.nixosSystem {
             system = system;
-            modules = replicant-core-modules ++ extra-modules ++ [
+            modules = replicant-core-modules ++ [
               {
                 nixpkgs.buildPlatform.system = system;
                 nixpkgs.hostPlatform.system = host;
@@ -79,9 +79,9 @@
           };
 
 
-          x86_64-replicant = replicant {
+          x86_64-replicant = nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
-            extra-modules = [
+            modules = replicant-core-modules + [
               # we are probably going to be running on some intel chip,
               # so make sure that we have VA-API drivers so firefox is happy
               ./intel-gpu.nix
@@ -90,9 +90,9 @@
             ];
           };
 
-          x86_64-replicant-minimal = replicant {system = "x86_64-linux";};
-          aarch64-replicant-minimal = replicant {system = "x86_64-linux"; host = "aarch64-linux";};
-          riscv64-replicant-minimal = replicant {system = "x86_64-linux"; host = "riscv64-linux";};
+          x86_64-replicant-minimal  = replicant-minimal {system = "x86_64-linux"; host = "x86_64-linux";};
+          aarch64-replicant-minimal = replicant-minimal {system = "x86_64-linux"; host = "aarch64-linux";};
+          riscv64-replicant-minimal = replicant-minimal {system = "x86_64-linux"; host = "riscv64-linux";};
 
         };
 
@@ -110,6 +110,12 @@
             script-name = "aarch64-run-nixos-vm";
             qemu-invocation = "${pkgs.qemu}/bin/qemu-system-aarch64 -cpu cortex-a57 -machine virt";
             efi-flash = "${pkgs.pkgsCross.aarch64-multiplatform.OVMF.fd}/FV/AAVMF_CODE.fd";
+          };
+
+          riscv64-vm-params = {
+            script-name = "riscv64-run-nixos-vm";
+            qemu-invocation = "${pkgs.qemu}/bin/qemu-system-riscv64 -machine virt";
+            efi-flash = "${pkgs.pkgsCross.riscv64.OVMF.fd}/FV/RISCV_VIRT_CODE.fd";
           };
 
 
@@ -130,6 +136,7 @@
 
           x86_64-vm = vm x86_64-vm-params;
           aarch64-vm = vm aarch64-vm-params;
+          riscv64-vm = vm riscv64-vm-params;
         in
         {
 
@@ -142,7 +149,7 @@
           x86_64-replicant-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-image;
           x86_64-replicant-minimal-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-minimal-image;
           aarch64-replicant-minimal-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-minimal-image;
-
+          riscv64-replicant-minimal-vm = riscv64-vm self.packages."x86_64-linux".riscv64-replicant-minimal-image;
         };
     };
 }
