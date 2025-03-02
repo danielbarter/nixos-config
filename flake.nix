@@ -88,6 +88,18 @@
             ];
           };
 
+
+          riscv64-replicant-cross = nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules = core-modules ++ [
+              ./replicant.nix
+              {
+                nixpkgs.buildPlatform.system = "x86_64-linux";
+                nixpkgs.hostPlatform.system = "riscv64-linux";
+              }
+            ];
+          };
+
           aarch64-replicant = nixpkgs.lib.nixosSystem {
             system = "aarch64-linux";
             modules = core-modules ++ [
@@ -148,6 +160,7 @@
           aarch64-replicant-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-image;
           aarch64-replicant-cross-image = self.nixosConfigurations.aarch64-replicant-cross.config.system.build.image;
           aarch64-replicant-cross-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-cross-image;
+          riscv64-replicant-cross-image = self.nixosConfigurations.riscv64-replicant-cross.config.system.build.image;
 
         };
     };
