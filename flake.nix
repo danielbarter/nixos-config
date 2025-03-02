@@ -77,6 +77,23 @@
             ];
           };
 
+
+          x86_64-replicant-minimal = nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules = core-modules ++ [
+              ./replicant.nix
+            ];
+          };
+
+          aarch64-replicant = nixpkgs.lib.nixosSystem {
+            system = "aarch64-linux";
+            modules = core-modules ++ [
+              ./replicant.nix
+              ./sway-gui.nix
+              ./sound.nix
+            ];
+          };
+ 
           aarch64-replicant-cross = nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
             modules = core-modules ++ [
@@ -99,16 +116,6 @@
               }
             ];
           };
-
-          aarch64-replicant = nixpkgs.lib.nixosSystem {
-            system = "aarch64-linux";
-            modules = core-modules ++ [
-              ./replicant.nix
-              ./sway-gui.nix
-              ./sound.nix
-            ];
-          };
-
         };
 
       packages."x86_64-linux" =
@@ -128,9 +135,9 @@
               ${pkgs.qemu}/bin/qemu-kvm \
               -drive file=${efi-flash},readonly=on,if=pflash \
               -drive file=/dev/shm/image.raw,format=raw \
-              -smp $(nproc) \
+              -smp 4 \
               -nographic \
-              -m 8G
+              -m 4G
 
               rm /dev/shm/image.raw
             '';
@@ -148,8 +155,8 @@
               ${pkgs.qemu}/bin/qemu-system-aarch64 \
               -drive file=${efi-flash},readonly=on,if=pflash \
               -drive file=/dev/shm/image.raw,format=raw \
-              -machine virt \
               -cpu cortex-a57 \
+              -machine virt \
               -smp 4 \
               -nographic \
               -m 4G
@@ -162,6 +169,8 @@
           # before building run ./utils/pack_etc_nixos.sh
           x86_64-replicant-image = self.nixosConfigurations.x86_64-replicant.config.system.build.image;
           x86_64-replicant-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-image;
+          x86_64-replicant-minimal-image = self.nixosConfigurations.x86_64-replicant-minimal.config.system.build.image;
+          x86_64-replicant-minimal-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-minimal-image;
           aarch64-replicant-image = self.nixosConfigurations.aarch64-replicant.config.system.build.image;
           aarch64-replicant-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-image;
           aarch64-replicant-cross-image = self.nixosConfigurations.aarch64-replicant-cross.config.system.build.image;
