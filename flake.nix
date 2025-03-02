@@ -29,6 +29,18 @@
             ./nix-config.nix
             { nix.nixPath = [ "nixpkgs=${nixpkgs.outPath}" ]; }
           ];
+
+          replicant = { system, host ? system, extra-modules ? [] }: nixpkgs.lib.nixosSystem {
+            system = system;
+            modules = core-modules ++ extra-modules ++ [
+              ./replicant.nix
+              {
+                nixpkgs.buildPlatform.system = system;
+                nixpkgs.hostPlatform.system = host;
+              }
+            ];
+          };
+
         in
         {
           jasper = nixpkgs.lib.nixosSystem {
@@ -65,10 +77,10 @@
             modules = core-modules ++ [ ./rupert.nix ];
           };
 
-          x86_64-replicant = nixpkgs.lib.nixosSystem {
+
+          x86_64-replicant = replicant {
             system = "x86_64-linux";
-            modules = core-modules ++ [
-              ./replicant.nix
+            extra-modules = [
               # we are probably going to be running on some intel chip,
               # so make sure that we have VA-API drivers so firefox is happy
               ./intel-gpu.nix
@@ -77,45 +89,10 @@
             ];
           };
 
+          x86_64-replicant-minimal = replicant {system = "x86_64-linux";};
+          aarch64-replicant-minimal = replicant {system = "x86_64-linux"; host = "aarch64-linux";};
+          riscv64-replicant-minimal = replicant {system = "x86_64-linux"; host = "riscv64-linux";};
 
-          x86_64-replicant-minimal = nixpkgs.lib.nixosSystem {
-            system = "x86_64-linux";
-            modules = core-modules ++ [
-              ./replicant.nix
-            ];
-          };
-
-          aarch64-replicant = nixpkgs.lib.nixosSystem {
-            system = "aarch64-linux";
-            modules = core-modules ++ [
-              ./replicant.nix
-              ./sway-gui.nix
-              ./sound.nix
-            ];
-          };
- 
-          aarch64-replicant-cross = nixpkgs.lib.nixosSystem {
-            system = "x86_64-linux";
-            modules = core-modules ++ [
-              ./replicant.nix
-              {
-                nixpkgs.buildPlatform.system = "x86_64-linux";
-                nixpkgs.hostPlatform.system = "aarch64-linux";
-              }
-            ];
-          };
-
-
-          riscv64-replicant-cross = nixpkgs.lib.nixosSystem {
-            system = "x86_64-linux";
-            modules = core-modules ++ [
-              ./replicant.nix
-              {
-                nixpkgs.buildPlatform.system = "x86_64-linux";
-                nixpkgs.hostPlatform.system = "riscv64-linux";
-              }
-            ];
-          };
         };
 
       packages."x86_64-linux" =
@@ -158,14 +135,12 @@
           # before building run ./utils/pack_etc_nixos.sh
           x86_64-replicant-image = self.nixosConfigurations.x86_64-replicant.config.system.build.image;
           x86_64-replicant-minimal-image = self.nixosConfigurations.x86_64-replicant-minimal.config.system.build.image;
-          aarch64-replicant-image = self.nixosConfigurations.aarch64-replicant.config.system.build.image;
-          aarch64-replicant-cross-image = self.nixosConfigurations.aarch64-replicant-cross.config.system.build.image;
-          riscv64-replicant-cross-image = self.nixosConfigurations.riscv64-replicant-cross.config.system.build.image;
+          aarch64-replicant-minimal-image = self.nixosConfigurations.aarch64-replicant-minimal.config.system.build.image;
+          riscv64-replicant-minimal-image = self.nixosConfigurations.riscv64-replicant-minimal.config.system.build.image;
 
           x86_64-replicant-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-image;
           x86_64-replicant-minimal-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-minimal-image;
-          aarch64-replicant-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-image;
-          aarch64-replicant-cross-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-cross-image;
+          aarch64-replicant-minimal-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-minimal-image;
 
         };
     };
