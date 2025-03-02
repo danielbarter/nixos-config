@@ -30,10 +30,11 @@
             { nix.nixPath = [ "nixpkgs=${nixpkgs.outPath}" ]; }
           ];
 
+          replicant-core-modules = core-modules ++ [ ./replicant.nix ];
+
           replicant = { system, host ? system, extra-modules ? [] }: nixpkgs.lib.nixosSystem {
             system = system;
-            modules = core-modules ++ extra-modules ++ [
-              ./replicant.nix
+            modules = replicant-core-modules ++ extra-modules ++ [
               {
                 nixpkgs.buildPlatform.system = system;
                 nixpkgs.hostPlatform.system = host;
