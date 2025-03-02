@@ -117,37 +117,43 @@
 
           x86_64-vm =
             image:
+            let
+              efi-flash = "${pkgs.OVMF.fd}/FV/OVMF_CODE.fd";
+            in
             pkgs.writeScriptBin "x86_64-run-nixos-vm" ''
               #!${pkgs.runtimeShell}
               cp ${image}/image.raw /dev/shm/image.raw
               chmod +w /dev/shm/image.raw
+
               ${pkgs.qemu}/bin/qemu-kvm \
-              -smp $(nproc) \
-              -bios ${pkgs.OVMF.fd}/FV/OVMF.fd \
+              -drive file=${efi-flash},readonly=on,if=pflash \
               -drive file=/dev/shm/image.raw,format=raw \
+              -smp $(nproc) \
               -nographic \
               -m 8G
+
               rm /dev/shm/image.raw
             '';
 
           aarch64-vm =
             image:
             let
-              drive-flags = "format=raw,readonly=on";
-              efi-flash = "${pkgs.pkgsCross.aarch64-multiplatform.OVMF.fd}/AAVMF/QEMU_EFI-pflash.raw";
+              efi-flash = "${pkgs.pkgsCross.aarch64-multiplatform.OVMF.fd}/FV/AAVMF_CODE.fd";
             in
             pkgs.writeScriptBin "aarch64-run-nixos-vm" ''
               #!${pkgs.runtimeShell}
               cp ${image}/image.raw /dev/shm/image.raw
               chmod +w /dev/shm/image.raw
+
               ${pkgs.qemu}/bin/qemu-system-aarch64 \
+              -drive file=${efi-flash},readonly=on,if=pflash \
+              -drive file=/dev/shm/image.raw,format=raw \
               -machine virt \
               -cpu cortex-a57 \
-              -m 2G \
               -smp 4 \
               -nographic \
-              -drive if=pflash,file=${efi-flash},${drive-flags} \
-              -drive file=/dev/shm/image.raw,${drive-flags}
+              -m 4G
+
               rm /dev/shm/image.raw
             '';
         in
