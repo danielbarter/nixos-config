@@ -168,14 +168,15 @@
 
           # before building run ./utils/pack_etc_nixos.sh
           x86_64-replicant-image = self.nixosConfigurations.x86_64-replicant.config.system.build.image;
-          x86_64-replicant-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-image;
           x86_64-replicant-minimal-image = self.nixosConfigurations.x86_64-replicant-minimal.config.system.build.image;
-          x86_64-replicant-minimal-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-minimal-image;
           aarch64-replicant-image = self.nixosConfigurations.aarch64-replicant.config.system.build.image;
-          aarch64-replicant-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-image;
           aarch64-replicant-cross-image = self.nixosConfigurations.aarch64-replicant-cross.config.system.build.image;
-          aarch64-replicant-cross-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-cross-image;
           riscv64-replicant-cross-image = self.nixosConfigurations.riscv64-replicant-cross.config.system.build.image;
+
+          x86_64-replicant-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-image;
+          x86_64-replicant-minimal-vm = x86_64-vm self.packages."x86_64-linux".x86_64-replicant-minimal-image;
+          aarch64-replicant-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-image;
+          aarch64-replicant-cross-vm = aarch64-vm self.packages."x86_64-linux".aarch64-replicant-cross-image;
 
         };
     };
