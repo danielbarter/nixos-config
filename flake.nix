@@ -81,7 +81,7 @@
 
           x86_64-replicant = nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
-            modules = replicant-core-modules + [
+            modules = replicant-core-modules ++ [
               # we are probably going to be running on some intel chip,
               # so make sure that we have VA-API drivers so firefox is happy
               ./intel-gpu.nix
