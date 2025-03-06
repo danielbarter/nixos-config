@@ -1,4 +1,4 @@
-{ pkgs,... }:
+{ config, pkgs,... }:
 {
 
   dev-machine = true;
@@ -71,7 +71,7 @@
           Name = "wg0";
         };
         wireguardConfig = {
-          PrivateKeyFile = "/etc/nixos/secrets/wireguard/punky";
+          PrivateKeyFile = "/etc/nixos/secrets/wireguard/${config.networking.hostName}";
           ListenPort = 51820;
         };
         wireguardPeers = import ./wireguard-peers.nix; 

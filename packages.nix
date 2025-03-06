@@ -25,7 +25,6 @@
       file
       htop
       wget
-      wireguard-tools
       pciutils # lspci
       usbutils # lsusb
       nmap

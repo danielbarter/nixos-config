@@ -44,7 +44,7 @@
           Name = "wg0";
         };
         wireguardConfig = {
-          PrivateKeyFile = "/etc/nixos/secrets/wireguard/jasper";
+          PrivateKeyFile = "/etc/nixos/secrets/wireguard/${config.networking.hostName}";
           ListenPort = 51820;
         };
         wireguardPeers = ./wireguard-peers.nix; 
