@@ -64,6 +64,18 @@
           MIIMonitorSec = "1s";
         };
       };
+
+      "50-wg0" = {
+        netdevConfig = {
+          Kind = "wireguard";
+          Name = "wg0";
+        };
+        wireguardConfig = {
+          PrivateKeyFile = "/etc/nixos/secrets/wireguard/punky";
+          ListenPort = 51820;
+        };
+        wireguardPeers = []; # import from a common file because everyone needs to share it
+      };
     };
 
     networks = {
