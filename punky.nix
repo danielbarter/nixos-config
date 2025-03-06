@@ -1,7 +1,9 @@
 { config, pkgs,... }:
 {
 
+  imports = [ ./static-bond.nix ];
   dev-machine = true;
+  network-id = 13;
 
   # we use /dev/shm as a staging area for raw disk images, so the extra space is nice
   boot.devShmSize = "75%";
@@ -52,19 +54,6 @@
   # bonding ethernet and wireless (with ethernet as primary)
   systemd.network = {
     netdevs = {
-      "30-bond0" = {
-        netdevConfig = {
-          Kind = "bond";
-          Name = "bond0";
-        };
-
-        bondConfig = {
-          Mode = "active-backup";
-          PrimaryReselectPolicy = "always";
-          MIIMonitorSec = "1s";
-        };
-      };
-
       "30-wg0" = {
         netdevConfig = {
           Kind = "wireguard";
@@ -79,50 +68,6 @@
     };
 
     networks = {
-      "30-enp88s0" = {
-        matchConfig = {
-          Name = "enp88s0";
-        };
-
-        networkConfig = {
-          Bond = "bond0";
-          PrimarySlave = true;
-        };
-      };
-
-      "30-wlan0" = {
-        matchConfig = {
-          Name = "wlan0";
-        };
-
-        networkConfig = {
-          Bond = "bond0";
-        };
-      };
-
-      "30-bond0" = {
-        matchConfig = {
-          Name = "bond0";
-        };
-
-        networkConfig = {
-          DHCP = "no";
-          MulticastDNS = "yes";
-        };
-
-        addresses = [
-          {
-            Address = "192.168.1.12/24";
-          }
-        ];
-
-        routes = [
-          {
-            Gateway = "192.168.1.1";
-          }
-        ];
-      };
-
       "30-wg0" = {
         matchConfig.Name = "wg0";
         address = ["192.168.2.12/24"];

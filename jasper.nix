@@ -9,6 +9,7 @@
 
   imports = [ ./static-bond.nix ];
   dev-machine = true;
+  network-id = 13;
 
   nix = {
     settings = {
@@ -24,6 +25,7 @@
   };
 
   systemd.network = {
+    netdevs = {
       "30-wg0" = {
         netdevConfig = {
           Kind = "wireguard";
@@ -35,7 +37,7 @@
         };
         wireguardPeers = import ./wireguard-peers.nix; 
       };
-
+    };
     networks = {
       "30-wg0" = {
         matchConfig.Name = "wg0";
