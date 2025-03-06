@@ -3,7 +3,7 @@
 
   imports = [ ./static-bond.nix ];
   dev-machine = true;
-  network-id = 13;
+  network-id = 12;
 
   # we use /dev/shm as a staging area for raw disk images, so the extra space is nice
   boot.devShmSize = "75%";
