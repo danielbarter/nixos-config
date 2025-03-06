@@ -19,6 +19,18 @@
     secretKeyFile = "/etc/nixos/secrets/binary-cache/cache-priv-key.pem";
   };
 
+
+  # dnssd for nix store
+  # kinda stupid. Just an experiment to see if it works
+  environment.etc = {
+    "systemd/dnssd/nix_store.dnssd".text = ''
+      [Service]
+      Name=nix_store
+      Type=_http._tcp
+      Port=5000
+    '';
+  };
+
   systemd.services.llama-cpp = let
     llama-vulkan = pkgs.llama-cpp.override {vulkanSupport = true;};
     model_file = "/ML/deepseek_r1_distill_qwen_14b.gguf";
@@ -30,16 +42,6 @@
       Type = "simple";
       ExecStart = "${llama-vulkan}/bin/llama-server -m ${model_file} -ngl ${layers} ${network_config}";
     };
-  };
-
-  # dnssd for nix store
-  environment.etc = {
-    "systemd/dnssd/nix_store.dnssd".text = ''
-      [Service]
-      Name=nix_store
-      Type=_http._tcp
-      Port=5000
-    '';
   };
 
   # serve DNS stub on local network
