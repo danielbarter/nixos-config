@@ -65,7 +65,7 @@
         };
       };
 
-      "50-wg0" = {
+      "30-wg0" = {
         netdevConfig = {
           Kind = "wireguard";
           Name = "wg0";
@@ -74,7 +74,7 @@
           PrivateKeyFile = "/etc/nixos/secrets/wireguard/punky";
           ListenPort = 51820;
         };
-        wireguardPeers = []; # import from a common file because everyone needs to share it
+        wireguardPeers = []; # import from a common file because everyone needs to share it. see https://nixos.wiki/wiki/WireGuard
       };
     };
 
@@ -121,6 +121,11 @@
             Gateway = "192.168.1.1";
           }
         ];
+      };
+
+      "30-wg0" = {
+        matchConfig.Name = "wg0";
+        address = ["192.168.2.12/24"];
       };
     };
   };
