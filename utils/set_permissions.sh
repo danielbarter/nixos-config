@@ -2,7 +2,7 @@
 chown -R danielbarter /etc/nixos
 chgrp -R wheel /etc/nixos
 
-# wireguard private keys only need to be read by root
+# wireguard private keys only need to be read by systemd-network user
 chown -R systemd-network /etc/nixos/secrets/wireguard
 chgrp -R systemd-network /etc/nixos/secrets/wireguard
 
