@@ -74,7 +74,7 @@
           PrivateKeyFile = "/etc/nixos/secrets/wireguard/punky";
           ListenPort = 51820;
         };
-        wireguardPeers = []; # import from a common file because everyone needs to share it. see https://nixos.wiki/wiki/WireGuard
+        wireguardPeers = import ./wireguard-peers.nix; 
       };
     };
 
@@ -140,6 +140,7 @@
       "192.168.1.2" = [ "asusaux.meow" ];
       "192.168.1.10" = [ "rupert.meow" ];
       "192.168.1.12" = [ "punky.meow" ];
+      "192.168.1.13" = [ "jasper.meow" ];
     };
 
     # DNS used by resolved. resolvectl status
