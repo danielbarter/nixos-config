@@ -47,7 +47,7 @@
           PrivateKeyFile = "/etc/nixos/secrets/wireguard/${config.networking.hostName}";
           ListenPort = 51820;
         };
-        wireguardPeers = ./wireguard-peers.nix; 
+        wireguardPeers = import ./wireguard-peers.nix; 
       };
     };
 
