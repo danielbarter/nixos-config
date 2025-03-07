@@ -6,12 +6,6 @@ import time
 import re
 import argparse
 
-
-
-def log(msg):
-    time_prefix =  time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
-    print(f"[{time_prefix}]: {msg}")
-
 def is_valid_ipv4(address):
     ipv4_pattern = r"^(\d{1,3}\.){3}\d{1,3}$"
     if not re.match(ipv4_pattern, address):
@@ -43,7 +37,7 @@ is_valid_ipv4(current_ip)
 
 
 if current_ip != cached_ip:
-    log(f"ip change: current = {current_ip}, cached = {cached_ip if len(cached_ip) > 0 else "_"}") 
+    print(f"ip change: current = {current_ip}, cached = {cached_ip if len(cached_ip) > 0 else "_"}") 
     with open(cached_ip_file_path,'w') as f:
         f.write(current_ip)
 
@@ -53,11 +47,11 @@ if current_ip != cached_ip:
     update_ip_response = requests.get(update_ip_url)
     status = update_ip_response.text
     if status == "OK":
-        log("ip update successful")
+        print("ip update successful")
     else:        
-        log("ip update failed")
+        print("ip update failed")
     
 
 else:
-    log(f"no ip change: ip = {current_ip}") 
+    print(f"no ip change: ip = {current_ip}") 
 
