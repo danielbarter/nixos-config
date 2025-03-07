@@ -3,7 +3,7 @@
 
   imports = [ ./static-bond.nix ];
   dev-machine = true;
-  network-id = 12;
+  network-id = (import ./network-ids.nix).punky;
 
   # we use /dev/shm as a staging area for raw disk images, so the extra space is nice
   boot.devShmSize = "75%";
@@ -48,7 +48,7 @@
 
   # serve DNS stub on local network
   services.resolved.extraConfig = ''
-    DNSStubListenerExtra=192.168.1.12
+    DNSStubListenerExtra=192.168.1.${config.network-id}
   '';
 
   # bonding ethernet and wireless (with ethernet as primary)
@@ -70,22 +70,22 @@
     networks = {
       "30-wg0" = {
         matchConfig.Name = "wg0";
-        address = ["192.168.2.12/24"];
+        address = ["192.168.2.${config.network-id}/24"];
       };
     };
   };
 
-  networking = {
-
+  networking = let network-ids = import ./network-ids.nix;
+   in {
     hostName = "punky";
 
     # these get put into /etc/hosts
     hosts = {
       "192.168.1.1" = [ "asusmain.meow" ];
       "192.168.1.2" = [ "asusaux.meow" ];
-      "192.168.1.10" = [ "rupert.meow" ];
-      "192.168.1.12" = [ "punky.meow" ];
-      "192.168.1.13" = [ "jasper.meow" ];
+      "192.168.1.${network-ids.rupert}" = [ "rupert.meow" ];
+      "192.168.1.${network-ids.punky}" = [ "punky.meow" ];
+      "192.168.1.${network-ids.jasper}" = [ "jasper.meow" ];
     };
 
     # DNS used by resolved. resolvectl status
