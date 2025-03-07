@@ -51,7 +51,6 @@
     DNSStubListenerExtra=192.168.1.${config.network-id}
   '';
 
-  # bonding ethernet and wireless (with ethernet as primary)
   systemd.network = {
     netdevs = {
       "30-wg0" = {
