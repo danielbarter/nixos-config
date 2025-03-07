@@ -3,12 +3,11 @@ in [
   {
     PublicKey = (builtins.readFile ./public/wireguard/punky);
     AllowedIPs = [ "192.168.2.${network-ids.punky}" ];
-    Endpoint = [ "192.168.1.${network-ids.punky}:51820"];
+    Endpoint = [ "punkymeow.duckdns.org:51820"];
   }
   
   {
-    PublicKey = (builtins.readFile ./public/wireguard/jasper);
-    AllowedIPs = [ "192.168.2.${network-ids.jasper}" ];
-    Endpoint = [ "192.168.1.${network-ids.jasper}:51820"];
+    PublicKey = "9JoDOB1aGfOrD8woPSukSVho1NoMLr/MYY+WAHk7lDc=";
+    AllowedIPs = [ "192.168.2.${network-ids.phone}" ];
   }
 ]
