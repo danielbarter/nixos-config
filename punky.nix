@@ -3,7 +3,7 @@
 
   imports = [ ./static-bond-interface.nix ];
   dev-machine = true;
-  network-id = (import ./network-ids.nix).punky;
+  network-id = (import ./network-ids.nix).${config.networking.hostName};
 
   # we use /dev/shm as a staging area for raw disk images, so the extra space is nice
   boot.devShmSize = "75%";

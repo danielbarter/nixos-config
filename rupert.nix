@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
   nix = {
     settings = {
@@ -25,7 +25,7 @@
 
   # bonding ethernet and wireless (with ethernet as primary)
   imports = [ ./static-bond-interface.nix ];
-  network-id = (import ./network-ids.nix).rupert;
+  network-id = (import ./network-ids.nix).${config.networking.hostName};
 
   networking = {
     hostName = "rupert";
