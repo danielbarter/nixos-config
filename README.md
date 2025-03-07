@@ -1,8 +1,5 @@
 # NixOS system configuration
 
-
-### Secrets
-
 ```
 # gpg keys are imported as follows
 $ gpg --import /etc/nixos/secrets/gpg/privkey.asc /etc/nixos/public/gpg/public.asc
