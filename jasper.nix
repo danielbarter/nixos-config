@@ -9,7 +9,7 @@
 
   imports = [ ./static-bond.nix ];
   dev-machine = true;
-  network-id = 13;
+  network-id = (import ./network-ids.nix).jasper;
 
   nix = {
     settings = {
@@ -41,7 +41,7 @@
     networks = {
       "30-wg0" = {
         matchConfig.Name = "wg0";
-        address = ["192.168.2.13/24"];
+        address = ["192.168.2.${config.network-id}/24"];
       };
     };
   };

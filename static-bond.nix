@@ -9,7 +9,7 @@
   # we want to put them behind a bond interface, and assign a static ip, since they
   # live in a house where the router is on 192.168.1.1
   options.network-id = lib.mkOption {
-    type = lib.types.int;
+    type = lib.types.str;
     description = "id used for static IP: 192.168.1.x";
   };
 
@@ -65,7 +65,7 @@
 
           addresses = [
             {
-              Address = "192.168.1.${builtins.toString config.network-id}/24";
+              Address = "192.168.1.${config.network-id}/24";
             }
           ];
 
