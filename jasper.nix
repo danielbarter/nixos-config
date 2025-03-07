@@ -7,7 +7,7 @@
 
 {
 
-  imports = [ ./static-bond.nix ];
+  imports = [ ./static-bond-interface.nix ];
   dev-machine = true;
   network-id = (import ./network-ids.nix).jasper;
 

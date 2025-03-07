@@ -24,7 +24,7 @@
   '';
 
   # bonding ethernet and wireless (with ethernet as primary)
-  imports = [ ./static-bond.nix ];
+  imports = [ ./static-bond-interface.nix ];
   network-id = (import ./network-ids.nix).rupert;
 
   networking = {
