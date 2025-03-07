@@ -22,7 +22,9 @@
         "video"
         "audio"
       ];
-      openssh.authorizedKeys.keys = [ (builtins.readFile ./public/ssh/id_rsa.pub) ];
+      openssh.authorizedKeys.keys = [
+        (builtins.readFile ./public/ssh/id_rsa.pub)
+      ];
     };
   };
 }
