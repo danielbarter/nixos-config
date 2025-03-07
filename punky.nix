@@ -51,6 +51,14 @@
     DNSStubListenerExtra=192.168.1.${config.network-id}
   '';
 
+
+  # duckdns for LAN
+  systemd.service.ddns-update = let
+  ddns = (pkgs.callPackage ./ddns-update.nix {});
+  in {
+    
+  };
+  # wireguard interface
   systemd.network = {
     netdevs = {
       "30-wg0" = {
