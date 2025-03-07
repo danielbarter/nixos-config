@@ -52,11 +52,26 @@
   '';
 
 
-  # duckdns for LAN
-  systemd.service.ddns-update = let
-  ddns = (pkgs.callPackage ./ddns-update.nix {});
+  # ddns update for LAN
+  systemd.services.ddns-update = let
+  ddns-update = (pkgs.callPackage ./ddns-update.nix {});
   in {
-    
+    wantedBy = [ "timers.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${ddns-update}/bin/ddns_update --token_file /etc/nixos/secrets/duckdns_token";
+    };
+    unitConfig = {
+      PartOf = [ "timers.target" ];
+    };
+  };
+
+  systemd.timers.ddns-update = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnBootSec = "1min";
+      OnUnitActiveSec = "10min";
+    };
   };
   # wireguard interface
   systemd.network = {
