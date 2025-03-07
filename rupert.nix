@@ -24,72 +24,11 @@
   '';
 
   # bonding ethernet and wireless (with ethernet as primary)
-  systemd.network = {
-    netdevs = {
-      "30-bond0" = {
-        netdevConfig = {
-          Kind = "bond";
-          Name = "bond0";
-        };
-
-        bondConfig = {
-          Mode = "active-backup";
-          PrimaryReselectPolicy = "always";
-          MIIMonitorSec = "1s";
-        };
-      };
-    };
-
-    networks = {
-      "30-enp37s0" = {
-        matchConfig = {
-          Name = "enp37s0";
-        };
-
-        networkConfig = {
-          Bond = "bond0";
-          PrimarySlave = true;
-        };
-      };
-
-      "30-wlan0" = {
-        matchConfig = {
-          Name = "wlan0";
-        };
-
-        networkConfig = {
-          Bond = "bond0";
-        };
-      };
-
-      "30-bond0" = {
-        matchConfig = {
-          Name = "bond0";
-        };
-
-        networkConfig = {
-          DHCP = "no";
-          MulticastDNS = "yes";
-        };
-
-        addresses = [
-          {
-            Address = "192.168.1.10/24";
-          }
-        ];
-
-        routes = [
-          {
-            Gateway = "192.168.1.1";
-          }
-        ];
-      };
-    };
-  };
+  imports = [ ./static-bond.nix ];
+  network-id = (import ./network-ids.nix).rupert;
 
   networking = {
     hostName = "rupert";
-    nameservers = [ "192.168.1.12" ];
     networkmanager.enable = false;
   };
 
