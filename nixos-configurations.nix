@@ -1,5 +1,4 @@
-{ nixpkgs, hosts }:
-let
+{ nixpkgs, hosts }: let
   core-modules = [
     ./base.nix
     ./packages.nix
