@@ -29,6 +29,7 @@ in {
     hostName = "replicant";
   };
 
+
   # catchall network config. Configure whatever interface is present
   systemd.network.networks = {
     "40-generic" = {
@@ -83,7 +84,7 @@ in {
     depends = [ "/nix-store-lower" "/nix-store-upper" ];
   };
 
-  imports = [ "${modulesPath}/image/repart.nix" ];
+  imports = [ "${modulesPath}/image/repart.nix" ./wireguard-interface.nix  ];
 
   image.repart =
     let
@@ -107,18 +108,11 @@ in {
               timeout menu-force
             '';
 
-            "/loader/entries/nixos_console.conf".source = pkgs.writeText "nixos_console.conf" ''
-              title NixOS (console)
-              linux /EFI/nixos/kernel.efi
-              initrd /EFI/nixos/initrd.efi
-              options init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams} console=ttyS0
-            '';
-
             "/loader/entries/nixos.conf".source = pkgs.writeText "nixos.conf" ''
               title NixOS
               linux /EFI/nixos/kernel.efi
               initrd /EFI/nixos/initrd.efi
-              options init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams}
+              options init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams} console=tty0 console=ttyS0
             '';
           };
           repartConfig = {

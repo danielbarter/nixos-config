@@ -10,4 +10,9 @@ in [
     PublicKeyFile = "/etc/nixos/public/wireguard/phone";
     AllowedIPs = [ "192.168.2.${network-ids.phone}" ];
   }
+
+  {
+    PublicKeyFile = "/etc/nixos/public/wireguard/replicant";
+    AllowedIPs = [ "192.168.2.${network-ids.replicant}" ];
+  }
 ]

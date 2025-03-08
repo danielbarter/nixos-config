@@ -1,7 +1,7 @@
 { config, pkgs,... }:
 {
 
-  imports = [ ./static-bond-interface.nix ];
+  imports = [ ./static-bond-interface.nix ./wireguard-interface.nix ];
   dev-machine = true;
 
   # we use /dev/shm as a staging area for raw disk images, so the extra space is nice
