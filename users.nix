@@ -24,8 +24,7 @@
       ];
       openssh.authorizedKeys.keys = [
         (builtins.readFile ./public/ssh/id_rsa.pub)
-
-        "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDDVf4aFiu/viLpvGoOTogDVAHhO/OnLbxMGoHog9h0TWUlKrofH4OCD2pNYSDt3nUNXqxK55rhr5zgLgI/rhH4PNMJYWo2coiS5NoLXk9QQeY0CJExgMylR2euD8LlzYXlvfqmm5Cj3yiyGcqISL/a8H8OAPQFCTuPr/Pw1q4mC77eV1LSKUhBc0zmIxx5HARr5933T0HosGqDPC1o0ukpMjCvh1IBXdJVw0tJa5cn0nGgii8xMJtotnK18Ka7eGHJzUAXGOnX8/u3tNrGCjje/8TiVXGxjb9behSXjOJV8N+veKvFuMU8hC/3Zpo46wu9V3/va0fmVvIVx4T+PfD2pdpohTVre6ypzh6ZYqco/WF26sdEY28H8E06R4zyIsvC1ZIrp05u+STfLTOQP24o4jzdtVexJa6lETpMEEMSPsvWf1p57lGYGQ7dPaQTYgez4oVpZ5QZNJtixS+AGQQ5FruhUMTfQkA2Ce6fCB9OmkPV3qUtYkh+tUNndqwqlU6muZWnJjU1UC5m0Mu2m/Mw+UXbve0IK2KOemXDCAmklE3rOQOZEtDqPm9HribZcxi+E/NmWgbD09alq9I/ht1UCkLjL5X+R2OC2TIKGxP6JzCVvsDZ+45lYrjWNDUeMfEds2IjqBPnOB1Tg8jqBswdAPna/y9k5K5eUpgee+KzTQ== phone"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFAXoGdkV9pYmgrXdFUEk11B3zhGcbikM1KTLcULJgxq u0_a305@localhost"
       ];
     };
   };
