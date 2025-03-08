@@ -16,6 +16,11 @@
       trusted-users = [ "danielbarter" ];
     };
 
+
+  nix.sshServe = {
+    enable = true;
+  };
+
     # wipe the default flake registry
     extraOptions =
       let

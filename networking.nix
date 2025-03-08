@@ -59,12 +59,20 @@
 
   # Enable the OpenSSH daemon.
   services.openssh = {
+    # don't autogenerate keys
+    hostKeys = [];
+
+    # store public keys in a single location
+    authorizedKeysInHomedir = false;
+    
     enable = true;
     settings = {
       PasswordAuthentication = false;
     };
   };
 
-  programs.ssh.extraConfig = builtins.readFile ./dotfiles/ssh/config;
-
+  programs.ssh.extraConfig = ''
+  Host *
+      IdentityFile /etc/nixos/secrets/ssh/id_rsa
+  '';
 }

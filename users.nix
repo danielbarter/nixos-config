@@ -8,9 +8,11 @@
       ];
     };
 
-    root = {
-      extraGroups = [ "wheel" ];
-    };
+    root. extraGroups = [ "wheel" ];
+
+    nix-ssh.openssh.authorizedKeys.keyFiles = [
+        "/etc/nixos/public/ssh/id_rsa.pub"
+    ];
 
     danielbarter = {
 

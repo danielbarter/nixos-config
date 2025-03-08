@@ -15,10 +15,6 @@
     cores = 2;
   };
 
-  nix.sshServe = {
-    enable = true;
-  };
-
   systemd.services.llama-cpp = let
     llama-vulkan = pkgs.llama-cpp.override {vulkanSupport = true;};
     model_file = "/ML/deepseek_r1_distill_qwen_14b.gguf";

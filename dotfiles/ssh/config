@@ -1,2 +1,0 @@
-Host *
-    IdentityFile /etc/nixos/secrets/ssh/id_rsa
