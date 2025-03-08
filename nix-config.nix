@@ -15,6 +15,7 @@
       experimental-features = "nix-command flakes";
       trusted-substituters = [ "ssh://nix-ssh@punky.meow" ];
       trusted-public-keys = [ (builtins.readFile "/etc/nixos/public/nix/public-key") ];
+      trusted-users = [ "danielbarter" ];
     };
 
 
