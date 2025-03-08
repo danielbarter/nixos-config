@@ -1,6 +1,9 @@
 # flake inputs can be overriden eg
 # --override-input nixpkgs /home/danielbarter/nixpkgs
 #
+# substituters can be overriden with
+# --option substituters ssh://nix-ssh@punky.meow
+# 
 # to rebuild, pulling image from punky:
 # sudo nixos-rebuild --impure --option substituters ssh://nix-ssh@punky.meow switch
 
