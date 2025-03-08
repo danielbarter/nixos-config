@@ -15,23 +15,9 @@
     cores = 2;
   };
 
-  services.nix-serve = {
+  nix.sshServe = {
     enable = true;
-    port = 5000;
-    secretKeyFile = "/etc/nixos/secrets/binary-cache/cache-priv-key.pem";
-  };
-
-
-  # dnssd for nix store
-  # kinda stupid. Just an experiment to see if it works
-  environment.etc = {
-    "systemd/dnssd/nix_store.dnssd".text = ''
-      [Service]
-      Name=nix_store
-      Type=_http._tcp
-      Port=5000
-    '';
-  };
+  }
 
   systemd.services.llama-cpp = let
     llama-vulkan = pkgs.llama-cpp.override {vulkanSupport = true;};

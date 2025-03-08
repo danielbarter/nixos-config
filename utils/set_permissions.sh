@@ -6,13 +6,6 @@ chgrp -R wheel /etc/nixos
 chown -R systemd-network /etc/nixos/secrets/wireguard
 chgrp -R systemd-network /etc/nixos/secrets/wireguard
 
-# LAN cache private key needs to be owned by nix-serve
-if id nix-serve
-then
-    chown nix-serve /etc/nixos/secrets/binary-cache/cache-priv-key.pem
-    chgrp nix-serve /etc/nixos/secrets/binary-cache/cache-priv-key.pem
-fi
-
 # 660 for all files not in secrets
 for file in $(find /etc/nixos -path /etc/nixos/secrets -prune -o -type f -print)
 do

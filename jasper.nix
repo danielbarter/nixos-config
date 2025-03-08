@@ -11,38 +11,15 @@
   dev-machine = true;
   network-id = (import ./network-ids.nix).${config.networking.hostName};
 
+
   nix = {
     settings = {
-      substituters = [ "http://punky.meow:5000" ];
-
-      trusted-public-keys = [ (builtins.readFile ./public/binary-cache/cache-pub-key.pem) ];
+      substituters = [ "ssh://nix-ssh@punky.meow" ];
     };
   };
 
   networking = {
     hostName = "jasper";
-  };
-
-  systemd.network = {
-    netdevs = {
-      "30-wg0" = {
-        netdevConfig = {
-          Kind = "wireguard";
-          Name = "wg0";
-        };
-        wireguardConfig = {
-          PrivateKeyFile = "/etc/nixos/secrets/wireguard/${config.networking.hostName}";
-          ListenPort = 51820;
-        };
-        wireguardPeers = import ./wireguard-peers.nix; 
-      };
-    };
-    networks = {
-      "30-wg0" = {
-        matchConfig.Name = "wg0";
-        address = ["192.168.2.${config.network-id}/24"];
-      };
-    };
   };
 
   services.resolved.extraConfig = ''

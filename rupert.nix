@@ -2,9 +2,7 @@
 {
   nix = {
     settings = {
-      substituters = [ "http://punky.meow:5000" ];
-
-      trusted-public-keys = [ (builtins.readFile ./public/binary-cache/cache-pub-key.pem) ];
+      substituters = [ "ssh://nix-ssh@punky.meow" ];
     };
   };
 
