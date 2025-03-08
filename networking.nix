@@ -69,9 +69,6 @@
 
     # Enable the OpenSSH daemon.
     services.openssh = {
-      # don't autogenerate keys
-      hostKeys = [];
-
       # store public keys in a single location
       authorizedKeysInHomedir = false;
     

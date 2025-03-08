@@ -24,6 +24,10 @@ setup_replicant() {
     # to restart sshd
     systemctl restart sshd.service
 
+    # wiregaurd keys are now present, so restart systemd-networkd
+    # to create wireguard interface
+    systemctl restart systemd-networkd.service
+
     echo "all done!"
 }
 
