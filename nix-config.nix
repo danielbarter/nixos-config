@@ -13,12 +13,11 @@
   nix = {
     settings = {
       experimental-features = "nix-command flakes";
-      trusted-users = [ "danielbarter" ];
     };
 
 
-  nix.sshServe = {
-    enable = true;
+    sshServe = {
+      enable = true;
   };
 
     # wipe the default flake registry
