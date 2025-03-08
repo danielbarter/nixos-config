@@ -22,6 +22,9 @@
   networking = {
     hostName = "rupert";
     networkmanager.enable = false;
+
+    
+    # DNS used by resolved. resolvectl status
     nameservers = [
       "192.168.1.12"
     ];
