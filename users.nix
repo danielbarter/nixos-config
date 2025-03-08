@@ -4,7 +4,7 @@
     annasavage = {
       isNormalUser = true;
       openssh.authorizedKeys.keyFiles = [
-        /etc/nixos/public/ssh/annasavage.pub
+        "/etc/nixos/public/ssh/annasavage.pub"
       ];
     };
 
@@ -23,8 +23,8 @@
         "audio"
       ];
       openssh.authorizedKeys.keyFiles = [
-        /etc/nixos/public/ssh/id_rsa.pub
-        /etc/nixos/public/ssh/phone.pub
+        "/etc/nixos/public/ssh/id_rsa.pub"
+        "/etc/nixos/public/ssh/phone.pub"
       ];
     };
   };
