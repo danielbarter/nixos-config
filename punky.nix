@@ -17,7 +17,7 @@
 
   nix.sshServe = {
     enable = true;
-  }
+  };
 
   systemd.services.llama-cpp = let
     llama-vulkan = pkgs.llama-cpp.override {vulkanSupport = true;};
