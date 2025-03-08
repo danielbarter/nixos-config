@@ -9,7 +9,6 @@
 
   imports = [ ./static-bond-interface.nix ];
   dev-machine = true;
-  network-id = (import ./network-ids.nix).${config.networking.hostName};
 
 
   networking = {
