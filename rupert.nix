@@ -1,13 +1,7 @@
 { pkgs, config, ... }:
 {
-  nix = {
-    settings = {
-      substituters = [ "ssh://nix-ssh@punky.meow" ];
-    };
-  };
 
   programs.firefox.enable = true;
-
   programs.steam.enable = true;
 
   # controls the max number of memory mapped areas a process can have
@@ -28,6 +22,10 @@
   networking = {
     hostName = "rupert";
     networkmanager.enable = false;
+    nameservers = [
+      "192.168.1.12"
+    ];
+
   };
 
   services.avahi.enable = false;

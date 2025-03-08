@@ -12,14 +12,12 @@
   network-id = (import ./network-ids.nix).${config.networking.hostName};
 
 
-  nix = {
-    settings = {
-      substituters = [ "ssh://nix-ssh@punky.meow" ];
-    };
-  };
-
   networking = {
     hostName = "jasper";
+    
+    nameservers = [
+      "192.168.1.12"
+    ];
   };
 
   services.resolved.extraConfig = ''
