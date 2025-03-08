@@ -1,11 +1,11 @@
+# flake inputs can be overriden eg
+# --override-input nixpkgs /home/danielbarter/nixpkgs
+#
+# to rebuild, pulling image from punky:
+# sudo nixos-rebuild --impure --option substituters ssh://nix-ssh@punky.meow switch
+
 {
   inputs = {
-
-    # flake inputs can be overriden eg
-    # --override-input nixpkgs /home/danielbarter/nixpkgs
-    #
-    # to rebuild, pulling image from punky:
-    # sudo nixos-rebuild --impure --option substituters ssh://nix-ssh@punky.meow switch
     nixpkgs.url = "github:NixOs/nixpkgs/9a416feab31c62141d5a2f14f4108f5d6e9858c0";
     hosts.url = "github:StevenBlack/hosts";
 
