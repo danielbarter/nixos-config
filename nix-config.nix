@@ -11,7 +11,10 @@
   nixpkgs.config.allowUnfree = true;
 
   nix = {
-    settings.experimental-features = "nix-command flakes";
+    settings = {
+      experimental-features = "nix-command flakes";
+      trusted-users = [ "danielbarter" ];
+    };
 
     # wipe the default flake registry
     extraOptions =
