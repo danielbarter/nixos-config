@@ -7,7 +7,7 @@ in [
   }
   
   {
-    PublicKey = "9JoDOB1aGfOrD8woPSukSVho1NoMLr/MYY+WAHk7lDc=";
+    PublicKey = (builtins.readFile ./public/wireguard/phone);
     AllowedIPs = [ "192.168.2.${network-ids.phone}" ];
   }
 ]
