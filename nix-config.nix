@@ -13,6 +13,8 @@
   nix = {
     settings = {
       experimental-features = "nix-command flakes";
+      trusted-substituters = [ "ssh://nix-ssh@punky.meow" ];
+      trusted-public-keys = [ (builtins.readFile "/etc/nixos/public/nix/public-key") ];
     };
 
 
@@ -32,6 +34,7 @@
       in
       ''
         flake-registry = ${emptyFlakeRegistry};
+        secret-key-files = /etc/nixos/secrets/nix/private-key
       '';
   };
 
