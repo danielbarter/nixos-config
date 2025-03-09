@@ -30,6 +30,7 @@
   # serve DNS stub on local network
   services.resolved.extraConfig = ''
     DNSStubListenerExtra=192.168.1.${config.network-id}
+    DNSStubListenerExtra=192.168.2.${config.network-id}
   '';
 
 
@@ -69,6 +70,9 @@
       "192.168.1.${network-ids.rupert}" = [ "rupert.meow" ];
       "192.168.1.${network-ids.punky}" = [ "punky.meow" ];
       "192.168.1.${network-ids.jasper}" = [ "jasper.meow" ];
+      "192.168.2.${network-ids.rupert}" = [ "rupert.wg" ];
+      "192.168.2.${network-ids.punky}" = [ "punky.wg" ];
+      "192.168.2.${network-ids.jasper}" = [ "jasper.wg" ];
     };
 
     # DNS used by resolved. resolvectl status
