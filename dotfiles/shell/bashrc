@@ -122,7 +122,9 @@ update_git_short_hash() {
 }
 
 update_prompt() {
-    PS1="${GIT_SHORT_HASH}${PROMPT} "
+    # \[ and \] tell bash to treat the enclosed characters as non-printing when
+    # calculating the prompt's length.
+    PS1="\[${GIT_SHORT_HASH}\]${PROMPT} "
 }
 
 prompt_command() {
