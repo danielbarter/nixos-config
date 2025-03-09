@@ -40,7 +40,9 @@
     wantedBy = [ "timers.target" ];
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${ddns-update}/bin/ddns_update --token_file /etc/nixos/secrets/duckdns_token";
+      ExecStart = ''
+        ${ddns-update}/bin/ddns_update --token_file /etc/nixos/secrets/duckdns_token --domain hobiehomelab
+        '';
     };
     unitConfig = {
       PartOf = [ "timers.target" ];

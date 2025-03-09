@@ -17,11 +17,11 @@ def is_valid_ipv4(address):
 
 parser = argparse.ArgumentParser(description="update duckdns")
 parser.add_argument("--token_file", type=str, required=True)
+parser.add_argument("--domain", type=str, required=True)
 args = parser.parse_args()
 
 
 cached_ip_file_path = '/tmp/cached_ip'
-domain = "punkymeow"
 
 # touch cached_ip file if it doesn't exist
 if not os.path.exists(cached_ip_file_path):
@@ -43,7 +43,7 @@ if current_ip != cached_ip:
 
     with open(args.token_file,'r') as f:
         token = f.read()[:-1]
-    update_ip_url = f"https://www.duckdns.org/update?domains={domain}&token={token}&ip={current_ip}"
+    update_ip_url = f"https://www.duckdns.org/update?domains={args.domain}&token={token}&ip={current_ip}"
     update_ip_response = requests.get(update_ip_url)
     status = update_ip_response.text
     if status == "OK":
