@@ -106,6 +106,15 @@ GIT_SHORT_HASH=""
 update_git_short_hash() {
     if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
         GIT_SHORT_HASH=$(git rev-parse --short=3 HEAD)
+        local green='\033[0;32m'
+        local red='\033[0;31m'
+        local reset='\033[0m'
+        if [[ -z $(git status --porcelain) ]]; then
+            GIT_SHORT_HASH="${green}${GIT_SHORT_HASH}${reset}"
+        else
+            GIT_SHORT_HASH="${red}${GIT_SHORT_HASH}${reset}"
+        fi
+
         GIT_SHORT_HASH="${GIT_SHORT_HASH} "
     else
         GIT_SHORT_HASH=""
