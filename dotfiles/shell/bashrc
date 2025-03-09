@@ -89,7 +89,7 @@ volume() {
     wpctl set-volume @DEFAULT_AUDIO_SINK@ $1
 }
 
-prompt_command() {
+update_title() {
     if [ $SHOW_PWD == yes ]
     then
         echo -ne "\033]0;$(whoami)@$(hostname):$(pwd)\007"
@@ -101,6 +101,27 @@ prompt_command() {
     history -a
 }
 
+GIT_SHORT_HASH=""
+
+update_git_short_hash() {
+    if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+        GIT_SHORT_HASH=$(git rev-parse --short=3 HEAD)
+        GIT_SHORT_HASH="${GIT_SHORT_HASH} "
+    else
+        GIT_SHORT_HASH=""
+    fi
+}
+
+update_prompt() {
+    PS1="${GIT_SHORT_HASH}${PROMPT} "
+}
+
+prompt_command() {
+    update_title
+    update_git_short_hash
+    update_prompt
+}
+
 PROMPTS=(🍏 🍎 🍐 🍊 🍋 🍌 🍉 🍇 🍓 🫐 🍈 🍒 🥭 🍍 🥥 🥝 🍅 🍆 🥑 🥦 🥬 🥒 🫑 🌽 🥕 🫒 🧄)
 
 if is_pseudoterminal
@@ -109,7 +130,6 @@ then
     PROMPT_INDEX=$(($RANDOM % $PROMPTS_SIZE))
     PROMPT=${PROMPTS[$PROMPT_INDEX]}
     PROMPT_COMMAND='prompt_command'
-    PS1="${PROMPT} "
 fi
 
 # if direnv is available, initialize it
