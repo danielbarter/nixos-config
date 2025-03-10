@@ -1,12 +1,4 @@
 {
-  config,
-  pkgs,
-  lib,
-  ...
-}:
-
-{
-
   imports = [
     ./static-bond-interface.nix
     ./wireless.nix

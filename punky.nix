@@ -6,7 +6,6 @@
     ./wireguard-interface.nix
     ./wireless.nix
     ./intel-gpu.nix
-    ./sound.nix
   ];
 
   dev-machine = true;
