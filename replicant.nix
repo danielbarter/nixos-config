@@ -84,7 +84,10 @@ in {
     depends = [ "/nix-store-lower" "/nix-store-upper" ];
   };
 
-  imports = [ "${modulesPath}/image/repart.nix" ./wireguard-interface.nix  ];
+  imports = [
+    "${modulesPath}/image/repart.nix"
+    ./wireguard-interface.nix
+  ];
 
   boot.kernelParams = let
     serial_tty = {

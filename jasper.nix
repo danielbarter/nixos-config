@@ -7,7 +7,14 @@
 
 {
 
-  imports = [ ./static-bond-interface.nix ];
+  imports = [
+    ./static-bond-interface.nix
+    ./wireless.nix
+    ./sway-gui.nix
+    ./sound.nix
+    ./intel-gpu.nix
+
+  ];
   dev-machine = true;
 
 

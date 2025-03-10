@@ -16,7 +16,7 @@
   '';
 
   # bonding ethernet and wireless (with ethernet as primary)
-  imports = [ ./static-bond-interface.nix ];
+  imports = [ ./static-bond-interface.nix ./wireless.nix ];
 
   networking = {
     hostName = "rupert";

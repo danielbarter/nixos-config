@@ -1,5 +1,8 @@
-{config,...}:
+{config,pkgs,...}:
 {
+
+  environment.systemPackages = [ pkgs.wireguard-tools ];
+
   systemd.network = {
     netdevs = {
       "30-wg0" = {

@@ -1,7 +1,6 @@
 {
   pkgs,
   lib,
-  options,
   config,
   ...
 }:
@@ -42,29 +41,12 @@
     systemd.network.wait-online.anyInterface = true;
     systemd.network.wait-online.timeout = 0;
 
-    # give wireless cards time to turn on
-    systemd.services.iwd.serviceConfig.ExecStartPre = "${pkgs.coreutils}/bin/sleep 2";
-
-    environment.systemPackages = [ pkgs.iw pkgs.wireguard-tools ];
-
     networking = {
-
       # disable various default nixos networking components
       dhcpcd.enable = false;
       firewall.enable = false;
       useDHCP = false;
-
       useNetworkd = true;
-      wireless.iwd = {
-
-        enable = true;
-        settings = {
-          General = {
-            # attempt to find a better AP every 10 seconds (default is 60)
-            RoamRetryInterval = "10";
-          };
-        };
-      };
     };
 
     # Enable the OpenSSH daemon.
