@@ -24,6 +24,7 @@
       git
       file
       htop
+      jq # json pretty print
       wget
       pciutils # lspci
       usbutils # lsusb

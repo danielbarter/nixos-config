@@ -59,6 +59,8 @@
   };
 
 
+
+
   networking = let network-ids = import ./network-ids.nix;
    in {
     hostName = "punky";
@@ -80,6 +82,14 @@
       "1.1.1.1"
       "8.8.8.8"
     ];
+
+    stevenBlackHosts = {
+      enable = true;
+      blockFakenews = true;
+      blockGambling = true;
+      blockPorn = true;
+      blockSocial = true;
+    };
   };
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" "riscv64-linux" ];
