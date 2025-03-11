@@ -14,23 +14,9 @@
   boot.devShmSize = "75%";
 
   # building lots of derivations at once tends to unearth concurrency bugs in build systems
-  # also, this machine is also constantly streaming music, which we don't want to interupt
   nix.settings = {
     max-jobs = 2;
     cores = 2;
-  };
-
-  systemd.services.llama-cpp = let
-    llama-vulkan = pkgs.llama-cpp.override {vulkanSupport = true;};
-    model_file = "/ML/deepseek_r1_distill_qwen_14b.gguf";
-    layers = "49";
-    network_config = "--host 0.0.0.0 --port 80";
-  in {
-    after = [ "network.target" ];
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = "${llama-vulkan}/bin/llama-server -m ${model_file} -ngl ${layers} ${network_config}";
-    };
   };
 
   # serve DNS stub on local network
