@@ -126,12 +126,6 @@ in {
           };
         };
 
-        # the generated images are static, so we want to
-        # resize the store partition after copying onto a
-        # drive.
-        # $ nix-shell -p cloud-utils
-        # $ doas growpart /dev/sda 2
-        # $ doas resize2fs /dev/sda2
         "nix-store-lower" = {
           storePaths = [
             config.system.build.toplevel
