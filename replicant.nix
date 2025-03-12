@@ -89,17 +89,14 @@ in {
     ./wireguard-interface.nix
   ];
 
-  boot.kernelParams = let
-    serial_tty = {
-      x86_64-linux = "console=ttyS0";
-      aarch64-linux = "console=ttyAMA0";
-      riscv64-linux = "console=ttyS0";
-    };
-    in [ "console=tty0" serial_tty.${config.nixpkgs.hostPlatform.system} ];
-
   image.repart =
     let
       efiArch = pkgs.stdenv.hostPlatform.efiArch;
+      serial_tty = {
+        x86_64-linux = "console=ttyS0";
+        aarch64-linux = "console=ttyAMA0";
+        riscv64-linux = "console=ttyS0";
+      };
     in
     {
       name = "image";
@@ -124,6 +121,13 @@ in {
               linux /EFI/nixos/kernel.efi
               initrd /EFI/nixos/initrd.efi
               options init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams}
+            '';
+            
+            "/loader/entries/nixos_serial.conf".source = pkgs.writeText "nixos_serial.conf" ''
+              title NixOS (serial)
+              linux /EFI/nixos/kernel.efi
+              initrd /EFI/nixos/initrd.efi
+              options init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams} ${serial_tty.${config.nixpkgs.hostPlatform.system}}
             '';
           };
           repartConfig = {
