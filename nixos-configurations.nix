@@ -60,19 +60,28 @@ in {
   x86_64-replicant-minimal  = nixosSystem {
     build = "x86_64-linux";
      host = "x86_64-linux";
-     modules = [./replicant.nix];
+     modules = [
+      ./replicant.nix
+      { boot.kernelParams = ["console=ttyS0"];}
+    ];
   };
 
   aarch64-replicant-minimal = nixosSystem {
     build = "x86_64-linux";
      host = "aarch64-linux";
-     modules = [./replicant.nix];
+     modules = [
+      ./replicant.nix
+      { boot.kernelParams = ["console=ttyAMA0"];}
+    ];
   };
 
   riscv64-replicant-minimal = nixosSystem {
     build = "x86_64-linux";
      host = "riscv64-linux";
-     modules = [./replicant.nix];
+     modules = [
+      ./replicant.nix
+      { boot.kernelParams = ["console=ttyS0"];}
+    ];
   };
 
 }
