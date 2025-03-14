@@ -1,6 +1,6 @@
 {
   imports = [
-    ./static-bond-interface.nix
+    ./static-bridge-interface.nix
     ./wireless.nix
     ./sway-gui.nix
     ./sound.nix
