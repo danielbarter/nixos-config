@@ -26,6 +26,18 @@
   '';
 
 
+  systemd.network.networks."30-bond0" = {
+    networkConfig = { DHCPServer = "yes"; };
+    dhcpServerConfig = {
+      ServerAddress = "192.168.1.${config.network-id}/24";
+      PoolOffset = 100;
+      PoolSize = 128;
+      DNS = "192.168.1.${config.network-id}";
+      EmitRouter= true;
+      Router="192.168.1.1";
+    };
+  };
+
   # ddns update for LAN
   systemd.services.ddns-update = let
   ddns-update = (pkgs.callPackage ./ddns-update.nix {});
