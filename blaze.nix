@@ -29,11 +29,23 @@
   systemd.network.networks = {
     "40-generic" = {
       matchConfig = {
-        Name = "*";
+        Name = "eno1";
       };
       networkConfig = {
-        DHCP = "yes";
+        DHCP = "no";
       };
+
+      addresses = [
+        {
+          Address = "192.168.1.${config.network-id}/24";
+        }
+      ];
+
+      routes = [
+      {
+        Gateway = "192.168.1.1";
+      }
+      ];
     };
   };
 
