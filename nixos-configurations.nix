@@ -33,7 +33,7 @@ in {
   };
 
 
-  punky = nixosSystem {
+  blaze = nixosSystem {
     build = "x86_64-linux";
     host = "x86_64-linux";
     modules = [ hosts.nixosModule ./blaze.nix ];
