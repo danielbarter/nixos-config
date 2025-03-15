@@ -32,7 +32,7 @@
       networkConfig = {
         DHCP = "no";
         MulticastDNS = "yes";
-        LLMNR = "no";
+        LLMNR = "yes";
 
       };
 
