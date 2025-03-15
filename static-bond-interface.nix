@@ -53,6 +53,7 @@
         networkConfig = {
           DHCP = "no";
           MulticastDNS = "yes";
+          LLMNR = "no";
         };
 
         addresses = [

@@ -30,6 +30,10 @@
         "1.1.1.1"
         "8.8.8.8"
       ];
+
+      extraConfig = ''
+        MulticastDNS=true
+      ''; 
     };
 
     # enable systemd networking for all hosts
