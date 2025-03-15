@@ -32,6 +32,13 @@ in {
     modules = [ hosts.nixosModule ./punky.nix ];
   };
 
+
+  punky = nixosSystem {
+    build = "x86_64-linux";
+    host = "x86_64-linux";
+    modules = [ hosts.nixosModule ./blaze.nix ];
+  };
+
   rupert = nixosSystem {
     build = "x86_64-linux";
     host = "x86_64-linux";
