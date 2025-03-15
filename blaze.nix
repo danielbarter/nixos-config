@@ -37,7 +37,7 @@
     };
   };
 
-  networking.hostName = "blaze"
+  networking.hostName = "blaze";
 
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
