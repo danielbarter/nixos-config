@@ -24,8 +24,6 @@
 
   swapDevices = [ ];
 
-
-  # catchall network config. Configure whatever interface is present
   systemd.network.networks = {
     "40-generic" = {
       matchConfig = {
@@ -33,6 +31,9 @@
       };
       networkConfig = {
         DHCP = "no";
+        MulticastDNS = "yes";
+        LLMNR = "no";
+
       };
 
       addresses = [

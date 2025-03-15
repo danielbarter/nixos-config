@@ -73,12 +73,18 @@
     hosts = {
       "192.168.1.1" = [ "asusmain.meow" ];
       "192.168.1.2" = [ "asusaux.meow" ];
+
       "192.168.1.${network-ids.rupert}" = [ "rupert.meow" ];
-      "192.168.1.${network-ids.punky}" = [ "punky.meow" ];
-      "192.168.1.${network-ids.jasper}" = [ "jasper.meow" ];
       "192.168.2.${network-ids.rupert}" = [ "rupert.wg" ];
+
+      "192.168.1.${network-ids.punky}" = [ "punky.meow" ];
       "192.168.2.${network-ids.punky}" = [ "punky.wg" ];
+
+      "192.168.1.${network-ids.jasper}" = [ "jasper.meow" ];
       "192.168.2.${network-ids.jasper}" = [ "jasper.wg" ];
+
+      "192.168.1.${network-ids.blaze}" = [ "blaze.meow" ];
+      "192.168.2.${network-ids.blaze}" = [ "blaze.wg" ];
     };
 
     # DNS used by resolved. resolvectl status
