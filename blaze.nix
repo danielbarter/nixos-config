@@ -97,6 +97,44 @@
     nftables = {
       enable = true;
       ruleset = ''
+      define DEV_WAN = "eno0"
+      define DEV_LAN = "eno1"
+      table ip filter {
+        chain output {
+          type filter hook output; policy accept;
+        }
+
+        chain input {
+          type filter hook input; policy drop;
+
+          # don't drop packets from LAN
+          iifname $DEV_LAN accept
+
+          # allow returning traffic from connections initiated in LAN
+          iifname $DEV_WAN ct state { established, related } accept
+        }
+
+        chain forward {
+          type filter hook forward; policy drop;
+
+          # don't drop packets from LAN
+          iifname $DEV_LAN accept
+
+          # allow returning traffic from connections initiated in LAN
+          iifname $DEV_WAN ct state { established, related } accept          
+        }
+      }
+
+      table ip nat {
+        chain prerouting {
+          type nat hook prerouting; policy accept;
+        }
+
+        chain postrouting {
+          type nat hook postrouting; policy accept;
+          oifname $DEV_WAN masquerade
+        }
+      }
       '';
     };
 
