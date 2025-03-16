@@ -99,13 +99,14 @@
       ruleset = ''
       define DEV_WAN = "eno0"
       define DEV_LAN = "eno1"
+      define PRIORITY = 100
       table ip filter {
         chain output {
-          type filter hook output; policy accept;
+          type filter hook output priority $PRIORITY; policy accept;
         }
 
         chain input {
-          type filter hook input; policy drop;
+          type filter hook input priority $PRIORITY; policy drop;
 
           # don't drop packets from LAN
           iifname $DEV_LAN accept
@@ -115,7 +116,7 @@
         }
 
         chain forward {
-          type filter hook forward; policy drop;
+          type filter hook forward priority $PRIORITY; policy drop;
 
           # don't drop packets from LAN
           iifname $DEV_LAN accept
@@ -127,11 +128,11 @@
 
       table ip nat {
         chain prerouting {
-          type nat hook prerouting; policy accept;
+          type nat hook prerouting priority $PRIORITY; policy accept;
         }
 
         chain postrouting {
-          type nat hook postrouting; policy accept;
+          type nat hook postrouting priority $PRIORITY; policy accept;
           oifname $DEV_WAN masquerade
         }
       }
