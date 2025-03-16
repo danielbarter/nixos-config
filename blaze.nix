@@ -14,7 +14,6 @@
       networkConfig = {
         DHCP = "no";
         DHCPServer = "yes";
-        MulticastDNS = "yes";
         LLMNR = "yes";
 
       };
