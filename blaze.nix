@@ -100,40 +100,34 @@
       define DEV_WAN = "eno0"
       define DEV_LAN = "eno1"
       define PRIORITY = 100
-      table ip filter {
-        chain output {
-          type filter hook output priority $PRIORITY; policy accept;
-        }
-
+      define NET_LAN = "192.168.1.0/24"
+      table inet filter {
         chain input {
           type filter hook input priority $PRIORITY; policy drop;
-
-          # don't drop packets from LAN
-          iifname $DEV_LAN accept
-
-          # allow returning traffic from connections initiated in LAN
-          iifname $DEV_WAN ct state { established, related } accept
+          jump common
         }
 
         chain forward {
           type filter hook forward priority $PRIORITY; policy drop;
+          jump common
+        }
 
+        chain common {
           # don't drop packets from LAN
-          iifname $DEV_LAN accept
+          iifname { $DEV_LAN, lo } accept
 
           # allow returning traffic from connections initiated in LAN
-          iifname $DEV_WAN ct state { established, related } accept          
+          ct state vmap { established : accept, related : accept, invalid : drop }
+
+          # accept ipv6 control packets
+          icmpv6 type { nd-neighbor-solicit, nd-router-advert, nd-neighbor-advert } accept
         }
       }
 
       table ip nat {
-        chain prerouting {
-          type nat hook prerouting priority $PRIORITY; policy accept;
-        }
-
         chain postrouting {
           type nat hook postrouting priority $PRIORITY; policy accept;
-          oifname $DEV_WAN masquerade
+          ip saddr $NET_LAN oifname $DEV_WAN masquerade
         }
       }
       '';
