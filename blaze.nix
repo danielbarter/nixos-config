@@ -104,6 +104,11 @@
       table inet filter {
         chain input {
           type filter hook input priority $PRIORITY; policy drop;
+
+          # accept DHCPv4 and DHCPv6 packets
+          udp dport dhcp-client accept
+          udp dport dhcpv6-client accept
+
           jump common
         }
 
