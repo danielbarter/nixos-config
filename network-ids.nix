@@ -1,8 +1,8 @@
 {
-  rupert = "10";
+  blaze = "1";
+  rupert = "11";
   punky = "12";
   jasper = "13";
-  blaze = "14";
-  phone = "100";
-  replicant = "101";
+  phone = "14";
+  replicant = "15";
 }

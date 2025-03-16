@@ -31,7 +31,7 @@
         PoolSize = 128;
         DNS = "192.168.1.${config.network-id}";
         EmitRouter= true;
-        Router="192.168.1.1";
+        Router="192.168.1.${config.network-id}";
       };
 
       addresses = [
@@ -42,7 +42,7 @@
 
       routes = [
       {
-        Gateway = "192.168.1.1";
+        Gateway = "192.168.1.${(import ./network-ids.nix).blaze}";
       }
       ];
     };
@@ -143,8 +143,8 @@
 
     # these get put into /etc/hosts
     hosts = {
-      "192.168.1.1" = [ "asusmain.meow" ];
-      "192.168.1.2" = [ "asusaux.meow" ];
+      "192.168.1.${network-ids.asus2}" = [ "asus2.meow" ];
+      "192.168.1.${network-ids.asus3}" = [ "asus3.meow" ];
 
       "192.168.1.${network-ids.rupert}" = [ "rupert.meow" ];
       "192.168.2.${network-ids.rupert}" = [ "rupert.wg" ];

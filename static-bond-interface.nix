@@ -4,8 +4,7 @@
 }:
 {
 # most standard desktops come with a wireless interface and an ethernet interface
-# we want to put them behind a bond interface, and assign a static ip, since they
-# live in a house where the router is on 192.168.1.1
+# we want to put them behind a bond interface, and assign a static ip
   systemd.network = {
     netdevs = {
       "30-bond0" = {
@@ -63,7 +62,7 @@
 
         routes = [
           {
-            Gateway = "192.168.1.1";
+            Gateway = "192.168.1.${(import ./network-ids.nix).blaze}";
           }
         ];
       };
