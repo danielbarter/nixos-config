@@ -24,7 +24,7 @@
     
     # DNS used by resolved. resolvectl status
     nameservers = [
-      "192.168.1.12"
+      "192.168.1.${(import ./network-ids.nix).blaze}"
     ];
 
   };
