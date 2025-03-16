@@ -6,7 +6,14 @@
 
 {
 
+  boot.kernel.sysctl = {
+    "net.ipv4.conf.all.forwarding" = true;
+  };
+
+
   systemd.network.networks = {
+
+    # LAN interface, with a DHCP server
     "40-lan" = {
       matchConfig = {
         Name = "eno1";
@@ -38,6 +45,18 @@
         Gateway = "192.168.1.1";
       }
       ];
+    };
+
+    # WAN interface with DHCP
+    "40-wan" = {
+      matchConfig = {
+        Name = "eno0";
+      };
+
+      networkConfig = {
+        DHCP= "yes";
+        LLMNR = "no";
+      };
     };
   };
 
@@ -75,6 +94,12 @@
 
   networking = let network-ids = import ./network-ids.nix;
    in {
+    nftables = {
+      enable = true;
+      ruleset = ''
+      '';
+    };
+
     hostName = "blaze";
 
     # these get put into /etc/hosts

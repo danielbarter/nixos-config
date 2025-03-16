@@ -38,6 +38,7 @@
 
     networking = {
       # disable various default nixos networking components
+      nat.enable = false;
       dhcpcd.enable = false;
       firewall.enable = false;
       useDHCP = false;
