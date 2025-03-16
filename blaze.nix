@@ -6,6 +6,111 @@
 
 {
 
+  systemd.network.networks = {
+    "40-lan" = {
+      matchConfig = {
+        Name = "eno1";
+      };
+      networkConfig = {
+        DHCP = "no";
+        DHCPServer = "yes";
+        MulticastDNS = "yes";
+        LLMNR = "yes";
+
+      };
+
+      dhcpServerConfig = {
+        ServerAddress = "192.168.1.${config.network-id}/24";
+        PoolOffset = 100;
+        PoolSize = 128;
+        DNS = "192.168.1.${config.network-id}";
+        EmitRouter= true;
+        Router="192.168.1.1";
+      };
+
+      addresses = [
+        {
+          Address = "192.168.1.${config.network-id}/24";
+        }
+      ];
+
+      routes = [
+      {
+        Gateway = "192.168.1.1";
+      }
+      ];
+    };
+  };
+
+  # serve DNS stub on local network
+  services.resolved.extraConfig = ''
+    DNSStubListenerExtra=192.168.1.${config.network-id}
+    DNSStubListenerExtra=192.168.2.${config.network-id}
+  '';
+
+  # ddns update for LAN
+  systemd.services.ddns-update = let
+  ddns-update = (pkgs.callPackage ./ddns-update.nix {});
+  in {
+    wantedBy = [ "timers.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = ''
+        ${ddns-update}/bin/ddns_update --token_file /etc/nixos/secrets/duckdns_token --domain hobiehomelab
+        '';
+    };
+    unitConfig = {
+      PartOf = [ "timers.target" ];
+    };
+  };
+
+  systemd.timers.ddns-update = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnBootSec = "1min";
+      OnUnitActiveSec = "10min";
+    };
+  };
+
+
+
+  networking = let network-ids = import ./network-ids.nix;
+   in {
+    hostName = "blaze";
+
+    # these get put into /etc/hosts
+    hosts = {
+      "192.168.1.1" = [ "asusmain.meow" ];
+      "192.168.1.2" = [ "asusaux.meow" ];
+
+      "192.168.1.${network-ids.rupert}" = [ "rupert.meow" ];
+      "192.168.2.${network-ids.rupert}" = [ "rupert.wg" ];
+
+      "192.168.1.${network-ids.punky}" = [ "punky.meow" ];
+      "192.168.2.${network-ids.punky}" = [ "punky.wg" ];
+
+      "192.168.1.${network-ids.jasper}" = [ "jasper.meow" ];
+      "192.168.2.${network-ids.jasper}" = [ "jasper.wg" ];
+
+      "192.168.1.${network-ids.blaze}" = [ "blaze.meow" ];
+      "192.168.2.${network-ids.blaze}" = [ "blaze.wg" ];
+    };
+
+    # DNS used by resolved. resolvectl status
+    nameservers = [
+      "1.1.1.1"
+      "8.8.8.8"
+    ];
+
+    stevenBlackHosts = {
+      enable = true;
+      blockFakenews = true;
+      blockGambling = true;
+      blockPorn = true;
+      blockSocial = true;
+    };
+  };
+
   boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usbhid" "usb_storage" "sd_mod" "sdhci_pci" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
@@ -23,34 +128,6 @@
     };
 
   swapDevices = [ ];
-
-  systemd.network.networks = {
-    "40-generic" = {
-      matchConfig = {
-        Name = "eno1";
-      };
-      networkConfig = {
-        DHCP = "no";
-        MulticastDNS = "yes";
-        LLMNR = "yes";
-
-      };
-
-      addresses = [
-        {
-          Address = "192.168.1.${config.network-id}/24";
-        }
-      ];
-
-      routes = [
-      {
-        Gateway = "192.168.1.1";
-      }
-      ];
-    };
-  };
-
-  networking.hostName = "blaze";
 
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 

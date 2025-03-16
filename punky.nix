@@ -16,90 +16,17 @@
   # building lots of derivations at once tends to unearth concurrency bugs in build systems
   nix.settings = {
     max-jobs = 2;
-    cores = 2;
-  };
-
-  # serve DNS stub on local network
-  services.resolved.extraConfig = ''
-    DNSStubListenerExtra=192.168.1.${config.network-id}
-    DNSStubListenerExtra=192.168.2.${config.network-id}
-  '';
-
-
-  systemd.network.networks."30-bond0" = {
-    networkConfig = { DHCPServer = "yes"; };
-    dhcpServerConfig = {
-      ServerAddress = "192.168.1.${config.network-id}/24";
-      PoolOffset = 100;
-      PoolSize = 128;
-      DNS = "192.168.1.${config.network-id}";
-      EmitRouter= true;
-      Router="192.168.1.1";
-    };
-  };
-
-  # ddns update for LAN
-  systemd.services.ddns-update = let
-  ddns-update = (pkgs.callPackage ./ddns-update.nix {});
-  in {
-    wantedBy = [ "timers.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = ''
-        ${ddns-update}/bin/ddns_update --token_file /etc/nixos/secrets/duckdns_token --domain hobiehomelab
-        '';
-    };
-    unitConfig = {
-      PartOf = [ "timers.target" ];
-    };
-  };
-
-  systemd.timers.ddns-update = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      OnBootSec = "1min";
-      OnUnitActiveSec = "10min";
-    };
+    cores = 3;
   };
 
 
-
-
-  networking = let network-ids = import ./network-ids.nix;
-   in {
+  networking = {
     hostName = "punky";
-
-    # these get put into /etc/hosts
-    hosts = {
-      "192.168.1.1" = [ "asusmain.meow" ];
-      "192.168.1.2" = [ "asusaux.meow" ];
-
-      "192.168.1.${network-ids.rupert}" = [ "rupert.meow" ];
-      "192.168.2.${network-ids.rupert}" = [ "rupert.wg" ];
-
-      "192.168.1.${network-ids.punky}" = [ "punky.meow" ];
-      "192.168.2.${network-ids.punky}" = [ "punky.wg" ];
-
-      "192.168.1.${network-ids.jasper}" = [ "jasper.meow" ];
-      "192.168.2.${network-ids.jasper}" = [ "jasper.wg" ];
-
-      "192.168.1.${network-ids.blaze}" = [ "blaze.meow" ];
-      "192.168.2.${network-ids.blaze}" = [ "blaze.wg" ];
-    };
-
+    
     # DNS used by resolved. resolvectl status
     nameservers = [
-      "1.1.1.1"
-      "8.8.8.8"
+      "192.168.1.${(import ./network-ids.nix).blaze}"
     ];
-
-    stevenBlackHosts = {
-      enable = true;
-      blockFakenews = true;
-      blockGambling = true;
-      blockPorn = true;
-      blockSocial = true;
-    };
   };
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" "riscv64-linux" ];
