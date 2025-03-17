@@ -100,15 +100,10 @@
       define DEV_WAN = "eno0"
       define DEV_LAN = "eno1"
       define PRIORITY = 100
-      define NET_LAN = "192.168.1.0/24"
+      define NET_LAN = 192.168.1.0/24
       table inet filter {
         chain input {
           type filter hook input priority $PRIORITY; policy drop;
-
-          # accept DHCPv4 and DHCPv6 packets
-          udp dport dhcp-client accept
-          udp dport dhcpv6-client accept
-
           jump common
         }
 
