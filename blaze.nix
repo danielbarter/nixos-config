@@ -39,12 +39,6 @@
           Address = "192.168.1.${config.network-id}/24";
         }
       ];
-
-      routes = [
-      {
-        Gateway = "192.168.1.${(import ./network-ids.nix).blaze}";
-      }
-      ];
     };
 
     # WAN interface with DHCP
