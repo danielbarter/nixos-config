@@ -29,7 +29,7 @@
         LLMNR = "no";
         MulticastDNS = "yes";
         IPv6SendRA = "yes";
-        DHCPv6PrefixDelegation = "yes";
+        DHCPPrefixDelegation = "yes";
       };
 
       dhcpServerConfig = {
