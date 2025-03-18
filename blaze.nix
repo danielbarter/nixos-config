@@ -46,8 +46,7 @@
       };
 
       networkConfig = {
-        DHCP = "yes";
-        LLMNR = "no";
+        DHCP = "ipv4";
       };
     };
   };

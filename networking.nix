@@ -20,6 +20,14 @@
       # with DNSSEC validation failed: no-signature
       dnssec = "false";
 
+      # residential ISPs tend to provide
+      # /64 ipv6 addresses, which makes
+      # enabling ipv6 on LAN akward...
+      # multicast dns protocols generally
+      # expect a dual ipv4/6 network,
+      # so disabling LLMNR
+      llmnr = "false";
+
       # if not set, resolved defaults to its own list
       fallbackDns = [
         "1.1.1.1"
