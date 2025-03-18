@@ -6,6 +6,11 @@
 
 {
 
+
+  imports = [
+    ./wireguard-interface.nix
+  ];
+
   boot.kernel.sysctl = {
     "net.ipv4.conf.all.forwarding" = true;
   };
@@ -98,6 +103,7 @@
       table inet filter {
         chain input {
           type filter hook input priority $PRIORITY; policy drop;
+          ip6 udp dport 51820 accept
           jump common
         }
 

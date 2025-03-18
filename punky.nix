@@ -3,7 +3,6 @@
 
   imports = [
     ./static-bond-interface.nix
-    ./wireguard-interface.nix
     ./wireless.nix
     ./intel-gpu.nix
   ];
