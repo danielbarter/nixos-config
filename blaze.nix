@@ -117,7 +117,7 @@
           icmpv6 type { nd-neighbor-solicit, nd-router-advert, nd-neighbor-advert } accept
 
           # log any packets we are dropping
-          log
+          log prefix "nft drop: "
         }
       }
 
