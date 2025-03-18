@@ -21,6 +21,13 @@
     networks = {
       "30-wg0" = {
         matchConfig.Name = "wg0";
+
+        networkConfig = {
+          DHCP = "no";
+          LLMNR = "no";
+          MulticastDNS = "yes";
+        };
+
         address = ["192.168.2.${config.network-id}/24"];
       };
     };
