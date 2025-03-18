@@ -116,8 +116,8 @@
         }
 
         chain common {
-          # don't drop packets from LAN
-          iifname { $DEV_LAN, lo } accept
+          # don't drop packets from LAN or wireguard
+          iifname { $DEV_LAN, lo, wg0 } accept
 
           # allow returning traffic from connections initiated in LAN
           ct state vmap { established : accept, related : accept, invalid : drop }
