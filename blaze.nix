@@ -112,7 +112,7 @@
           ct state vmap { established : accept, related : accept, invalid : drop }
 
           # accept ipv6 control packets
-          icmpv6 type { nd-neighbor-solicit, nd-router-advert, nd-neighbor-advert } accept
+          icmpv6 type { nd-router-solicit, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
 
           # accept wireguard packets
           udp dport 51820 accept
