@@ -115,6 +115,8 @@
 
           # accept ipv6 control packets
           icmpv6 type { nd-neighbor-solicit, nd-router-advert, nd-neighbor-advert } accept
+
+          log prefix "nftables-dropped: " group log_dropped drop
         }
       }
 
