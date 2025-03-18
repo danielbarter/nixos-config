@@ -50,7 +50,7 @@
         };
 
         networkConfig = {
-          DHCP = "no";
+          DHCP = "ipv6";
           LLMNR = "no";
           MulticastDNS = "yes";
           Gateway = "192.168.1.${(import ./network-ids.nix).blaze}";

@@ -24,11 +24,12 @@
         Name = "eno1";
       };
       networkConfig = {
-        DHCP = "no";
+        DHCP = "ipv6";
         DHCPServer = "yes";
         LLMNR = "no";
         MulticastDNS = "yes";
-
+        IPv6SendRA = "yes";
+        DHCPv6PrefixDelegation = "yes";
       };
 
       dhcpServerConfig = {
