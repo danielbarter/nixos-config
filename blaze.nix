@@ -13,6 +13,7 @@
 
   boot.kernel.sysctl = {
     "net.ipv4.conf.all.forwarding" = true;
+    "net.ipv6.conf.all.forwarding" = true;
   };
 
 
@@ -28,8 +29,6 @@
         DHCPServer = "yes";
         LLMNR = "no";
         MulticastDNS = "yes";
-        IPv6SendRA = "yes";
-        DHCPv6PrefixDelegation = "yes";
       };
 
       dhcpServerConfig = {
@@ -55,7 +54,7 @@
       };
 
       networkConfig = {
-        DHCP= "yes";
+        DHCP = "yes";
         LLMNR = "no";
         MulticastDNS = "no";
       };
