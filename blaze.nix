@@ -27,8 +27,6 @@
       networkConfig = {
         DHCP = "ipv6";
         DHCPServer = "yes";
-        LLMNR = "no";
-        MulticastDNS = "yes";
       };
 
       dhcpServerConfig = {
@@ -56,7 +54,6 @@
       networkConfig = {
         DHCP = "yes";
         LLMNR = "no";
-        MulticastDNS = "no";
       };
     };
   };

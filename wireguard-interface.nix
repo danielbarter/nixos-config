@@ -24,8 +24,6 @@
 
         networkConfig = {
           DHCP = "no";
-          LLMNR = "no";
-          MulticastDNS = "yes";
         };
 
         address = ["192.168.2.${config.network-id}/24"];
