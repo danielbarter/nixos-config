@@ -103,7 +103,10 @@
       table inet filter {
         chain input {
           type filter hook input priority $PRIORITY; policy drop;
-          ip6 udp dport 51820 accept
+
+          # accept wireguard packets
+          udp dport 51820 accept
+
           jump common
         }
 
