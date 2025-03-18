@@ -105,10 +105,6 @@
       table inet filter {
         chain input {
           type filter hook input priority $PRIORITY; policy drop;
-
-          # accept wireguard packets
-          udp dport 51820 accept
-
           jump common
         }
 
@@ -126,6 +122,9 @@
 
           # accept ipv6 control packets
           icmpv6 type { nd-neighbor-solicit, nd-router-advert, nd-neighbor-advert } accept
+
+          # accept wireguard packets
+          udp dport 51820 accept
 
           # log any packets we are dropping
           # log prefix "nft drop: "
