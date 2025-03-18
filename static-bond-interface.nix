@@ -16,7 +16,7 @@
         bondConfig = {
           Mode = "active-backup";
           PrimaryReselectPolicy = "always";
-          MIIMonitorSec = "1s";
+          MIIMonitorSec = "10s";
         };
       };
     };
@@ -50,15 +50,9 @@
         };
 
         networkConfig = {
-          DHCP = "ipv6";
           Gateway = "192.168.1.${(import ./network-ids.nix).blaze}";
+          Address = "192.168.1.${config.network-id}/24";
         };
-
-        addresses = [
-          {
-            Address = "192.168.1.${config.network-id}/24";
-          }
-        ];
       };
     };
   };

@@ -23,10 +23,8 @@
         matchConfig.Name = "wg0";
 
         networkConfig = {
-          DHCP = "no";
+          Address = "192.168.2.${config.network-id}/24";
         };
-
-        address = ["192.168.2.${config.network-id}/24"];
       };
     };
   };

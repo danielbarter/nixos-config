@@ -25,8 +25,8 @@
         Name = "eno1";
       };
       networkConfig = {
-        DHCP = "ipv6";
         DHCPServer = "yes";
+        Address = "192.168.1.${config.network-id}/24";
       };
 
       dhcpServerConfig = {
@@ -37,12 +37,6 @@
         EmitRouter= true;
         Router="192.168.1.${config.network-id}";
       };
-
-      addresses = [
-        {
-          Address = "192.168.1.${config.network-id}/24";
-        }
-      ];
     };
 
     # WAN interface with DHCP
@@ -138,24 +132,6 @@
     };
 
     hostName = "blaze";
-
-    # these get put into /etc/hosts
-    hosts = {
-      "192.168.1.${network-ids.asus2}" = [ "asus2.meow" ];
-      "192.168.1.${network-ids.asus3}" = [ "asus3.meow" ];
-
-      "192.168.1.${network-ids.rupert}" = [ "rupert.meow" ];
-      "192.168.2.${network-ids.rupert}" = [ "rupert.wg" ];
-
-      "192.168.1.${network-ids.punky}" = [ "punky.meow" ];
-      "192.168.2.${network-ids.punky}" = [ "punky.wg" ];
-
-      "192.168.1.${network-ids.jasper}" = [ "jasper.meow" ];
-      "192.168.2.${network-ids.jasper}" = [ "jasper.wg" ];
-
-      "192.168.1.${network-ids.blaze}" = [ "blaze.meow" ];
-      "192.168.2.${network-ids.blaze}" = [ "blaze.wg" ];
-    };
 
     # DNS used by resolved. resolvectl status
     nameservers = [
