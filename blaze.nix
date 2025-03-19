@@ -13,7 +13,6 @@
 
   boot.kernel.sysctl = {
     "net.ipv4.conf.all.forwarding" = true;
-    "net.ipv6.conf.all.forwarding" = true;
   };
 
 
@@ -111,10 +110,10 @@
           ct state vmap { established : accept, related : accept, invalid : drop }
 
           # accept ipv6 control packets
-          icmpv6 type { nd-router-solicit, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
+          # icmpv6 type { nd-router-solicit, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
 
           # accept wireguard packets
-          udp dport 51820 accept
+          udp dport {51820, 51821} accept
 
           # log any packets we are dropping
           # log prefix "nft drop: "
@@ -122,6 +121,12 @@
       }
 
       table ip nat {
+
+        chain prerouting {
+          type nat hook prerouting priority $PRIORITY; policy accept;
+          udp dport 51821 dnat to 192.168.1.12
+
+        }
         chain postrouting {
           type nat hook postrouting priority $PRIORITY; policy accept;
           ip saddr $NET_LAN oifname $DEV_WAN masquerade
@@ -137,6 +142,23 @@
       "1.1.1.1"
       "8.8.8.8"
     ];
+
+    hosts = {
+      "192.168.1.${network-ids.rupert}" = [ "rupert.lan" ];
+      "192.168.2.${network-ids.rupert}" = [ "rupert.wg" ];
+      
+      "192.168.1.${network-ids.punky}" = [ "punky.lan" ];
+      "192.168.2.${network-ids.punky}" = [ "punky.wg" ];
+      
+      "192.168.1.${network-ids.jasper}" = [ "jasper.lan" ];
+      "192.168.2.${network-ids.jasper}" = [ "jasper.wg" ];
+
+      "192.168.1.${network-ids.blaze}" = [ "blaze.lan" ];
+      "192.168.2.${network-ids.blaze}" = [ "blaze.wg" ];
+
+      "192.168.1.${network-ids.asus2}" = [ "asus2.lan" ];
+      "192.168.1.${network-ids.asus3}" = [ "asus3.lan" ];
+    }
 
     stevenBlackHosts = {
       enable = true;
