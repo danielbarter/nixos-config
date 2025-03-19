@@ -124,7 +124,7 @@
 
         chain prerouting {
           type nat hook prerouting priority $PRIORITY; policy accept;
-          udp dport 51821 dnat to 192.168.1.12
+          udp dport 51821 dnat to 192.168.1.12:51820
 
         }
         chain postrouting {
