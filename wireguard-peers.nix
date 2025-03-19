@@ -3,7 +3,7 @@ in [
   {
     PublicKeyFile = "/etc/nixos/public/wireguard/punky";
     AllowedIPs = [ "192.168.2.${network-ids.punky}" ];
-    Endpoint = [ "hobiehomelab.duckdns.org:51820"];
+    Endpoint = [ "hobiehomelab.duckdns.org:51821"];
   }
   
   {
@@ -19,5 +19,6 @@ in [
   {
     PublicKeyFile = "/etc/nixos/public/wireguard/blaze";
     AllowedIPs = [ "192.168.2.${network-ids.blaze}" ];
+    Endpoint = [ "hobiehomelab.duckdns.org:51820"];
   }
 ]
