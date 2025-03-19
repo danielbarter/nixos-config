@@ -6,6 +6,11 @@
 
 {
 
+  # verbose systemd logging
+  systemd.globalEnvironment = {
+    SYSTEMD_LOG_LEVEL = "debug";
+  };
+
   # store all debug symbols on dev machines
   environment.enableDebugInfo = config.dev-machine;
 
