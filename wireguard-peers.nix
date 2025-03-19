@@ -15,4 +15,9 @@ in [
     PublicKeyFile = "/etc/nixos/public/wireguard/replicant";
     AllowedIPs = [ "192.168.2.${network-ids.replicant}" ];
   }
+  
+  {
+    PublicKeyFile = "/etc/nixos/public/wireguard/blaze";
+    AllowedIPs = [ "192.168.2.${network-ids.blaze}" ];
+  }
 ]
