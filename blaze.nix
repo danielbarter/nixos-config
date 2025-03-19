@@ -158,7 +158,7 @@
 
       "192.168.1.${network-ids.asus2}" = [ "asus2.lan" ];
       "192.168.1.${network-ids.asus3}" = [ "asus3.lan" ];
-    }
+    };
 
     stevenBlackHosts = {
       enable = true;
