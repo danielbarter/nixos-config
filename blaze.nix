@@ -46,6 +46,7 @@
 
       networkConfig = {
         DHCP = "ipv4";
+        LLDP = "no";
       };
     };
   };
