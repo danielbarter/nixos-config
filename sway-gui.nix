@@ -31,6 +31,8 @@
       pkgs.source-sans-pro
       pkgs.source-serif-pro
       pkgs.noto-fonts-emoji
+
+      # used by waybar
       pkgs.font-awesome
     ];
 

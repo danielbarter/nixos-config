@@ -2,6 +2,9 @@
 mkdir -p /home/danielbarter/.config
 ln -sf /etc/nixos/dotfiles/helix /home/danielbarter/.config
 
+# symlink for waybar config
+ln -sf /etc/nixos/dotfiles/waybar /home/danielbarter/.config
+
 # symlink shell config files into home
 ln -sf /etc/nixos/dotfiles/shell/alacritty.toml /home/danielbarter/.alacritty.toml
 ln -sf /etc/nixos/dotfiles/shell/bashrc /home/danielbarter/.bashrc
