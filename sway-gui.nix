@@ -31,6 +31,8 @@
       pkgs.source-sans-pro
       pkgs.source-serif-pro
       pkgs.noto-fonts-emoji
+      pkgs
+      pkgs.font-awesome
     ];
 
     fontconfig = {
@@ -94,7 +96,7 @@
 
 
   environment.systemPackages = with pkgs; [
-    (callPackage ./status-command.nix {})
+    waybar
     glib # gsettings
     dracula-theme # gtk theme
     adwaita-icon-theme # default gnome icons

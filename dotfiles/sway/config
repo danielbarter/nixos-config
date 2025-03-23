@@ -248,18 +248,7 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
-bar {
-    position top
-    status_command while status_command; do sleep 5; done
-    height 25
-    colors {
-        background $Background
-        statusline $Foreground
-        focused_workspace $Purple $Purple $Foreground
-        urgent_workspace $Red $Red $Foreground
-        inactive_workspace $Background $Background $Foreground
-    }
-}
+bar swaybar_comman waybar
 
 # Import the WAYLAND_DISPLAY env var from sway into the systemd user session, and restart some user services
 # so that they have fresh environment variables
