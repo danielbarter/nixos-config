@@ -31,7 +31,6 @@
       pkgs.source-sans-pro
       pkgs.source-serif-pro
       pkgs.noto-fonts-emoji
-      pkgs
       pkgs.font-awesome
     ];
 

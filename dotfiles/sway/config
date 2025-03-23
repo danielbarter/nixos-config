@@ -248,7 +248,7 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
-bar swaybar_comman waybar
+bar swaybar_command waybar
 
 # Import the WAYLAND_DISPLAY env var from sway into the systemd user session, and restart some user services
 # so that they have fresh environment variables
