@@ -4,4 +4,5 @@
     font-family: SourceCodePro;
     font-size: 15;
     background: @background;
+    color: @foreground;
 }

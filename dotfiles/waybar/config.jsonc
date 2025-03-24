@@ -3,10 +3,16 @@
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-right": ["battery", "clock"],
     "battery": {
-        "format": "{capacity}% {icon}",
-        "format-icons": ["", "", "", "", ""]
+        "format": "🔋{capacity} ({time})%",
     },
     "clock": {
-        "format-alt": "{:%a %d %b %H:%M}"
+        "format": "{:%a %d %b %H:%M (%Z)}",
+        "tooltip-format": "{tz_list}",
+        "timezones": [
+            "America/Los_Angeles",
+            "America/New_York",
+            "Etc/UTC",
+            "Australia/Sydney"
+        ] 
     }
 }
