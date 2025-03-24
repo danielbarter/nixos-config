@@ -7,7 +7,7 @@
         "format": "🔋{capacity} ({time})%",
     },
     "clock": {
-        "format": "{:%a %d %b %H:%M (%Z)}",
+        "format": "🕗 {:%a %d %b %H:%M (%Z)}",
         "tooltip": false,
         "timezones": [
             "America/Los_Angeles",
@@ -16,8 +16,8 @@
             "Australia/Sydney"
         ],
         "actions" : {
-            "on-click": "tz_down",
-            "on-click-right": "tz_up",
+            "on-scroll-down": "tz_down",
+            "on-scroll-up": "tz_up",
         }
     }
 }
