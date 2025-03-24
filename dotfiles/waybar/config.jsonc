@@ -3,16 +3,21 @@
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-right": ["battery", "clock"],
     "battery": {
+        "tooltip": false,
         "format": "🔋{capacity} ({time})%",
     },
     "clock": {
         "format": "{:%a %d %b %H:%M (%Z)}",
-        "tooltip-format": "{tz_list}",
+        "tooltip": false,
         "timezones": [
             "America/Los_Angeles",
             "America/New_York",
             "Etc/UTC",
             "Australia/Sydney"
-        ] 
+        ],
+        "actions" : {
+            "on-click": "tz_down",
+            "on-click-right": "tz_up",
+        }
     }
 }
