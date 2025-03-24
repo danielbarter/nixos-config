@@ -1,7 +1,6 @@
 @import url("./colors.css");
 
 * {
-    border: none;
     font-family: SourceCodePro;
     font-size: 15;
     background: @background;
