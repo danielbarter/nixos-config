@@ -97,10 +97,10 @@ echo_unicode() {
   # Convert the code point to a UTF-8 character
   if [[ "$code_point" =~ ^0x[0-9A-Fa-f]+$ ]]; then
     # Hexadecimal code point
-    printf "\\U$(printf '%08x' "$code_point")"
+    printf "\\U$(printf '%08x' "$code_point")\n"
   elif [[ "$code_point" =~ ^[0-9]+$ ]]; then
     # Decimal code point
-    printf "\\U$(printf '%08x' "$code_point")"
+    printf "\\U$(printf '%08x' "$code_point")\n"
   else
     echo "Invalid code point format. Must be decimal or hexadecimal (e.g., 0x1F600)." >&2
     return 1

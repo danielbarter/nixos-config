@@ -21,7 +21,8 @@ tooltip label {
 #cpu,
 #bluetooth,
 #battery,
-#clock
+#clock,
+#systemd-failed-units
 {
     margin: 3px;
     padding-left: 10px;

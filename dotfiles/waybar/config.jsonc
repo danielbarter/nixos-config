@@ -1,7 +1,7 @@
 {
     "layer": "top",
     "modules-left": ["sway/workspaces", "sway/mode"],
-    "modules-right": ["pulseaudio","network","memory","cpu","bluetooth", "battery", "clock"],
+    "modules-right": ["pulseaudio","network#interface","network#wireless","memory","cpu","bluetooth", "battery", "clock", "systemd-failed-units"],
 
     "battery": {
         "format": "{icon} {capacity}%",
@@ -41,10 +41,16 @@
         "format": " {percentage}%",
     },
 
-    "network": {
-        "format-ethernet": " {ifname}",
-        "format-wifi":  " {ifname}  {essid} ({signalStrength}%)",
-        "tooltip-format": "{ipaddr}/{cidr}\n\n {bandwidthUpBits}   {bandwidthDownBits}"
+    "network#interface": {
+        "format": " {ifname}",
+        "tooltip-format": "address: {ipaddr}/{cidr}\ngateway: {gwaddr}\n {bandwidthUpBits}   {bandwidthDownBits}"
+    },
+
+    "network#wireless": {
+        "interface": "wl*",
+        "format": " {essid} ({signalStrength}%)",
+        "format-disconnected": "",
+        "tooltip-format": "signal strength: {signaldBm} dBm\nfrequency: {frequency} GHz"
     },
 
     "pulseaudio": {
@@ -66,5 +72,13 @@
     "sway/mode": {
         "format": " {}",
         "max-length": 50
+    },
+
+    "systemd-failed-units": {
+        "hide-on-ok": false, // Do not hide if there is zero failed units.
+        "format": "✗ {nr_failed}",
+        "format-ok": "✓",
+        "system": true, // Monitor failed systemwide units.
+        "user": false // Ignore failed user units.
     }
 }
