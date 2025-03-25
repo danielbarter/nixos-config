@@ -89,6 +89,24 @@ volume() {
     wpctl set-volume @DEFAULT_AUDIO_SINK@ $1
 }
 
+
+# Function to echo a Unicode character given its code point
+echo_unicode() {
+  local code_point="$1"
+
+  # Convert the code point to a UTF-8 character
+  if [[ "$code_point" =~ ^0x[0-9A-Fa-f]+$ ]]; then
+    # Hexadecimal code point
+    printf "\\U$(printf '%08x' "$code_point")"
+  elif [[ "$code_point" =~ ^[0-9]+$ ]]; then
+    # Decimal code point
+    printf "\\U$(printf '%08x' "$code_point")"
+  else
+    echo "Invalid code point format. Must be decimal or hexadecimal (e.g., 0x1F600)." >&2
+    return 1
+  fi
+}
+
 update_title() {
     if [ $SHOW_PWD == yes ]
     then

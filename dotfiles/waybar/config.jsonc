@@ -4,10 +4,11 @@
     "modules-right": ["battery", "clock"],
     "battery": {
         "tooltip": false,
-        "format": "🔋{capacity} ({time})%",
+        "format": "{icon} {capacity}%",
+        "format-icons": ["", "", "", "", ""],
     },
     "clock": {
-        "format": "🕗 {:%a %d %b %H:%M (%Z)}",
+        "format": " {:%a %d %b %H:%M (%Z)}",
         "tooltip": false,
         "timezones": [
             "America/Los_Angeles",
@@ -19,5 +20,11 @@
             "on-scroll-down": "tz_down",
             "on-scroll-up": "tz_up",
         }
+    },
+
+    "bluetooth": {
+        "format": " {status}",
+        "format-disabled": "", // an empty format will hide the module
+        "format-connected": " {num_connections} connected",
     }
 }
