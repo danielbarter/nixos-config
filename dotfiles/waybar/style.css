@@ -1,18 +1,39 @@
 @import url("./colors.css");
 
 * {
-    font-family: SourceCodePro;
+    border: none;
+    border-radius: 15px;
+    font-family: SourceCodePro, FontAwesome;
     font-size: 15px;
-    background: @background;
+    background: rgba(0,0,0,0);
     color: @foreground;
+
 }
 
+tooltip label {
+    background: @dark-background;
+    padding: 10px;
+}
+
+#network,
+#memory,
 #cpu,
 #bluetooth,
 #battery,
 #clock
 {
-    padding-left: 35px;
+    margin: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
     background: @dark-background;
+    border-radius: 15px;
 }
 
+
+#bluetooth.connected {
+    background: @purple;
+}
+
+#bluetooth.off {
+    background: @background;
+}
