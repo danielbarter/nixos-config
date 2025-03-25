@@ -37,7 +37,8 @@
 
     fontconfig = {
       defaultFonts = {
-        monospace = [ "Source Code Pro" ];
+        # make alacritty use noto color emoji as second fallback for monospace
+        monospace = [ "Source Code Pro" "Noto Color Emoji" ];
         sansSerif = [ "Source Sans Pro" ];
         serif = [ "Source Serif Pro" ];
         emoji = [ "Noto Color Emoji" ];
