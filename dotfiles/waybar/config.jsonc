@@ -1,15 +1,13 @@
 {
     "layer": "top",
     "modules-left": ["sway/workspaces", "sway/mode"],
-    "modules-right": ["battery", "clock"],
+    "modules-right": ["cpu","bluetooth", "battery", "clock"],
     "battery": {
-        "tooltip": false,
         "format": "{icon} {capacity}%",
         "format-icons": ["", "", "", "", ""],
     },
     "clock": {
         "format": " {:%a %d %b %H:%M (%Z)}",
-        "tooltip": false,
         "timezones": [
             "America/Los_Angeles",
             "America/New_York",
@@ -23,8 +21,12 @@
     },
 
     "bluetooth": {
-        "format": " {status}",
-        "format-disabled": "", // an empty format will hide the module
-        "format-connected": " {num_connections} connected",
-    }
+        "format": "",
+        "format-disabled": "",
+        "format-connected": " {device_alias} ({device_address})",
+    },
+
+    "cpu": {
+        "format" : " {usage}% {avg_frequency}GHz"
+    },
 }

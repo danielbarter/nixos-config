@@ -2,7 +2,16 @@
 
 * {
     font-family: SourceCodePro;
-    font-size: 15;
+    font-size: 15px;
     background: @background;
     color: @foreground;
 }
+
+#cpu,
+#bluetooth,
+#battery,
+#clock
+{
+    padding-left: 35px;
+}
+
