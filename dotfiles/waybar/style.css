@@ -15,6 +15,7 @@ tooltip label {
     padding: 10px;
 }
 
+#pulseaudio,
 #network,
 #memory,
 #cpu,
@@ -37,3 +38,28 @@ tooltip label {
 #bluetooth.off {
     background: @background;
 }
+
+#mode, #workspaces button {
+    margin: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 15px;
+}
+
+#workspaces button {
+    background: @dark-background;
+}
+
+#workspaces button.focused {
+    background: @purple;
+}
+
+
+#workspaces button.urgent {
+    background: @red;
+}
+
+#mode {
+    background: @red;
+}
+

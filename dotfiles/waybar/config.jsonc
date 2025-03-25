@@ -1,7 +1,7 @@
 {
     "layer": "top",
     "modules-left": ["sway/workspaces", "sway/mode"],
-    "modules-right": ["network","memory","cpu","bluetooth", "battery", "clock"],
+    "modules-right": ["pulseaudio","network","memory","cpu","bluetooth", "battery", "clock"],
 
     "battery": {
         "format": "{icon} {capacity}%",
@@ -41,10 +41,30 @@
         "format": " {percentage}%",
     },
 
-    // probably need a custom module to deal with bond interface
     "network": {
-        "format": " {ifname}",        
-        "format-alt": " {ifname} {ipaddr}/{cidr}",
-        "tooltip-format": "{essid}: {signalStrength}%"
+        "format-ethernet": " {ifname}",
+        "format-wifi":  " {ifname}  {essid} ({signalStrength}%)",
+        "tooltip-format": "{ipaddr}/{cidr}\n\n {bandwidthUpBits}   {bandwidthDownBits}"
+    },
+
+    "pulseaudio": {
+        "format": " {icon} {volume}% {format_source}",
+        "format-muted": "  {format_source}",
+        "format-source": " {volume}%",
+        "format-source-muted": "",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        }
+    },
+
+    "sway/mode": {
+        "format": " {}",
+        "max-length": 50
     }
 }
