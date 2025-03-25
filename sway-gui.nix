@@ -24,65 +24,18 @@
   };
 
   fonts = {
-    enableDefaultPackages = true;
+
+    enableDefaultPackages = false;
 
     packages = [
       pkgs.source-code-pro
       pkgs.source-sans-pro
       pkgs.source-serif-pro
       pkgs.noto-fonts-emoji
+      pkgs.font-awesome
     ];
 
     fontconfig = {
-      enable = true;
-
-      # some applications, notably alacritty, choose fonts according to
-      # fontconfigs internal ordering of fonts rather than specific font
-      # tags. To get the correct fonts to be rendered, we need to disable some
-      # fallback fonts which nixos includes by default and fontconfig prefers
-      # over user specified ones. To see this internal list, run fc-match -s
-
-      localConf =
-        let
-          # function to generate patterns for fontconfig font banning
-          fontBanPattern = s: ''
-            <pattern>
-              <patelt name="family">
-                <string>${s}</string>
-              </patelt>
-            </pattern>
-          '';
-
-          fontsToBan = [
-            "Noto Emoji"
-            "DejaVu Sans"
-            "FreeSans"
-            "FreeMono"
-            "FreeSerif"
-            "DejaVu Math TeX Gyre"
-            "DejaVu Sans Mono"
-            "DejaVu Serif"
-            "Liberation Mono"
-            "Liberation Serif"
-            "Liberation Sans"
-            "DejaVu Serif"
-            "DejaVu Serif"
-            "Liberation Serif"
-            "DejaVu Serif"
-          ];
-        in
-        ''
-          <?xml version="1.0"?>
-          <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
-          <fontconfig>
-            <selectfont>
-              <rejectfont>
-                ${lib.strings.concatStringsSep "\n" (map fontBanPattern fontsToBan)}
-              </rejectfont>
-            </selectfont>
-          </fontconfig>
-        '';
-
       defaultFonts = {
         monospace = [ "Source Code Pro" ];
         sansSerif = [ "Source Sans Pro" ];
