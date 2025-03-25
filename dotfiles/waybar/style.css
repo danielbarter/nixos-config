@@ -13,5 +13,6 @@
 #clock
 {
     padding-left: 35px;
+    background: @dark-background;
 }
 
