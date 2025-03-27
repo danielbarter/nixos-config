@@ -2,13 +2,13 @@
 # --override-input nixpkgs /home/danielbarter/nixpkgs
 #
 # substituters can be overriden with
-# --option substituters ssh://nix-ssh@punky.meow
+# --option substituters ssh://nix-ssh@punky.lan
 # 
 # to rebuild, pulling image from punky:
-# sudo nixos-rebuild --impure --option substituters ssh://nix-ssh@punky.meow switch
+# sudo nixos-rebuild --impure --option substituters ssh://nix-ssh@punky.lan switch
 #
 # copy closure of store path from substituter
-# nix-store --realise --substituters ssh://nix-ssh@punky.meow <path>
+# nix-store --realise --substituters ssh://nix-ssh@punky.lan <path>
 {
   inputs = {
     nixpkgs.url = "github:NixOs/nixpkgs/3870b7fece9e0b946fafb0fa21e11d7228a752a7";
