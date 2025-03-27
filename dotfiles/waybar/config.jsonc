@@ -18,7 +18,7 @@
             "Etc/UTC",
             "Australia/Sydney"
         ],
-        "tooltip-format": "<tt><small>{calendar}</small></tt>",
+        "tooltip": false,
         "actions" : {
             "on-scroll-down": "tz_down",
             "on-scroll-up": "tz_up",
