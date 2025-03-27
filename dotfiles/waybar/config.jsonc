@@ -43,6 +43,7 @@
 
     "network#interface": {
         "format": " {ifname}",
+        "format-disconnected": "",
         "tooltip-format": "address: {ipaddr}/{cidr}\ngateway: {gwaddr}\n {bandwidthUpBits}   {bandwidthDownBits}"
     },
 
