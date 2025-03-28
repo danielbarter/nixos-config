@@ -7,6 +7,9 @@
         "format": "{icon} {capacity}%",
         "format-alt": "{icon} {capacity}% ({time})",
         "format-icons": ["", "", "", "", ""],
+        "states": {
+            "critical": 10,
+        },
     },
 
     "clock": {

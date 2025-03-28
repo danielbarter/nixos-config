@@ -64,3 +64,10 @@ tooltip label {
     background: @red;
 }
 
+#battery.critical {
+    background: @red;
+}
+
+#battery.charging {
+    background: @purple;
+}
