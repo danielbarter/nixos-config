@@ -67,6 +67,9 @@
     programs.ssh.extraConfig = ''
     Host *
         IdentityFile /etc/nixos/secrets/ssh/id_rsa
+        ControlMaster auto
+        ControlPath /tmp/ssh-control-master-%r@%h-&p
+        ControlPersist 10m
     '';
   };
 }
