@@ -19,6 +19,12 @@
     cores = 3;
   };
 
+  # serve nix cache over http
+  services.nix-serve = {
+    enable = true;
+    port = 5000;
+    secretKeyFile = "/etc/nixos/secrets/nix/private-key";
+  };
 
   networking = {
     hostName = "punky";
