@@ -62,6 +62,7 @@
   ddns-update = (pkgs.callPackage ./ddns-update.nix {});
   in {
     wantedBy = [ "timers.target" ];
+    path = [ pkgs.iproute2 ];
     serviceConfig = {
       Type = "oneshot";
       ExecStart = ''
