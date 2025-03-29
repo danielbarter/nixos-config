@@ -13,8 +13,7 @@
     },
 
     "clock": {
-        "format": " {:%H:%M (%Z)}",
-        "format-alt": " {:%a %d %b %H:%M (%Z)}",
+        "format": " {:%a %d %b %H:%M (%Z)}",
         "timezones": [
             "America/Los_Angeles",
             "America/New_York",
@@ -23,8 +22,8 @@
         ],
         "tooltip": false,
         "actions" : {
-            "on-scroll-down": "tz_down",
-            "on-scroll-up": "tz_up",
+            "on-click": "tz_down",
+            "on-click-right": "tz_up",
         }
     },
 
