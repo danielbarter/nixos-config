@@ -65,7 +65,7 @@
     serviceConfig = {
       Type = "oneshot";
       ExecStart = ''
-        ${ddns-update}/bin/ddns_update --token_file /etc/nixos/secrets/duckdns_token --domain hobiehomelab
+        ${ddns-update}/bin/ddns_update --token_file /etc/nixos/secrets/duckdns_token --domain hobiehomelab --wan_interface eno0
         '';
     };
     unitConfig = {
