@@ -53,7 +53,6 @@
     wl-clipboard
     mako # FreeDesktop notifications
     libnotify # notify-send
-    kanshi # sway hotplug functionality
     fuzzel
   ];
 

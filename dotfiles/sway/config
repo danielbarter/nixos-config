@@ -275,10 +275,6 @@ exec swayidle -w \
 seat seat0 xcursor_theme Dracula-cursors 24
 
 
-# run kanshi which handles display hotswapping
-# to set output scale, run swaymsg output eDP-1 enable scale 1.2
-exec_always "pkill kanshi; kanshi"
-
 # mako will auto start when a notification is sent, but it is better to start it here
 # because then it picks up sway specific environment variables
 exec_always "pkill mako; mako"
