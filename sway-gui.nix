@@ -12,12 +12,6 @@
   # firefox integration
   programs.firefox.enable = true;
 
-  # xdg-desktop-portal works by exposing a series of D-Bus interfaces
-  # known as portals under a well-known name
-  # (org.freedesktop.portal.Desktop) and object path
-  # (/org/freedesktop/portal/desktop).
-  # The portal interfaces include APIs for file access, opening URIs,
-  # printing and others.
   xdg.portal = {
     enable = true;
     wlr.enable = true;
@@ -49,7 +43,6 @@
 
   environment.systemPackages = with pkgs; [
     waybar
-    glib # gsettings
     dracula-theme # gtk theme
     adwaita-icon-theme # default gnome icons
     nixos-icons
@@ -72,18 +65,33 @@
     # clearout default packages
     extraPackages = [];
 
-    # extra session environment variables
-    # we need add gsettings-desktop-schemas to XDG_DATA_DIRS so gsettings works
-    # we need to set _JAVA_AWT_WM_NONREPARENTING=1 so java GUI apps aren't broken
     extraSessionCommands =
-      let
-        schema = pkgs.gsettings-desktop-schemas;
-        datadir = "${schema}/share/gsettings-schemas/${schema.name}";
-      in
       ''
-        export XDG_DATA_DIRS=${datadir}:$XDG_DATA_DIRS
-        export _JAVA_AWT_WM_NONREPARENTING=1
         export BROWSER=firefox
       '';
+  };
+
+  # configure GTK themes
+  programs.dconf = {
+    enable = true;
+    profiles.user.databases = [
+      {
+        settings = {
+          "org/gnome/desktop/interface" = {
+            cursor-size = lib.gvariant.mkInt32 24;
+            cursor-theme = "Dracula-cursors";
+            document-font-name = "Source Sans Pro 11";
+            font-name = "Source Sans Pro 11";
+            gtk-theme = "Dracula";
+            icon-theme = "Adwaita";
+            monospace-font-name = "Source Code Pro 11";
+          };
+
+          "org/gnome/desktop/wm/preferences" = {
+            titlebar-font = "Source Sans Pro 11";
+          };
+        };
+      }
+    ];
   };
 }
