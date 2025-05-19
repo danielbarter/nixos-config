@@ -11,7 +11,7 @@
 # nix-store --realise --substituters ssh://nix-ssh@punky.lan <path>
 {
   inputs = {
-    nixpkgs.url = "github:NixOs/nixpkgs/3870b7fece9e0b946fafb0fa21e11d7228a752a7";
+    nixpkgs.url = "github:NixOs/nixpkgs/8e1439fe0f0eddf819c839be5151cbda1851d14d";
     hosts.url = "github:StevenBlack/hosts";
 
     # unify nixpkgs across inputs
