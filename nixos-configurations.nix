@@ -15,6 +15,7 @@
       ./nix-config.nix
       ./users.nix
       ./packages.nix
+      ./ssh.nix
     ];
   };
 
