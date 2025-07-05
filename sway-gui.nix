@@ -41,20 +41,6 @@
   };
 
 
-  environment.systemPackages = with pkgs; [
-    waybar
-    dracula-theme # gtk theme
-    adwaita-icon-theme # default gnome icons
-    nixos-icons
-    swaylock
-    swayidle
-    grim # screenshot functionality
-    slurp # screenshot functionality
-    wl-clipboard
-    mako # FreeDesktop notifications
-    libnotify # notify-send
-    fuzzel
-  ];
 
   # enable sway window manager
   programs.sway = {
@@ -68,29 +54,5 @@
       ''
         export BROWSER=firefox
       '';
-  };
-
-  # configure GTK themes
-  programs.dconf = {
-    enable = true;
-    profiles.user.databases = [
-      {
-        settings = {
-          "org/gnome/desktop/interface" = {
-            cursor-size = lib.gvariant.mkInt32 24;
-            cursor-theme = "Dracula-cursors";
-            document-font-name = "Source Sans Pro 11";
-            font-name = "Source Sans Pro 11";
-            gtk-theme = "Dracula";
-            icon-theme = "Adwaita";
-            monospace-font-name = "Source Code Pro 11";
-          };
-
-          "org/gnome/desktop/wm/preferences" = {
-            titlebar-font = "Source Sans Pro 11";
-          };
-        };
-      }
-    ];
   };
 }
