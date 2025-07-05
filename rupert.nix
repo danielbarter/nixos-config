@@ -1,5 +1,7 @@
 {
 
+  imports = [ ./sound.nix ];
+
   programs.firefox.enable = true;
   programs.steam.enable = true;
 
@@ -10,28 +12,10 @@
     "vm.max_map_count" = 524288;
   };
 
-  services.resolved.extraConfig = ''
-    DNSStubListener=no
-  '';
-
-  # bonding ethernet and wireless (with ethernet as primary)
-  imports = [ ./static-bond-interface.nix ./wireless.nix ];
 
   networking = {
     hostName = "rupert";
-    networkmanager.enable = false;
-
-    
-    # DNS used by resolved. resolvectl status
-    nameservers = [
-      "192.168.1.${(import ./network-ids.nix).blaze}"
-    ];
-
   };
-
-  services.avahi.enable = false;
-
-  services.gnome.core-utilities.enable = true;
 
   boot.kernelModules = [ "hid-nintendo" ];
 
@@ -69,12 +53,6 @@
   swapDevices = [ ];
 
 
-  # enabling gnome
-  services.xserver.enable = true;
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-
-  hardware.bluetooth.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

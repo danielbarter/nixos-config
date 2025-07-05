@@ -1,12 +1,13 @@
-{ config, pkgs,... }:
 {
 
   imports = [
     ./static-bond-interface.nix
     ./wireguard-interface.nix
-    ./wireless.nix
     ./intel-gpu.nix
-  ];
+    ./headless-networking.nix
+    ./headless-wireless.nix
+];
+
 
   dev-machine = true;
 

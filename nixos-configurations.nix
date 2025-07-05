@@ -15,7 +15,6 @@
       ./nix-config.nix
       ./users.nix
       ./packages.nix
-      ./networking.nix
     ];
   };
 
@@ -57,8 +56,6 @@ in {
       ./intel-gpu.nix
 
       #  we usually run this image on a laptop
-      ./wireless.nix
-      ./sway-gui.nix
       ./sound.nix
       
     ];

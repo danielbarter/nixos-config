@@ -9,6 +9,7 @@
 
   imports = [
     ./wireguard-interface.nix
+    ./headless-networking.nix
   ];
 
   boot.kernel.sysctl = {
