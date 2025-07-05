@@ -1,8 +1,5 @@
 {
 
-  imports = [ ./sound.nix ];
-
-  programs.firefox.enable = true;
   programs.steam.enable = true;
 
   # controls the max number of memory mapped areas a process can have

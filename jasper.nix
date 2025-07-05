@@ -1,7 +1,7 @@
 {
   imports = [
-    ./sound.nix
     ./intel-gpu.nix
+    ./gui.nix
 
   ];
   dev-machine = true;

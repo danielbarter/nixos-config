@@ -55,8 +55,6 @@ in {
       # so make sure that we have VA-API drivers so firefox is happy
       ./intel-gpu.nix
 
-      #  we usually run this image on a laptop
-      ./sound.nix
       
     ];
   };
