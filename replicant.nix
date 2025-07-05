@@ -5,7 +5,8 @@
   config,
   ...
 }:
-let setup-replicant = builtins.path {
+let
+ setup-replicant = builtins.path {
       path = ./utils/setup_replicant.sh;
       name = "setup_replicant.sh";
     };
@@ -15,15 +16,41 @@ let setup-replicant = builtins.path {
     };
 in {
 
-  environment.variables = {
-    SETUP_REPLICANT = setup-replicant;
-    REPLICANT_NIXOS_CONFIG = replicant-nixos-config;
+  users.users.root.initialPassword = "";
+
+  systemd.services.setup-replicant = {
+    wantedBy = [ "sysinit.target" ];
+
+    environment = {
+      SETUP_REPLICANT = setup-replicant;
+      REPLICANT_NIXOS_CONFIG = replicant-nixos-config;
+    };
+
+    path = [ config.programs.gnupg.package pkgs.zip pkgs.unzip ];
+
+    serviceConfig = {
+      Type = "oneshot";
+    };
+
+    script = ''
+      cp $REPLICANT_NIXOS_CONFIG /nixos.zip.gpg
+      cd /
+
+      PASSWORD=$(systemd-ask-password --timeout=0 --no-tty)
+      echo $PASSWORD | gpg --pinentry-mode loopback  --passphrase-fd 0 /nixos.zip.gpg
+      unzip /nixos.zip
+
+      cd /etc/nixos
+
+      # set permissions for /etc/nixos
+      source /etc/nixos/utils/set_permissions.sh
+
+      # setup home
+      source /etc/nixos/utils/home_setup.sh
+    '';
   };
 
   system.stateVersion = "24.05";
-
-  # set password to be empty for root
-  users.users.root.initialPassword = "";
 
   networking = {
     hostName = "replicant";

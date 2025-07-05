@@ -1,34 +1,43 @@
 { config, pkgs, ... }:
 {
-  users.users = {
-    annasavage = {
-      isNormalUser = true;
-      openssh.authorizedKeys.keyFiles = [
-        "/etc/nixos/public/ssh/annasavage.pub"
+  users = {
+    mutableUsers = false;
+    users = {
+      annasavage = {
+        isNormalUser = true;
+        openssh.authorizedKeys.keyFiles = [
+          "/etc/nixos/public/ssh/annasavage.pub"
+        ];
+      };
+
+      root.extraGroups = [ "wheel" ];
+      systemd-network.extraGroups = [ "wheel" ];
+
+      nix-ssh.openssh.authorizedKeys.keyFiles = [
+          "/etc/nixos/public/ssh/id_rsa.pub"
       ];
-    };
 
-    root.extraGroups = [ "wheel" ];
-    systemd-network.extraGroups = [ "wheel" ];
+      danielbarter = {
 
-    nix-ssh.openssh.authorizedKeys.keyFiles = [
-        "/etc/nixos/public/ssh/id_rsa.pub"
-    ];
+        # creates /var/lib/systemd/linger/danielbarter
+        linger = true;
+        isNormalUser = true;
+        extraGroups = [
+          "wheel"
+          "video"
+          "audio"
+        ];
+        openssh.authorizedKeys.keyFiles = [
+          "/etc/nixos/public/ssh/id_rsa.pub"
+          "/etc/nixos/public/ssh/phone.pub"
+        ];
 
-    danielbarter = {
+        hashedPasswordFile = "/etc/nixos/secrets/user_password_hash";
+      };
 
-      # creates /var/lib/systemd/linger/danielbarter
-      linger = true;
-      isNormalUser = true;
-      extraGroups = [
-        "wheel"
-        "video"
-        "audio"
-      ];
-      openssh.authorizedKeys.keyFiles = [
-        "/etc/nixos/public/ssh/id_rsa.pub"
-        "/etc/nixos/public/ssh/phone.pub"
-      ];
+      root = { 
+        hashedPasswordFile = "/etc/nixos/secrets/root_password_hash";
+      };
     };
   };
 }

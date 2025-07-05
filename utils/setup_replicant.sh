@@ -1,15 +1,11 @@
 setup_replicant() {
-    echo "set root password:"
-    passwd root
-
-    echo "set user password:"
-    passwd danielbarter
-
     echo "unpacking nixos configuration"
     cp $REPLICANT_NIXOS_CONFIG /nixos.zip.gpg
     cd /
     # removing existing empty nixos config
-    gpg /nixos.zip.gpg
+
+    PASSWORD=$(systemd-ask-password)
+    echo $PASSWORD | gpg --pinentry-mode loopback  --passphrase-fd 0 /nixos.zip.gpg
     unzip /nixos.zip
 
     cd /etc/nixos
@@ -27,6 +23,13 @@ setup_replicant() {
     # wiregaurd keys are now present, so restart systemd-networkd
     # to create wireguard interface
     systemctl restart systemd-networkd.service
+
+
+    # echo "set root password:"
+    # passwd root
+
+    # echo "set user password:"
+    # passwd danielbarter
 
     echo "all done!"
 }
