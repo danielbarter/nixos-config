@@ -6,10 +6,6 @@
   ...
 }:
 let
- setup-replicant = builtins.path {
-      path = ./utils/setup_replicant.sh;
-      name = "setup_replicant.sh";
-    };
     replicant-nixos-config = builtins.path {
       path = /tmp/nixos.zip.gpg;
       name = "nixos.zip.gpg";
@@ -24,7 +20,6 @@ in {
     wantedBy = [ "sysinit.target" ];
 
     environment = {
-      SETUP_REPLICANT = setup-replicant;
       REPLICANT_NIXOS_CONFIG = replicant-nixos-config;
     };
 
@@ -162,7 +157,6 @@ in {
         "nix-store-lower" = {
           storePaths = [
             config.system.build.toplevel
-            setup-replicant
             replicant-nixos-config
           ];
           stripNixStorePrefix = true;
