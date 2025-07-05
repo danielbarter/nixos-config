@@ -16,7 +16,8 @@ let
     };
 in {
 
-  users.users.root.initialPassword = "";
+  systemd.targets.sysinit.requires = [ "setup-replicant.service" ];
+  systemd.targets.sysinit.after = [ "setup-replicant.service" ];
 
   systemd.services.setup-replicant = {
     wantedBy = [ "sysinit.target" ];
@@ -27,6 +28,10 @@ in {
     };
 
     path = [ config.programs.gnupg.package pkgs.zip pkgs.unzip ];
+
+    unitConfig = {
+      DefaultDependencies = "no";
+    };
 
     serviceConfig = {
       Type = "oneshot";
