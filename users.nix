@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ lib, config, pkgs, ... }:
 {
   users = {
     mutableUsers = false;
@@ -32,11 +32,11 @@
           "/etc/nixos/public/ssh/phone.pub"
         ];
 
-        hashedPasswordFile = "/etc/nixos/secrets/user_password_hash";
+        hashedPassword = lib.strings.fileContents "/etc/nixos/secrets/user_password_hash";
       };
 
       root = { 
-        hashedPasswordFile = "/etc/nixos/secrets/root_password_hash";
+        hashedPassword = lib.strings.fileContents "/etc/nixos/secrets/root_password_hash";
       };
     };
   };
