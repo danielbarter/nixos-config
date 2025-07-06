@@ -1,44 +1,41 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 {
+  systemd.sysusers.enable = true;
+
   users = {
 
     mutableUsers = false;
 
     users = {
-
-      annasavage = {
-        isNormalUser = true;
-        openssh.authorizedKeys.keyFiles = [
-          "/etc/nixos/public/ssh/annasavage.pub"
-        ];
-      };
-
       danielbarter = {
-
+        isSystemUser = true;
         # creates /var/lib/systemd/linger/danielbarter
         linger = true;
-        isNormalUser = true;
+        group = "users";
         extraGroups = [
-          "wheel"
           "video"
           "audio"
+          "wheel"
         ];
         openssh.authorizedKeys.keyFiles = [
           "/etc/nixos/public/ssh/id_rsa.pub"
           "/etc/nixos/public/ssh/phone.pub"
         ];
 
-        hashedPassword = lib.strings.fileContents "/etc/nixos/secrets/user_password_hash";
+        initialHashedPassword = lib.strings.fileContents "/etc/nixos/secrets/user_password_hash";
+
+        shell = pkgs.bashInteractive;
+        home = "/home/danielbarter";
       };
 
       root = { 
-        hashedPassword = lib.strings.fileContents "/etc/nixos/secrets/root_password_hash";
-        extraGroups = [ "wheel" ];
+        initialHashedPassword = lib.strings.fileContents "/etc/nixos/secrets/root_password_hash";
+        extraGroups = [ "users" "wheel" ];
       };
 
 
       systemd-network = {
-        extraGroups = [ "wheel" ];
+        extraGroups = [ "users" "wheel" ];
       };
 
       nix-ssh = {

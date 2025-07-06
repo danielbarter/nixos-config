@@ -27,5 +27,5 @@ ln -sf /etc/nixos/dotfiles/sway/config /home/danielbarter/.config/sway/config
 ln -sf /etc/nixos/dotfiles/sway/config_mako /home/danielbarter/.config/mako/config
 
 # make sure all the above has correct user and group
-chgrp -R wheel /home/danielbarter
+chgrp -R users /home/danielbarter
 chown -R danielbarter /home/danielbarter
