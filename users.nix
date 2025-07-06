@@ -1,8 +1,9 @@
-{ lib, config, pkgs, ... }:
+{ lib, ... }:
 {
   users = {
     mutableUsers = false;
     users = {
+
       annasavage = {
         isNormalUser = true;
         openssh.authorizedKeys.keyFiles = [
