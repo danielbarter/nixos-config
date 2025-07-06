@@ -1,4 +1,3 @@
-{ config, pkgs,... }:
 {
 
   imports = [
@@ -19,23 +18,7 @@
     cores = 3;
   };
 
-  # serve nix cache over http
-  # services.nix-serve = {
-  #   enable = true;
-  #   port = 5000;
-  #   secretKeyFile = "/etc/nixos/secrets/nix/private-key";
-  # };
-
-  networking = {
-    hostName = "punky";
-    
-    # DNS used by resolved. resolvectl status
-    nameservers = [
-      "192.168.1.${(import ./network-ids.nix).blaze}"
-    ];
-  };
-
-  # boot.binfmt.emulatedSystems = [ "aarch64-linux" "riscv64-linux" ];
+  networking.hostName = "punky";  
 
   boot.initrd.availableKernelModules = [
     "xhci_pci"

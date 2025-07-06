@@ -1,5 +1,15 @@
 {
 
+  # bonding ethernet and wireless (with ethernet as primary)
+  imports = [ ./static-bond-interface.nix ./wireless.nix ];
+
+
+  # enabling gnome
+  services.xserver.enable = true;
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
+  hardware.bluetooth.enable = true;
+
   programs.firefox.enable = true;
   programs.steam.enable = true;
 
@@ -14,8 +24,6 @@
     DNSStubListener=no
   '';
 
-  # bonding ethernet and wireless (with ethernet as primary)
-  imports = [ ./static-bond-interface.nix ./wireless.nix ];
 
   networking = {
     hostName = "rupert";
@@ -59,13 +67,6 @@
 
   swapDevices = [ ];
 
-
-  # enabling gnome
-  services.xserver.enable = true;
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-
-  hardware.bluetooth.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

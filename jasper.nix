@@ -9,11 +9,8 @@
   ];
   dev-machine = true;
 
-
-  networking = {
-    hostName = "jasper";    
-  };
-
+  networking.hostName = "jasper";
+ 
   services.resolved.extraConfig = ''
     DNSStubListener=no
   '';
