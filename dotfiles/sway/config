@@ -250,13 +250,8 @@ bindsym $mod+r mode "resize"
 
 bar swaybar_command waybar
 
-# Import the WAYLAND_DISPLAY env var from sway into the systemd user session, and restart some user services
-# so that they have fresh environment variables
-exec {
-    dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
-    systemctl --user stop pipewire wireplumber pipewire-pulse xdg-desktop-portal xdg-desktop-portal-wlr
-    systemctl --user start pipewire wireplumber pipewire-pulse xdg-desktop-portal xdg-desktop-portal-wlr
-}
+# include system integration configuration
+include /etc/sway/config.d/*
 
 # lock keybind
 bindsym $mod+F1 exec 'swaylock -f -c 000000'
