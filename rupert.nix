@@ -20,18 +20,9 @@
   networking = {
     hostName = "rupert";
     networkmanager.enable = false;
-
-    
-    # DNS used by resolved. resolvectl status
-    nameservers = [
-      "192.168.1.${(import ./network-ids.nix).blaze}"
-    ];
-
   };
 
   services.avahi.enable = false;
-
-  services.gnome.core-utilities.enable = true;
 
   boot.kernelModules = [ "hid-nintendo" ];
 

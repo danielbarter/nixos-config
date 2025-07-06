@@ -11,12 +11,7 @@
 
 
   networking = {
-    hostName = "jasper";
-    
-    # DNS used by resolved. resolvectl status
-    nameservers = [
-      "192.168.1.${(import ./network-ids.nix).blaze}"
-    ];
+    hostName = "jasper";    
   };
 
   services.resolved.extraConfig = ''

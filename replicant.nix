@@ -12,6 +12,10 @@ let
     };
 in {
 
+  imports = [
+    "${modulesPath}/image/repart.nix"
+    ./wireguard-interface.nix
+  ];
 
   systemd.targets.sysinit.requires = [ "setup-replicant.service" ];
   systemd.targets.sysinit.after = [ "setup-replicant.service" ];
@@ -111,11 +115,6 @@ in {
     # make sure that we don't try and mount nix store before its parts are mounted
     depends = [ "/nix-store-lower" "/nix-store-upper" ];
   };
-
-  imports = [
-    "${modulesPath}/image/repart.nix"
-    ./wireguard-interface.nix
-  ];
 
   image.repart =
     let
