@@ -1,11 +1,11 @@
 { lib, pkgs, ... }:
 {
-  systemd.sysusers.enable = true;
 
-  # systemd-sysusers is a dependency of systemd-oomd, but this is not encoded
-  # in the stock unit files. fixed upstream: https://github.com/systemd/pull/35712
-  # add the dependency manually for now
-  systemd.services.systemd-oomd.after = [ "systemd-sysusers.service" ];
+
+  services.userborn.enable = true;
+
+  # oomd needs users to be up before starting
+  systemd.services.systemd-oomd.after = [ "userborn.service" ];
 
   users = {
 
@@ -13,7 +13,7 @@
 
     users = {
       danielbarter = {
-        isSystemUser = true;
+        isNormalUser = true;
         # creates /var/lib/systemd/linger/danielbarter
         linger = true;
         group = "users";
