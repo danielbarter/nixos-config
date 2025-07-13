@@ -71,6 +71,8 @@
     pinentryPackage = pkgs.pinentry-curses;
   };
 
+  system.etc.overlay.enable = true;
+
   # allow processes to persist after logout
   services.logind.killUserProcesses = false;
 }
