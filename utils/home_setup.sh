@@ -17,9 +17,6 @@ ln -sf /etc/nixos/dotfiles/git/gitconfig /home/danielbarter/.gitconfig
 ln -sf /etc/nixos/dotfiles/git/gitconfig /root/.gitconfig
 
 
-# create socket directory for ssh
-mkdir -p /home/danielbarter/.ssh/sockets
-
 # sway config
 mkdir -p /home/danielbarter/.config/sway
 mkdir -p /home/danielbarter/.config/mako
