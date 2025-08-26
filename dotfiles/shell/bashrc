@@ -24,6 +24,9 @@ fuzzy_history() {
     fi
 }
 
+clean_history() {
+    sort -u -o ~/.bash_eternal_history ~/.bash_eternal_history
+}
 
 inspect_variable() {
     # select an environment variable and then print it
