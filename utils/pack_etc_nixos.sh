@@ -9,7 +9,7 @@ pack_etc_nixos() {
 
     # zip up everything except the .git folder, since that contains a lot of files
     doas zip -r /tmp/nixos.zip /etc/nixos -x /etc/nixos/.git\*
-    gpg -c /tmp/nixos.zip
+    gpg --cipher-algo AES256 -c /tmp/nixos.zip
     doas rm /tmp/nixos.zip
 }
 
