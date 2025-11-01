@@ -22,6 +22,9 @@
   services.avahi.enable = false;
 
 
+  # TODO: these need to be cleaned up
+  # should be two partitions on nvme, and secondary disks should be merged
+  # into one for steam games
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/f3dcb6ca-b39f-4c0a-86a7-72f9f331a1e0";
     fsType = "ext4";
