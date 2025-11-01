@@ -13,17 +13,6 @@
   programs.firefox.enable = true;
   programs.steam.enable = true;
 
-  # controls the max number of memory mapped areas a process can have
-  # modern games have been hitting the default limit which is low
-  # 512 * 1024 = 524288
-  boot.kernel.sysctl = {
-    "vm.max_map_count" = 524288;
-  };
-
-  services.resolved.extraConfig = ''
-    DNSStubListener=no
-  '';
-
 
   networking = {
     hostName = "rupert";
@@ -32,7 +21,6 @@
 
   services.avahi.enable = false;
 
-  boot.kernelModules = [ "hid-nintendo" ];
 
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/f3dcb6ca-b39f-4c0a-86a7-72f9f331a1e0";
@@ -56,6 +44,14 @@
     '';
   };
 
+
+  # controls the max number of memory mapped areas a process can have
+  # modern games have been hitting the default limit which is low
+  # 512 * 1024 = 524288
+  boot.kernel.sysctl = {
+    "vm.max_map_count" = 524288;
+  };
+
   boot.initrd.availableKernelModules = [
     "xhci_pci"
     "ahci"
@@ -64,8 +60,6 @@
     "usbhid"
     "sd_mod"
   ];
-
-  swapDevices = [ ];
 
 
   # This value determines the NixOS release from which the default

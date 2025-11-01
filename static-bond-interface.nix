@@ -12,6 +12,12 @@
     ];
   };
 
+  # on everything except the router, we don't want to run
+  # DNS stub listner
+  services.resolved.extraConfig = ''
+    DNSStubListener=no
+  '';
+
 # most standard desktops come with a wireless interface and an ethernet interface
 # we want to put them behind a bond interface, and assign a static ip
   systemd.network = {
