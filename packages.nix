@@ -42,6 +42,7 @@
 
       alacritty # gpu accelerated terminal
       zathura # pdf viewer
+      wl-clipboard
 
     ] ++ lib.optionals dev-machine [
 

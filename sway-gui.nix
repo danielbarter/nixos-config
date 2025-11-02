@@ -50,7 +50,6 @@
     swayidle
     grim # screenshot functionality
     slurp # screenshot functionality
-    wl-clipboard
     mako # FreeDesktop notifications
     libnotify # notify-send
     fuzzel
