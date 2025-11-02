@@ -21,23 +21,19 @@
 
   services.avahi.enable = false;
 
-
-  # TODO: these need to be cleaned up
-  # should be two partitions on nvme, and secondary disks should be merged
-  # into one for steam games
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/f3dcb6ca-b39f-4c0a-86a7-72f9f331a1e0";
+    device = "/dev/disk/by-uuid/8c60622d-bf09-46be-9557-30f4c25bd560";
     fsType = "ext4";
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/6146-A760";
+    device = "/dev/disk/by-uuid/12CE-A600";
     fsType = "vfat";
   };
 
-  fileSystems."/home/danielbarter/windows" = {
-    device = "/dev/disk/by-label/windows";
-    fsType = "ext4";
+  fileSystems."/home/danielbarter" = {
+    device = "/dev/disk/by-uuid/a1573720-4b5e-4211-90fe-9eb9e9e5be3c";
+    fsType = "btrfs";
   };
 
   services.logind = {
