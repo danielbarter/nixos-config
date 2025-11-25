@@ -74,5 +74,5 @@
   system.etc.overlay.enable = true;
 
   # allow processes to persist after logout
-  services.logind.killUserProcesses = false;
+  services.logind.settings.Login.killUserProcesses = false;
 }

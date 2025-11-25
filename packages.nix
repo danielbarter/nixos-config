@@ -15,7 +15,7 @@
   config.environment.systemPackages =
     # if sway is enabled, we include more packages
     let sway-enabled = config.programs.sway.enable;
-        gnome-enabled = config.services.xserver.desktopManager.gnome.enable;
+        gnome-enabled = config.services.desktopManager.gnome.enable;
         gui-enabled = sway-enabled || gnome-enabled;
         dev-machine = config.dev-machine;
     in with pkgs; [

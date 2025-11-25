@@ -158,7 +158,7 @@ in {
             config.system.build.toplevel
             replicant-nixos-config
           ];
-          stripNixStorePrefix = true;
+          nixStorePrefix = "/";
           repartConfig = {
             Type = "linux-generic";
             Format = "ext4";
