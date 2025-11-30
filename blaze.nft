@@ -1,64 +1,117 @@
-define DEV_WAN = "eno0"
-define DEV_LAN = "eno1"
-define DEV_WG = "wg0"
-define NET_WG = 192.168.2.0/24
-define NET_LAN = 192.168.1.0/24
+# Define the WAN interface (Upstream/Internet)
+define WAN_IF = "eno0"
 
-table inet filter {
-    chain input {
-        # apparently, something like define a function, make sure this function is always called, and the function is drop packet?
-        type filter hook input priority filter; policy drop;
+# Define the LAN interface
+define LAN_IF = "eno1"
 
-        # accept packets on loopback interface and from LAN
-        iifname "lo" accept
-        iifname $DEV_LAN accept
+# Define the WireGuard interface
+define WG_IF = "wg0"
 
-        # accept established, related packets. Drop invalid packets.
-        ct state established accept
-        ct state related accept
-        ct state invalid drop
+# Define the LAN subnet
+define LAN_NET = 192.168.1.0/24
 
-        # allow all icmp packets
-        ip protocol icmp accept
-        ip6 nexthdr icmpv6 accept
+# Define the WireGuard subnet
+define WG_NET = 192.168.2.0/24
 
-        # accept udp packets on 51820 and 51821
-        udp dport 51820 accept
-        udp dport 51821 accept 
+# Define the internal server IP for the forwarded port
+define INTERNAL_SERVER = 192.168.1.12
+
+# Define the port the internal server listens on
+define INTERNAL_PORT = 51820
+
+# Define the port the router listens on for the internal server forwarding
+define EXTERNAL_PORT_FWD = 51821
+
+# Define the port the router listens on for its own WireGuard instance
+define ROUTER_WG_PORT = 51820
+
+# Table for Network Address Translation (IPv4 only)
+table ip nat {
+    # Chain for altering packets before routing decisions are made (DNAT)
+    chain prerouting {
+        # Hook into the prerouting stage with high priority
+        type nat hook prerouting priority dstnat; policy accept;
+
+        # Forward UDP port 51821 on WAN to internal machine at 192.168.1.12 on port 51820
+        iifname $WAN_IF udp dport $EXTERNAL_PORT_FWD dnat to $INTERNAL_SERVER:$INTERNAL_PORT
     }
 
-    chain forward {
-        type filter hook forward priority filter; policy drop;
+    # Chain for altering packets after routing decisions are made (SNAT/Masquerade)
+    chain postrouting {
+        # Hook into the postrouting stage to handle source NAT
+        type nat hook postrouting priority srcnat; policy accept;
 
-        # accept established, related packets. Drop invalid packets.
-        ct state established accept
-        ct state related accept
-        ct state invalid drop
-
-        # Allow LAN and WireGuard to access WAN
-        iifname $DEV_LAN oifname $DEV_WAN accept        
-        iifname $DEV_WG oifname $DEV_WAN accept
-
-
-        # Allow Port Forwarding (DNAT logic happens before this, so we match the internal IP/Port)
-        # Note: After DNAT, the destination is 192.168.1.12 and port is 51820
-        ip daddr 192.168.1.12 udp dport 51820 accept        
+        # Masquerade traffic leaving WAN interface (replace source IP with router's public IP)
+        oifname $WAN_IF masquerade
     }
 }
 
+# Table for Firewall Filtering (Handles both IPv4 and IPv6 families)
+table inet filter {
+    # Chain for traffic destined for the router itself (Input)
+    chain input {
+        # Set default policy to Drop (block everything unless explicitly allowed)
+        type filter hook input priority filter; policy drop;
 
-table ip nat {
-    chain prerouting {
-        type nat hook prerouting priority dstnat; policy accept;
-        
-        # Port forwarding 51821 external -> 51820 internal
-        iifname $DEV_WAN udp dport 51821 dnat to 192.168.1.12:51820
+        # Immediately drop all IPv6 traffic as upstream is broken and network is IPv4 only
+        meta nfproto ipv6 counter drop
+
+        # Accept traffic on the loopback interface (localhost)
+        iifname "lo" accept
+
+        # Accept traffic associated with connections already established or related to them
+        ct state established,related accept
+
+        # Drop packets marked as invalid
+        ct state invalid drop
+
+        # Accept ICMP (Ping) packets to the router for diagnostics
+        ip protocol icmp accept
+
+        # Accept incoming UDP traffic on port 51820 for the Router's own WireGuard instance
+        iifname $WAN_IF udp dport $ROUTER_WG_PORT accept
+
+        # Trust and accept all traffic originating from the LAN interface
+        iifname $LAN_IF accept
+
+        # Trust and accept all traffic originating from the WireGuard tunnel interface
+        iifname $WG_IF accept
     }
 
-    chain postrouting {
-        type nat hook postrouting priority srcnat; policy accept;
-        
-        # Masquerade LAN and WireGuard traffic leaving WAN
-        oifname $DEV_WAN masquerade
+    # Chain for traffic passing through the router (Forwarding)
+    chain forward {
+        # Set default policy to Drop (lock down routing paths)
+        type filter hook forward priority filter; policy drop;
+
+        # Immediately drop all IPv6 forwarding traffic
+        meta nfproto ipv6 counter drop
+
+        # Accept forwarded traffic for established and related connections
+        ct state established,related accept
+
+        # Drop forwarded packets marked as invalid
+        ct state invalid drop
+
+        # Allow traffic from LAN to WAN (Access Internet)
+        iifname $LAN_IF oifname $WAN_IF accept
+
+        # Allow traffic from WireGuard VPN to WAN (Access Internet)
+        iifname $WG_IF oifname $WAN_IF accept
+
+        # Allow traffic from LAN to WireGuard (Internal routing)
+        iifname $LAN_IF oifname $WG_IF accept
+
+        # Allow traffic from WireGuard to LAN (Internal routing)
+        iifname $WG_IF oifname $LAN_IF accept
+
+        # Allow forwarded traffic from WAN to the specific internal machine (DNAT result)
+        # Note: Match is on the internal IP and port 51820, as DNAT occurred in prerouting
+        iifname $WAN_IF oifname $LAN_IF ip daddr $INTERNAL_SERVER udp dport $INTERNAL_PORT accept
+    }
+
+    # Chain for traffic generated by the router itself (Output)
+    chain output {
+        # Allow all traffic generated by the router to leave
+        type filter hook output priority filter; policy accept;
     }
 }
