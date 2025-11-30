@@ -37,11 +37,10 @@
     fsType = "btrfs";
   };
 
-  services.logind = {
-    extraConfig = ''
-      HandlePowerKey=ignore
-      HandlePowerKeyLongPress=poweroff
-    '';
+
+  services.logind.settings.Login = {
+    HandlePowerKey = "ignore";
+    HandlePowerKeyLongPress = "poweroff";
   };
 
 
