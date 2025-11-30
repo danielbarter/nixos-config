@@ -88,53 +88,7 @@
    in {
     nftables = {
       enable = true;
-      ruleset = ''
-      define DEV_WAN = "eno0"
-      define DEV_LAN = "eno1"
-      define PRIORITY = 100
-      define NET_LAN = 192.168.1.0/24
-      table inet filter {
-        chain input {
-          type filter hook input priority $PRIORITY; policy drop;
-          jump common
-        }
-
-        chain forward {
-          type filter hook forward priority $PRIORITY; policy drop;
-          jump common
-        }
-
-        chain common {
-          # don't drop packets from LAN or wireguard
-          iifname { $DEV_LAN, lo, wg0 } accept
-
-          # allow returning traffic from connections initiated in LAN
-          ct state vmap { established : accept, related : accept, invalid : drop }
-
-          # accept ipv6 control packets
-          # icmpv6 type { nd-router-solicit, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
-
-          # accept wireguard packets
-          udp dport {51820, 51821} accept
-
-          # log any packets we are dropping
-          # log prefix "nft drop: "
-        }
-      }
-
-      table ip nat {
-
-        chain prerouting {
-          type nat hook prerouting priority $PRIORITY; policy accept;
-          udp dport 51821 dnat to 192.168.1.12:51820
-
-        }
-        chain postrouting {
-          type nat hook postrouting priority $PRIORITY; policy accept;
-          ip saddr $NET_LAN oifname $DEV_WAN masquerade
-        }
-      }
-      '';
+      ruleset = builtins.readFile ./blaze.nft;
     };
 
     hostName = "blaze";
