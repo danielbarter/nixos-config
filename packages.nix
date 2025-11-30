@@ -37,8 +37,6 @@
       aspell
       aspellDicts.en
       (pass.withExtensions (exts: [ exts.pass-otp ]))
-      (python3Packages.llm.withPlugins {llm-gemini = true;})
-
     ] ++ lib.optionals gui-enabled [
 
       alacritty # gpu accelerated terminal
