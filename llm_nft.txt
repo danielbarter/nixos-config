@@ -46,4 +46,4 @@ here are the interface adresses.
     inet 192.168.2.1/24 scope global wg0
        valid_lft forever preferred_lft forever
 
-I want to lock things down as much as possible, but the router wants UDP packets on port 51820, and an internal machine at 192.168.1.12 wants UDP packets on 51820, but the router receives them on 51821. Also, IPv6 is busted upstream (AT&T), so we are ipv4 only, with LAN at 192.168.1.0/24. We use 192.168.2.0/24 as the wireguard network. 
+I want to lock things down as much as possible, but the router wants UDP packets on port 51820, and an internal machine at 192.168.1.12 wants UDP packets on 51820, but the router receives them on 51821. Also, IPv6 is busted upstream (AT&T), so we are ipv4 only, with LAN at 192.168.1.0/24. We use 192.168.2.0/24 as the wireguard network. Please respond with a cleanly formated, nftables config. No other text. Also, please have informative comments above each line of the config.
