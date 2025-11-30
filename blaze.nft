@@ -1,45 +1,64 @@
 define DEV_WAN = "eno0"
 define DEV_LAN = "eno1"
+define DEV_WG = "wg0"
 define NET_WG = 192.168.2.0/24
 define NET_LAN = 192.168.1.0/24
 
 table inet filter {
     chain input {
+        # apparently, something like define a function, make sure this function is always called, and the function is drop packet?
         type filter hook input priority filter; policy drop;
+
+        # accept packets on loopback interface and from LAN
+        iifname "lo" accept
+        iifname $DEV_LAN accept
+
+        # accept established, related packets. Drop invalid packets.
+        ct state established accept
+        ct state related accept
+        ct state invalid drop
+
+        # allow all icmp packets
+        ip protocol icmp accept
+        ip6 nexthdr icmpv6 accept
+
+        # accept udp packets on 51820 and 51821
+        udp dport 51820 accept
+        udp dport 51821 accept 
     }
 
     chain forward {
-        type filter hook forward priority $PRIORITY; policy drop;
-        jump common
+        type filter hook forward priority filter; policy drop;
+
+        # accept established, related packets. Drop invalid packets.
+        ct state established accept
+        ct state related accept
+        ct state invalid drop
+
+        # Allow LAN and WireGuard to access WAN
+        iifname $DEV_LAN oifname $DEV_WAN accept        
+        iifname $DEV_WG oifname $DEV_WAN accept
+
+
+        # Allow Port Forwarding (DNAT logic happens before this, so we match the internal IP/Port)
+        # Note: After DNAT, the destination is 192.168.1.12 and port is 51820
+        ip daddr 192.168.1.12 udp dport 51820 accept        
     }
-
-chain common {
-# don't drop packets from LAN or wireguard
-iifname { $DEV_LAN, lo, wg0 } accept
-
-# allow returning traffic from connections initiated in LAN
-ct state vmap { established : accept, related : accept, invalid : drop }
-
-# accept ipv6 control packets
-# icmpv6 type { nd-router-solicit, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
-
-# accept wireguard packets
-udp dport {51820, 51821} accept
-
-# log any packets we are dropping
-# log prefix "nft drop: "
 }
-}
+
 
 table ip nat {
+    chain prerouting {
+        type nat hook prerouting priority dstnat; policy accept;
+        
+        # Port forwarding 51821 external -> 51820 internal
+        iifname $DEV_WAN udp dport 51821 dnat to 192.168.1.12:51820
+    }
 
-chain prerouting {
-type nat hook prerouting priority $PRIORITY; policy accept;
-udp dport 51821 dnat to 192.168.1.12:51820
-
-}
-chain postrouting {
-type nat hook postrouting priority $PRIORITY; policy accept;
-ip saddr $NET_LAN oifname $DEV_WAN masquerade
-}
+    chain postrouting {
+        type nat hook postrouting priority srcnat; policy accept;
+        
+        # Masquerade LAN and WireGuard traffic leaving WAN
+        oifname $DEV_WAN masquerade
+    }
 }
