@@ -1,0 +1,9 @@
+(
+    output: "all",
+    source: Color(Single((0.14231177, 0.14551084, 0.16470528))),
+    filter_by_theme: false,
+    rotation_frequency: 900,
+    filter_method: Lanczos,
+    scaling_mode: Zoom,
+    sampling_method: Alphanumeric,
+)
