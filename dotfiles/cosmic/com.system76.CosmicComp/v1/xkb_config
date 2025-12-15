@@ -3,7 +3,7 @@
     model: "pc104",
     layout: "us",
     variant: "",
-    options: Some("terminate:ctrl_alt_bksp"),
+    options: Some("terminate:ctrl_alt_bksp,caps:swapescape"),
     repeat_delay: 600,
     repeat_rate: 25,
 )
