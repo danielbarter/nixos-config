@@ -8,7 +8,12 @@
   ];
   dev-machine = true;
 
-  networking.hostName = "jasper";
+
+
+  networking = {
+    hostName = "jasper";
+    networkmanager.enable = false;
+  };
  
   services.logind.settings.Login = {
     HandlePowerKey = "suspend";
