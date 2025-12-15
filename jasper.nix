@@ -2,8 +2,7 @@
   imports = [
     ./static-bond-interface.nix
     ./wireless.nix
-    ./sway-gui.nix
-    ./sound.nix
+    ./gui.nix
     ./intel-gpu.nix
 
   ];

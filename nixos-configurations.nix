@@ -58,8 +58,7 @@ in {
 
       #  we usually run this image on a laptop
       ./wireless.nix
-      ./sway-gui.nix
-      ./sound.nix
+      ./gui.nix
       
     ];
   };

@@ -13,8 +13,7 @@
   };
 
   config.environment.systemPackages =
-    # if gui-enabled, we include more packages
-    let gui-enabled = config.programs.sway.enable || config.services.desktopManager.cosmic.enable;
+    let gui-enabled = config.services.desktopManager.cosmic.enable;
         dev-machine = config.dev-machine;
     in with pkgs; [
 
@@ -35,6 +34,7 @@
       aspell
       aspellDicts.en
       (pass.withExtensions (exts: [ exts.pass-otp ]))
+
     ] ++ lib.optionals gui-enabled [
 
       alacritty # gpu accelerated terminal

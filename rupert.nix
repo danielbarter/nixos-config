@@ -1,17 +1,9 @@
 {
 
   # bonding ethernet and wireless (with ethernet as primary)
-  imports = [ ./static-bond-interface.nix ./wireless.nix ];
+  imports = [ ./static-bond-interface.nix ./wireless.nix ./gui.nix ];
 
 
-  # enable cosmic
-  services.displayManager.cosmic-greeter.enable = true;
-  services.desktopManager.cosmic.enable = true;
-
-  
-  hardware.bluetooth.enable = true;
-
-  programs.firefox.enable = true;
   programs.steam.enable = true;
 
 
