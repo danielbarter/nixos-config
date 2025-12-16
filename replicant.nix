@@ -59,6 +59,7 @@ in {
 
   networking = {
     hostName = "replicant";
+    networkmanager.enable = false;
   };
 
 
