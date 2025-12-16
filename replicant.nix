@@ -14,7 +14,6 @@ in {
 
   imports = [
     "${modulesPath}/image/repart.nix"
-    ./wireguard-interface.nix
   ];
 
   systemd.targets.sysinit.requires = [ "setup-replicant.service" ];
@@ -57,23 +56,7 @@ in {
 
   system.stateVersion = "24.05";
 
-  networking = {
-    hostName = "replicant";
-    networkmanager.enable = false;
-  };
-
-
-  # catchall network config. Configure whatever interface is present
-  systemd.network.networks = {
-    "40-generic" = {
-      matchConfig = {
-        Name = "*";
-      };
-      networkConfig = {
-        DHCP = "yes";
-      };
-    };
-  };
+  networking.hostName = "replicant";
 
   # need ext4 kernel module to mount nix store in stage 1
   boot.initrd.availableKernelModules = [

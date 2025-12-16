@@ -1,16 +1,10 @@
 {
 
-  # bonding ethernet and wireless (with ethernet as primary)
-  imports = [ ./static-bond-interface.nix ./wireless.nix ./gui.nix ];
-
+  imports = [ ./gui.nix ];
 
   programs.steam.enable = true;
 
-
-  networking = {
-    hostName = "rupert";
-    networkmanager.enable = false;
-  };
+  networking.hostName = "rupert";
 
   services.avahi.enable = false;
 

@@ -15,7 +15,7 @@
       ./nix-config.nix
       ./users.nix
       ./packages.nix
-      ./networking.nix
+      ./ssh-config.nix
     ];
   };
 
@@ -51,13 +51,7 @@ in {
     host = "x86_64-linux";
     modules = [
       ./replicant.nix
-
-      # we are probably going to be running on some intel chip,
-      # so make sure that we have VA-API drivers so firefox is happy
       ./intel-gpu.nix
-
-      #  we usually run this image on a laptop
-      ./wireless.nix
       ./gui.nix
       
     ];

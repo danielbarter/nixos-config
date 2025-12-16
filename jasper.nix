@@ -1,19 +1,11 @@
 {
   imports = [
-    ./static-bond-interface.nix
-    ./wireless.nix
     ./gui.nix
     ./intel-gpu.nix
-
   ];
   dev-machine = true;
 
-
-
-  networking = {
-    hostName = "jasper";
-    networkmanager.enable = false;
-  };
+  networking.hostName = "jasper";
  
   services.logind.settings.Login = {
     HandlePowerKey = "suspend";

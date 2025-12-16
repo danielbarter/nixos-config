@@ -1,4 +1,5 @@
 {
+  pkgs,
   config,
   ...
 }:
@@ -17,6 +18,12 @@
   services.resolved.extraConfig = ''
     DNSStubListener=no
   '';
+
+
+  # this config is for headless systems without network manager. So we use iwd for
+  # wireless interface configuration
+  networking.wireless.iwd.enable = true;
+  environment.systemPackages = [ pkgs.iw ];
 
 # most standard desktops come with a wireless interface and an ethernet interface
 # we want to put them behind a bond interface, and assign a static ip

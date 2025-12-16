@@ -1,10 +1,8 @@
 {
 
   imports = [
+    ./headless-networking.nix
     ./static-bond-interface.nix
-    ./wireguard-interface.nix
-    ./wireless.nix
-    ./intel-gpu.nix
   ];
 
   dev-machine = true;
