@@ -23,26 +23,41 @@ in {
   jasper = nixosSystem {
     build = "x86_64-linux";
     host = "x86_64-linux";
-    modules = [ ./jasper.nix ];
+    modules = [
+      ./jasper.nix
+      ./gui.nix
+      ./intel-gpu.nix
+     ];
   };
 
   punky = nixosSystem {
     build = "x86_64-linux";
     host = "x86_64-linux";
-    modules = [ ./punky.nix ];
+    modules = [
+      ./punky.nix
+      ./headless-networking.nix
+      ./static-bond-interface.nix
+    ];
   };
 
 
   blaze = nixosSystem {
     build = "x86_64-linux";
     host = "x86_64-linux";
-    modules = [ hosts.nixosModule ./blaze.nix ];
+    modules = [
+       hosts.nixosModule
+       ./blaze.nix
+       ./headless-networking.nix
+     ];
   };
 
   rupert = nixosSystem {
     build = "x86_64-linux";
     host = "x86_64-linux";
-    modules = [ ./rupert.nix ];
+    modules = [
+      ./rupert.nix
+      ./gui.nix
+    ];
   };
 
 

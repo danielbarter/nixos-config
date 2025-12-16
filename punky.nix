@@ -1,10 +1,5 @@
 {
 
-  imports = [
-    ./headless-networking.nix
-    ./static-bond-interface.nix
-  ];
-
   dev-machine = true;
 
   # we use /dev/shm as a staging area for raw disk images, so the extra space is nice

@@ -6,11 +6,6 @@
 
 {
 
-
-  imports = [
-    ./headless-networking.nix
-  ];
-
   boot.kernel.sysctl = {
     "net.ipv4.conf.all.forwarding" = true;
   };

@@ -1,8 +1,4 @@
 {
-  imports = [
-    ./gui.nix
-    ./intel-gpu.nix
-  ];
   dev-machine = true;
 
   networking.hostName = "jasper";
