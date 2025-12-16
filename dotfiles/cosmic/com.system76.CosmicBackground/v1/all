@@ -1,6 +1,6 @@
 (
     output: "all",
-    source: Color(Single((0.14231177, 0.14551084, 0.16470528))),
+    source: Color(Single((0.15686275, 0.16470588, 0.21176471))),
     filter_by_theme: false,
     rotation_frequency: 900,
     filter_method: Lanczos,
