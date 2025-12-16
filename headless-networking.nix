@@ -29,6 +29,7 @@
       firewall.enable = false;
       useDHCP = false;
       useNetworkd = true;
+      networkmanager = false;
     };
 
     users = {
@@ -69,6 +70,7 @@
         
     services.resolved = {
       # use resolved for dns management
+      # since it works more seamlessly with systemd-networkd
       enable = true;
 
       # dnssec randomly failing sometimes
