@@ -29,10 +29,10 @@
       firewall.enable = false;
       useDHCP = false;
       useNetworkd = true;
-      networkmanager = false;
+      networkmanager.enable = false;
     };
 
-    users = {
+    users.users = {
       # let systemd-networkd access files belonging to users, like public wireguard keys
       systemd-network = {
         extraGroups = [ "users" "wheel" ];
