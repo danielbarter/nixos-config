@@ -99,16 +99,11 @@
       "8.8.8.8"
     ];
 
-    hosts = {
-      "192.168.1.${network-ids.rupert}" = [ "rupert.lan" ];
-      "192.168.2.${network-ids.rupert}" = [ "rupert.wg" ];
-      
+    # enter static IP addresses into DNS
+    hosts = { 
       "192.168.1.${network-ids.punky}" = [ "punky.lan" ];
       "192.168.2.${network-ids.punky}" = [ "punky.wg" ];
       
-      "192.168.1.${network-ids.jasper}" = [ "jasper.lan" ];
-      "192.168.2.${network-ids.jasper}" = [ "jasper.wg" ];
-
       "192.168.1.${network-ids.blaze}" = [ "blaze.lan" ];
       "192.168.2.${network-ids.blaze}" = [ "blaze.wg" ];
 

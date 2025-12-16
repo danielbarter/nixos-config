@@ -13,8 +13,7 @@
   };
 
   config.environment.systemPackages =
-    let gui-enabled = config.services.desktopManager.cosmic.enable;
-        dev-machine = config.dev-machine;
+    let dev-machine = config.dev-machine;
     in with pkgs; [
 
       tmux # terminal multiplexer
@@ -34,12 +33,6 @@
       aspell
       aspellDicts.en
       (pass.withExtensions (exts: [ exts.pass-otp ]))
-
-    ] ++ lib.optionals gui-enabled [
-
-      alacritty # gpu accelerated terminal
-      zathura # pdf viewer
-      wl-clipboard
 
     ] ++ lib.optionals dev-machine [
 

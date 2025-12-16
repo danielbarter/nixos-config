@@ -31,6 +31,13 @@
       useNetworkd = true;
     };
 
+    users = {
+      # let systemd-networkd access files belonging to users, like public wireguard keys
+      systemd-network = {
+        extraGroups = [ "users" "wheel" ];
+      };
+    };
+
     # wireguard interface for headless machines
     environment.systemPackages = [ pkgs.wireguard-tools ];
 

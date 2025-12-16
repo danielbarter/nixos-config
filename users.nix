@@ -38,11 +38,7 @@
         extraGroups = [ "users" "wheel" ];
       };
 
-
-      systemd-network = {
-        extraGroups = [ "users" "wheel" ];
-      };
-
+      # serve nix store over ssh
       nix-ssh = {
         openssh.authorizedKeys.keyFiles = [
             "/etc/nixos/public/ssh/id_rsa.pub"
