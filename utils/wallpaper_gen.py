@@ -1,89 +1,108 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -i python3 -p "python3.withPackages (ps: with ps; [ numpy scipy pillow ])"
+#! nix-shell -i python3 -p python3 python3Packages.numpy python3Packages.scipy python3Packages.pillow
 
 import numpy as np
 from scipy.spatial import Voronoi
 from PIL import Image, ImageDraw
 import random
+import sys
 
-# Configuration
+# --- Configuration ---
 WIDTH = 3840
 HEIGHT = 2160
-NUM_TILES_X = 40  # Adjust for tile density
-BG_COLOR = "#002b36"
-PADDING_WIDTH = 6 # Thickness of the gap between tiles
+NUM_SEEDS = 2500  # Higher number = smaller tiles
+RELAXATION_STEPS = 10  # Number of Lloyd's iterations for uniformity
+PADDING = 4  # Thickness of the gap between tiles
+DARKEN_FACTOR = 0.55  # 1.0 is original, 0.0 is black
 
-TILE_COLORS = [
-    "#b58900",
-    "#cb4b16",
-    "#dc322f",
-    "#d33682",
-    "#6c71c4",
-    "#268bd2",
-    "#2aa198",
-    "#859900"
+# Solarized Colors provided
+PALETTE_HEX = [
+    "#b58900", "#cb4b16", "#dc322f", "#d33682",
+    "#6c71c4", "#268bd2", "#2aa198", "#859900"
 ]
+BACKGROUND_COLOR = "#002b36"
 
-def generate_voronoi_art():
-    # 1. Generate seed points
-    # We generate points on a grid to ensure "roughly same size"
-    # then apply heavy jitter to create "many different shapes" (non-periodic)
-    # We extend the grid beyond image bounds to ensure edge tiles are closed
-    
-    aspect_ratio = WIDTH / HEIGHT
-    num_tiles_y = int(NUM_TILES_X / aspect_ratio)
-    
-    # Buffer to ensure the diagram covers the edges cleanly
-    buffer_x = WIDTH * 0.2
-    buffer_y = HEIGHT * 0.2
-    
-    x_coords = np.linspace(-buffer_x, WIDTH + buffer_x, NUM_TILES_X)
-    y_coords = np.linspace(-buffer_y, HEIGHT + buffer_y, num_tiles_y)
-    
-    xx, yy = np.meshgrid(x_coords, y_coords)
-    points = np.c_[xx.ravel(), yy.ravel()]
-    
-    # Add randomness (jitter) to the points
-    # The jitter amount controls how irregular the shapes are
-    spacing_x = WIDTH / NUM_TILES_X
-    jitter_amount = spacing_x * 0.45 
-    noise = (np.random.rand(len(points), 2) - 0.5) * 2 * jitter_amount
-    points += noise
+def hex_to_rgb(hex_code):
+    hex_code = hex_code.lstrip('#')
+    return tuple(int(hex_code[i:i+2], 16) for i in (0, 2, 4))
 
-    # 2. Compute Voronoi Diagram
+def darken_color(rgb, factor):
+    return tuple(int(c * factor) for c in rgb)
+
+def generate_points(width, height, count):
+    # Generate points in a buffer zone larger than the image to avoid edge artifacts
+    buffer = 200
+    x = np.random.uniform(-buffer, width + buffer, count)
+    y = np.random.uniform(-buffer, height + buffer, count)
+    return np.column_stack((x, y))
+
+def relax_points(points):
+    """
+    Apply Lloyd's algorithm approximation.
+    Computes Voronoi, then moves points to the centroid of their region.
+    """
     vor = Voronoi(points)
-
-    # 3. Render Image
-    im = Image.new("RGB", (WIDTH, HEIGHT), BG_COLOR)
-    draw = ImageDraw.Draw(im)
-
-    # Iterate through regions
-    # vor.point_region maps point indices to region indices
+    new_points = []
     for i, region_index in enumerate(vor.point_region):
         region = vor.regions[region_index]
+        if -1 in region or not region:
+            new_points.append(points[i])
+            continue
         
-        # -1 indicates a region that goes to infinity (we ignore these, 
-        # but our buffer ensures they are off-screen anyway)
+        vertices = vor.vertices[region]
+        centroid = vertices.mean(axis=0)
+        new_points.append(centroid)
+    return np.array(new_points)
+
+def main():
+    print("Initializing...")
+    
+    # Prepare colors
+    colors = [darken_color(hex_to_rgb(c), DARKEN_FACTOR) for c in PALETTE_HEX]
+    bg_rgb = hex_to_rgb(BACKGROUND_COLOR)
+
+    # Generate Seeds
+    print(f"Generating {NUM_SEEDS} seed points...")
+    points = generate_points(WIDTH, HEIGHT, NUM_SEEDS)
+
+    # Relax points (Lloyd's Algorithm)
+    print(f"Performing {RELAXATION_STEPS} relaxation steps for uniform tile size...")
+    for i in range(RELAXATION_STEPS):
+        points = relax_points(points)
+
+    # Generate final Voronoi diagram
+    print("Computing final tessellation...")
+    vor = Voronoi(points)
+
+    # Draw Image
+    print("Rendering image...")
+    img = Image.new("RGB", (WIDTH, HEIGHT), bg_rgb)
+    draw = ImageDraw.Draw(img)
+
+    for region_index in vor.point_region:
+        region = vor.regions[region_index]
+        
+        # Skip regions that are infinite (contain -1) or empty
         if -1 in region or len(region) == 0:
             continue
-            
-        # Get vertices for this region
-        polygon_points = [vor.vertices[v] for v in region]
-        
-        # Convert to list of tuples for PIL
-        poly_tuples = [tuple(p) for p in polygon_points]
-        
-        # Pick a random color
-        fill_col = random.choice(TILE_COLORS)
-        
-        # Draw the polygon
-        # The 'outline' acts as the padding between tiles
-        draw.polygon(poly_tuples, fill=fill_col, outline=BG_COLOR, width=PADDING_WIDTH)
 
-    # 4. Save
-    filename = "solarized_voronoi.png"
-    im.save(filename, format="PNG")
-    print(f"Image generated successfully: {filename}")
+        polygon = [tuple(vor.vertices[i]) for i in region]
+        
+        # Check if polygon is roughly within bounds (optimization)
+        poly_arr = np.array(polygon)
+        if (np.all(poly_arr[:, 0] < -100) or np.all(poly_arr[:, 0] > WIDTH + 100) or
+            np.all(poly_arr[:, 1] < -100) or np.all(poly_arr[:, 1] > HEIGHT + 100)):
+            continue
+
+        fill_col = random.choice(colors)
+        
+        # Draw the filled polygon. 
+        # The outline argument creates the padding by drawing the background color over the edge.
+        draw.polygon(polygon, fill=fill_col, outline=bg_rgb, width=PADDING)
+
+    output_filename = "voronoi_tiling.png"
+    img.save(output_filename)
+    print(f"Done. Image saved to {output_filename}")
 
 if __name__ == "__main__":
-    generate_voronoi_art()
+    main()

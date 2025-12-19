@@ -17,6 +17,7 @@ ln -sf /etc/nixos/dotfiles/git/gitconfig /root/.gitconfig
 # cosmic config
 ln -sf /etc/nixos/dotfiles/cosmic /home/danielbarter/.config
 touch /home/danielbarter/.config/cosmic-initial-setup-done
+ln -sf /etc/nixos/wallpapers /home/danielbarter
 
 # make sure all the above has correct user and group
 chgrp -R users /home/danielbarter

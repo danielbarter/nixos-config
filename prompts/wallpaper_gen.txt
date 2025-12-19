@@ -1,4 +1,4 @@
-Write me a python script, with minimal dependencies, which generates a png image of an asthetically pleasing, non periodic tiling, where the tiles are colored with the following colors at random:
+Write me a python script, with minimal dependencies, which generates a png image of a physics inspired, asthetically pleasing, non periodic tiling, where the tiles are colored with the following colors at random:
 
 #b58900
 #cb4b16
@@ -12,6 +12,7 @@ Write me a python script, with minimal dependencies, which generates a png image
 - there should be tiles of many different shapes. All tiles should be roughly the same size.
 - There should be padding between the tiles, and the margins are colored #002b36.
 - The tiling should extend all the way to the boundaries of the image
+- Please uniformly darken all the colors, so they are suitable for a desktop background with a dracula themed UI ontop.
 
 the resolution of the image should be large enough that it looks crisp on any monitor.
 
