@@ -3,50 +3,20 @@
         modifiers: [
             Super,
         ],
-        key: "a",
+        key: "Escape",
     ): Disable,
     (
         modifiers: [
             Super,
         ],
-        key: "m",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "t",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "r",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "slash",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "g",
+        key: "space",
     ): Disable,
     (
         modifiers: [
             Super,
             Shift,
         ],
-        key: "q",
-    ): Close,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "y",
+        key: "Escape",
     ): Disable,
     (
         modifiers: [
@@ -58,13 +28,37 @@
         modifiers: [
             Super,
         ],
-        key: "q",
     ): Disable,
     (
         modifiers: [
             Super,
         ],
-        key: "space",
+        key: "d",
+    ): System(Launcher),
+    (
+        modifiers: [
+            Super,
+            Shift,
+        ],
+        key: "d",
+    ): Close,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "F1",
+    ): System(LockScreen),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "slash",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "r",
     ): Disable,
     (
         modifiers: [
@@ -76,18 +70,37 @@
         modifiers: [
             Super,
         ],
-        key: "F11",
+        key: "b",
     ): Disable,
     (
         modifiers: [
             Super,
         ],
-        key: "F1",
-    ): System(LockScreen),
+        key: "g",
+    ): Disable,
     (
         modifiers: [
             Super,
         ],
+        key: "q",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "t",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "m",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "a",
     ): Disable,
     (
         modifiers: [
@@ -99,8 +112,9 @@
         modifiers: [
             Super,
         ],
-        key: "b",
-    ): Disable,
+        key: "Return",
+        description: Some("alacritty"),
+    ): Spawn("alacritty"),
     (
         modifiers: [
             Super,
@@ -112,26 +126,12 @@
         modifiers: [
             Super,
         ],
-        key: "Return",
-        description: Some("alacritty"),
-    ): Spawn("alacritty"),
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "Escape",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-            Shift,
-        ],
-        key: "Escape",
+        key: "F11",
     ): Disable,
     (
         modifiers: [
             Super,
         ],
-        key: "d",
-    ): System(Launcher),
+        key: "y",
+    ): Disable,
 }
