@@ -1,0 +1,18 @@
+Write me a python script, with minimal dependencies, which generates a png image of an asthetically pleasing, non periodic tiling, where the tiles are colored with the following colors at random:
+
+#b58900
+#cb4b16
+#dc322f
+#d33682
+#6c71c4
+#268bd2
+#2aa198
+#859900
+
+- there should be tiles of many different shapes. All tiles should be roughly the same size.
+- There should be padding between the tiles, and the margins are colored #002b36.
+- The tiling should extend all the way to the boundaries of the image
+
+the resolution of the image should be large enough that it looks crisp on any monitor.
+
+Please put a nix shell shebang line at the top of the script with all required dependencies.
