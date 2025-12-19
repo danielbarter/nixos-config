@@ -6,45 +6,40 @@ from scipy.spatial import Voronoi
 from PIL import Image, ImageDraw
 import random
 
-# --- Configuration ---
+# --- CONFIGURATION ---
 WIDTH = 3840
 HEIGHT = 2160
-NUM_SEEDS = 600
-RELAXATION_ITERATIONS = 5
-PADDING_WIDTH = 6  # Spacing between tiles
-OUTPUT_FILENAME = "dracula_voronoi_tiling.png"
+SCALE_FACTOR = 2  # Render at 2x for anti-aliasing
+NUM_SEEDS = 600   # Density of tiles
+RELAXATION_STEPS = 5 # Higher = more uniform (hexagonal), Lower = more random
+PADDING_RATIO = 0.85 # 1.0 = touching, < 1.0 = gaps
 
-# Dracula-inspired dark grayscale palette
-# Background (Margins)
-COLOR_BG = "#15161A"  # Very dark, almost black for contrast
+# Dracula-ish Grayscale Palette
+# Background (Grout)
+COLOR_BG = (20, 20, 30) 
 
-# 5 Tile Colors (Dark Grayscale with Dracula tint)
+# Tile Colors (Dark, Cool Grays)
 TILE_PALETTE = [
-    "#282a36",  # Dracula Background
-    "#343746",  # Offset 1
-    "#44475a",  # Dracula Current Line
-    "#52576e",  # Offset 2
-    "#6272a4",  # Dracula Comment (Bluish Grey)
+    (40, 42, 54),   # Dracula Background
+    (68, 71, 90),   # Current Line
+    (50, 50, 60),   # Darker Variant
+    (60, 62, 75),   # Mid Variant
+    (30, 31, 40),   # Deep Variant
 ]
 
-def generate_voronoi_diagram(width, height, num_seeds):
+def generate_voronoi_seeds(width, height, num_points, steps):
     """
-    Generates a Voronoi diagram with Lloyd's relaxation for uniformity.
+    Generates points and applies Lloyd's relaxation to regularize them.
+    Simulates surface tension forces in foam.
     """
-    # Create a buffer area to ensure edge tiles are closed
-    # We generate points in a coordinate system slightly larger than the image
-    buffer_x = width * 0.2
-    buffer_y = height * 0.2
-    
-    # Initialize random seeds
-    points = np.random.rand(num_seeds, 2)
-    points[:, 0] = points[:, 0] * (width + 2 * buffer_x) - buffer_x
-    points[:, 1] = points[:, 1] * (height + 2 * buffer_y) - buffer_y
+    # Generate points over a slightly larger area to ensure edges are covered
+    # and to avoid edge effects from the Voronoi algorithm
+    margin = 500
+    points = np.random.rand(num_points, 2)
+    points[:,0] = points[:,0] * (width + 2*margin) - margin
+    points[:,1] = points[:,1] * (height + 2*margin) - margin
 
-    # Lloyd's Relaxation: Iteratively move points to the centroid of their region
-    # This regularizes the cell sizes, making them "roughly the same size"
-    # while maintaining a non-periodic, organic structure.
-    for _ in range(RELAXATION_ITERATIONS):
+    for _ in range(steps):
         vor = Voronoi(points)
         new_points = []
         for i, region_index in enumerate(vor.point_region):
@@ -55,65 +50,68 @@ def generate_voronoi_diagram(width, height, num_seeds):
             
             # Get vertices for this region
             polygon = [vor.vertices[i] for i in region]
-            poly_arr = np.array(polygon)
             
-            # Calculate centroid
+            # Calculate centroid of the polygon
+            poly_arr = np.array(polygon)
             centroid = np.mean(poly_arr, axis=0)
             new_points.append(centroid)
         points = np.array(new_points)
-
-    # Final Voronoi computation
+        
     return Voronoi(points)
 
-def draw_tiling(vor, width, height):
+def shrink_polygon(vertices, factor):
     """
-    Draws the Voronoi regions onto a PIL image.
+    Shrinks a polygon towards its centroid to create padding.
     """
-    # Create image with background color (this serves as the margin)
-    img = Image.new("RGB", (width, height), COLOR_BG)
-    draw = ImageDraw.Draw(img)
-
-    for region_index in vor.point_region:
-        region = vor.regions[region_index]
-        
-        # Skip incomplete regions (usually at the infinite boundary)
-        if -1 in region or len(region) == 0:
-            continue
-        
-        polygon = [tuple(vor.vertices[i]) for i in region]
-        
-        # Check if polygon is roughly within bounds to avoid drawing useless off-screen geometry
-        # (Simple bounding box check)
-        poly_arr = np.array(polygon)
-        if (np.all(poly_arr[:, 0] < -500) or np.all(poly_arr[:, 0] > width + 500) or
-            np.all(poly_arr[:, 1] < -500) or np.all(poly_arr[:, 1] > height + 500)):
-            continue
-
-        # Pick a random color from the palette
-        fill_color = random.choice(TILE_PALETTE)
-        
-        # Draw the polygon.
-        # We simulate padding by drawing the polygon filled, and then drawing a 
-        # thick outline in the background color.
-        
-        # 1. Draw the actual colored tile
-        draw.polygon(polygon, fill=fill_color)
-        
-        # 2. Draw the stroke (margin) in background color
-        draw.line(polygon + [polygon[0]], fill=COLOR_BG, width=PADDING_WIDTH)
-
-    return img
+    arr = np.array(vertices)
+    centroid = np.mean(arr, axis=0)
+    return centroid + (arr - centroid) * factor
 
 def main():
-    print("Generating geometry...")
-    vor = generate_voronoi_diagram(WIDTH, HEIGHT, NUM_SEEDS)
+    # Setup high-res canvas
+    rw, rh = WIDTH * SCALE_FACTOR, HEIGHT * SCALE_FACTOR
+    img = Image.new("RGB", (rw, rh), COLOR_BG)
+    draw = ImageDraw.Draw(img)
+
+    print(f"Generating physics-inspired tiling ({WIDTH}x{HEIGHT})...")
     
-    print("Rendering image...")
-    image = draw_tiling(vor, WIDTH, HEIGHT)
+    # Generate Tiling
+    vor = generate_voronoi_seeds(rw, rh, NUM_SEEDS, RELAXATION_STEPS)
+
+    # Draw Polygons
+    for region_index in vor.point_region:
+        region = vor.regions[region_index]
+        if -1 in region or len(region) == 0:
+            continue
+            
+        vertices = [vor.vertices[i] for i in region]
+        
+        # Check if polygon is roughly within bounds (optimization)
+        v_arr = np.array(vertices)
+        if np.all(v_arr[:,0] < -500) or np.all(v_arr[:,0] > rw + 500):
+            continue
+        if np.all(v_arr[:,1] < -500) or np.all(v_arr[:,1] > rh + 500):
+            continue
+
+        # Apply padding
+        shrunk_vertices = shrink_polygon(vertices, PADDING_RATIO)
+        
+        # Convert to list of tuples for PIL
+        poly_tuples = [tuple(v) for v in shrunk_vertices]
+        
+        # Pick color
+        color = random.choice(TILE_PALETTE)
+        
+        # Draw
+        draw.polygon(poly_tuples, fill=color)
+
+    # Downsample for crisp edges (Lanczos filter)
+    print("Resampling for anti-aliasing...")
+    final_img = img.resize((WIDTH, HEIGHT), resample=Image.Resampling.LANCZOS)
     
-    print(f"Saving to {OUTPUT_FILENAME}...")
-    image.save(OUTPUT_FILENAME)
-    print("Done.")
+    output_filename = "voronoi_dracula.png"
+    final_img.save(output_filename)
+    print(f"Done. Saved to {output_filename}")
 
 if __name__ == "__main__":
     main()

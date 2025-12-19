@@ -1,11 +1,17 @@
-Write me a python script, with minimal dependencies, which generates a png image of a physics inspired, asthetically pleasing, non periodic tiling, where the tiles are colored in a dark grayscale, with 5 different colors:
-
+Write me a python script, with minimal dependencies, which generates a png image of a physics inspired, asthetically pleasing, non periodic tiling, where the tiles are colored in a dark grayscale. Choose the colors, so they are suitable for a desktop background with a dracula themed UI ontop.
 
 - there should be tiles of many different shapes. All tiles should be roughly the same size.
 - There should be padding between the tiles, and the margins are colored in the darkest color.
 - The tiling should extend all the way to the boundaries of the image
-- Please choose the colors, so they are suitable for a desktop background with a dracula themed UI ontop.
+- Please ensure that the image is rendered in a way, so that the lines do not look jagged.
 
 the resolution of the image should be large enough that it looks crisp on any monitor.
 
-Please put a nix shell shebang line at the top of the script with all required dependencies.
+Please put a nix shell shebang line at the top of the script with all required dependencies. For example:
+
+```
+#! /usr/bin/env nix-shell
+#! nix-shell -i python3 -p python3 python3Packages.numpy python3Packages.scipy python3Packages.pillow
+```
+
+but please feel free to use other dependencies, if required.
