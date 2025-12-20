@@ -4,8 +4,6 @@
 
   networking.hostName = "rupert";
 
-  services.avahi.enable = false;
-
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/8c60622d-bf09-46be-9557-30f4c25bd560";
     fsType = "ext4";

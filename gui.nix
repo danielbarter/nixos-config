@@ -4,8 +4,13 @@
 }:
 {
   # firefox integration
-  programs.firefox.enable = true;
-
+  programs = {
+    firefox.enable = true;
+    steam = {
+      enable = true;
+      gamescopeSession.enable = true;
+    };
+  };
 
   # enable cosmic
   services.displayManager.cosmic-greeter.enable = true;
