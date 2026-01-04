@@ -3,31 +3,14 @@
         modifiers: [
             Super,
         ],
-        key: "Escape",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "space",
-    ): Disable,
+        key: "F1",
+    ): System(LockScreen),
     (
         modifiers: [
             Super,
             Shift,
         ],
-        key: "Escape",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "f",
-    ): Fullscreen,
-    (
-        modifiers: [
-            Super,
-        ],
+        key: "r",
     ): Disable,
     (
         modifiers: [
@@ -38,69 +21,8 @@
     (
         modifiers: [
             Super,
-            Shift,
         ],
-        key: "d",
-    ): Close,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "F1",
-    ): System(LockScreen),
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "slash",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "r",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "x",
-    ): Maximize,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "b",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "g",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "q",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "t",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "m",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "a",
+        key: "y",
     ): Disable,
     (
         modifiers: [
@@ -112,15 +34,75 @@
         modifiers: [
             Super,
         ],
+        key: "q",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
         key: "Return",
         description: Some("alacritty"),
     ): Spawn("alacritty"),
     (
         modifiers: [
             Super,
+        ],
+        key: "space",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "slash",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "g",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "f",
+    ): Fullscreen,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "a",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "b",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
             Shift,
         ],
-        key: "r",
+        key: "t",
+    ): ToggleTiling,
+    (
+        modifiers: [
+            Super,
+            Shift,
+        ],
+        key: "Escape",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "m",
     ): Disable,
     (
         modifiers: [
@@ -132,6 +114,31 @@
         modifiers: [
             Super,
         ],
-        key: "y",
+        key: "Escape",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+            Shift,
+        ],
+        key: "d",
+    ): Close,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "t",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "x",
+    ): Maximize,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "r",
     ): Disable,
 }
