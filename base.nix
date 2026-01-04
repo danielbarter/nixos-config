@@ -14,6 +14,9 @@
   # store all debug symbols on dev machines
   environment.enableDebugInfo = config.dev-machine;
 
+  # enable podman on all dev machines
+  virtualisation.podman.enable = config.dev-machine;
+
   # switch to doas instead of sudo
   security = {
     doas = {

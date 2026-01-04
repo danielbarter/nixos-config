@@ -21,6 +21,7 @@
           "video"
           "audio"
           "wheel"
+          "podman"
         ];
         openssh.authorizedKeys.keyFiles = [
           "/etc/nixos/public/ssh/id_rsa.pub"
