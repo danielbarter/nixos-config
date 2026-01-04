@@ -51,15 +51,6 @@ in {
      ];
   };
 
-  rupert = nixosSystem {
-    build = "x86_64-linux";
-    host = "x86_64-linux";
-    modules = [
-      ./rupert.nix
-      ./gui.nix
-    ];
-  };
-
 
   x86_64-replicant = nixosSystem {
     build = "x86_64-linux";
