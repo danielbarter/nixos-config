@@ -94,24 +94,48 @@ volume() {
 
 set_dns() {
     if [ "$#" -eq 0 ]; then
-        echo "Usage: set_dns <nameserver> [nameserver...]"
+        echo "Usage: set_dns [--ipv4 <addr>...] [--ipv6 <addr>...]"
         return 1
     fi
 
     local ipv4_args=""
     local ipv6_args=""
 
-    for arg in "$@"; do
-        if [[ "$arg" == *:* ]]; then
-            ipv6_args="$ipv6_args $arg"
-        else
-            ipv4_args="$ipv4_args $arg"
-        fi
+    while [[ "$#" -gt 0 ]]; do
+        case $1 in
+            --ipv4)
+                if [[ -n "$2" && "$2" != --* ]]; then
+                    ipv4_args="$ipv4_args $2"
+                    shift 2
+                else
+                    echo "Error: --ipv4 requires an argument."
+                    return 1
+                fi
+                ;;
+            --ipv6)
+                if [[ -n "$2" && "$2" != --* ]]; then
+                    ipv6_args="$ipv6_args $2"
+                    shift 2
+                else
+                    echo "Error: --ipv6 requires an argument."
+                    return 1
+                fi
+                ;;
+            *)
+                echo "Unknown argument: $1"
+                return 1
+                ;;
+        esac
     done
 
     # Trim leading spaces
     ipv4_args=${ipv4_args# }
     ipv6_args=${ipv6_args# }
+
+    if [ -z "$ipv4_args" ] && [ -z "$ipv6_args" ]; then
+        echo "No DNS addresses provided."
+        return 1
+    fi
 
     if command -v nmcli >/dev/null 2>&1 && systemctl is-active --quiet NetworkManager; then
         local connection
@@ -146,7 +170,12 @@ set_dns() {
         fi
 
         echo "Setting DNS for interface '$interface' via systemd-resolved..."
-        sudo resolvectl dns "$interface" "$@"
+        # Combine args for resolvectl
+        local all_args="$ipv4_args $ipv6_args"
+        # Trim potentially double space if one is empty
+        all_args=$(echo "$all_args" | xargs)
+        
+        sudo resolvectl dns "$interface" $all_args
 
     else
         echo "Neither NetworkManager nor systemd-resolved appear to be active/available."
