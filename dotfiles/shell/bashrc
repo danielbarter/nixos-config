@@ -92,6 +92,68 @@ volume() {
     wpctl set-volume @DEFAULT_AUDIO_SINK@ $1
 }
 
+set_dns() {
+    if [ "$#" -eq 0 ]; then
+        echo "Usage: set_dns <nameserver> [nameserver...]"
+        return 1
+    fi
+
+    local ipv4_args=""
+    local ipv6_args=""
+
+    for arg in "$@"; do
+        if [[ "$arg" == *:* ]]; then
+            ipv6_args="$ipv6_args $arg"
+        else
+            ipv4_args="$ipv4_args $arg"
+        fi
+    done
+
+    # Trim leading spaces
+    ipv4_args=${ipv4_args# }
+    ipv6_args=${ipv6_args# }
+
+    if command -v nmcli >/dev/null 2>&1 && systemctl is-active --quiet NetworkManager; then
+        local connection
+        connection=$(nmcli -t -f NAME connection show --active | head -n1)
+
+        if [ -z "$connection" ]; then
+            echo "No active NetworkManager connection found."
+            return 1
+        fi
+
+        echo "Setting DNS for NetworkManager connection '$connection'..."
+        
+        if [ -n "$ipv4_args" ]; then
+            sudo nmcli con mod "$connection" ipv4.ignore-auto-dns yes
+            sudo nmcli con mod "$connection" ipv4.dns "$ipv4_args"
+        fi
+
+        if [ -n "$ipv6_args" ]; then
+            sudo nmcli con mod "$connection" ipv6.ignore-auto-dns yes
+            sudo nmcli con mod "$connection" ipv6.dns "$ipv6_args"
+        fi
+
+        sudo nmcli con up "$connection"
+
+    elif command -v resolvectl >/dev/null 2>&1 && systemctl is-active --quiet systemd-resolved; then
+        local interface
+        interface=$(ip route | grep '^default' | awk '{print $5}' | head -n1)
+
+        if [ -z "$interface" ]; then
+            echo "Could not determine default interface."
+            return 1
+        fi
+
+        echo "Setting DNS for interface '$interface' via systemd-resolved..."
+        sudo resolvectl dns "$interface" "$@"
+
+    else
+        echo "Neither NetworkManager nor systemd-resolved appear to be active/available."
+        return 1
+    fi
+}
+
 
 # Function to echo a Unicode character given its code point
 echo_unicode() {
