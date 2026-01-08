@@ -1,0 +1,1 @@
+Write me a python script utils/set_dns.py with the following interface: `set_dns --ipv4 <address> --ipv6 <address>` that sets ipv4 and ipv6 addresses for DNS servers. It should work on systems with NetworkManager/resolveconf or systemd-networkd/systemd-resolved. 

@@ -92,6 +92,11 @@ volume() {
     wpctl set-volume @DEFAULT_AUDIO_SINK@ $1
 }
 
+set_dns() {
+    # helper to run the repo's DNS configurator
+    sudo python /etc/nixos/utils/set_dns.py "$@"
+}
+
 
 # Function to echo a Unicode character given its code point
 echo_unicode() {
