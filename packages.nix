@@ -46,6 +46,7 @@
       pyright
       nixd
       git-lfs
+      gemini-cli
 
     ];
 }
