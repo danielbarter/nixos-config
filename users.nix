@@ -1,11 +1,5 @@
-{ lib, pkgs, ... }:
+{ lib, pkgs, config, ... }:
 {
-
-
-  services.userborn.enable = true;
-
-  # oomd needs users to be up before starting
-  systemd.services.systemd-oomd.after = [ "userborn.service" ];
 
   users = {
 
