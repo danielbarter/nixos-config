@@ -43,7 +43,7 @@
       gdb
       man-pages # linux programmers man pages
       man-pages-posix # posix man pages
-      pyright
+      ty # python type checker
       nixd
       git-lfs
       codex
