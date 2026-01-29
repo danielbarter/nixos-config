@@ -16,6 +16,7 @@ in {
     "${modulesPath}/image/repart.nix"
   ];
 
+  # forces sysinit to block until setup-replicant has finished
   systemd.targets.sysinit.requires = [ "setup-replicant.service" ];
   systemd.targets.sysinit.after = [ "setup-replicant.service" ];
 
