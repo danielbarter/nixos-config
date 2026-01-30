@@ -11,10 +11,6 @@
         # creates /var/lib/systemd/linger/danielbarter
         linger = true;
 
-        # needed so gemini can make sandboxes?
-        subUidRanges = [ { startUid = 100000; count = 65536; } ];
-        subGidRanges = [ { startGid = 100000; count = 65536; } ];
-
         group = "users";
         extraGroups = [
           "video"
