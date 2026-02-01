@@ -46,7 +46,5 @@
       ty # python type checker
       nixd
       git-lfs
-      codex
-
     ];
 }
