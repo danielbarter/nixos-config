@@ -10,4 +10,6 @@
 
   # openssh broken inside systemd-nspawn for some reason
   services.openssh.enable = lib.mkForce false;
+
+  users.users.root.hashedPassword = "";
 }

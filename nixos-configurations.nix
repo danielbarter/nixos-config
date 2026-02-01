@@ -1,5 +1,6 @@
 { nixpkgs, hosts}: let
 
+  # common modules + better platform support for all physical machines
   nixosSystem = { build, host, modules }:
    nixpkgs.lib.nixosSystem {
     system = build;
@@ -20,11 +21,14 @@
   };
 
 in {
-  tarball = nixosSystem {
-    build = "x86_64-linux";
-    host = "x86_64-linux";
+  tarball = nixpkgs.lib.nixosSystem {
+    system = "x86_64-linux";
     modules = [
       ./tarball.nix
+      { nix.nixPath = [ "nixpkgs=${nixpkgs.outPath}" ]; }
+      ./base.nix
+      ./nix-config.nix
+      ./packages.nix
     ];
   };
 
