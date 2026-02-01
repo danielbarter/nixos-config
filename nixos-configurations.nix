@@ -20,11 +20,11 @@
   };
 
 in {
-  oci = nixosSystem {
+  tarball = nixosSystem {
     build = "x86_64-linux";
     host = "x86_64-linux";
     modules = [
-      ./oci.nix
+      ./tarball.nix
     ];
   };
 
