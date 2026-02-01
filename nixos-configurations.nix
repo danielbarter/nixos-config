@@ -1,7 +1,7 @@
 { nixpkgs, hosts}: let
 
   # common modules + better platform support for all physical machines
-  nixosSystem = { build, host, modules }:
+  nixosSystemCommon = { build, host, modules }:
    nixpkgs.lib.nixosSystem {
     system = build;
     modules = modules ++ [
@@ -32,7 +32,7 @@ in {
     ];
   };
 
-  jasper = nixosSystem {
+  jasper = nixosSystemCommon {
     build = "x86_64-linux";
     host = "x86_64-linux";
     modules = [
@@ -42,7 +42,7 @@ in {
      ];
   };
 
-  punky = nixosSystem {
+  punky = nixosSystemCommon {
     build = "x86_64-linux";
     host = "x86_64-linux";
     modules = [
@@ -53,7 +53,7 @@ in {
   };
 
 
-  blaze = nixosSystem {
+  blaze = nixosSystemCommon {
     build = "x86_64-linux";
     host = "x86_64-linux";
     modules = [
@@ -64,7 +64,7 @@ in {
   };
 
 
-  x86_64-replicant = nixosSystem {
+  x86_64-replicant = nixosSystemCommon {
     build = "x86_64-linux";
     host = "x86_64-linux";
     modules = [
@@ -75,7 +75,7 @@ in {
     ];
   };
 
-  x86_64-replicant-minimal  = nixosSystem {
+  x86_64-replicant-minimal  = nixosSystemCommon {
     build = "x86_64-linux";
      host = "x86_64-linux";
      modules = [
@@ -84,7 +84,7 @@ in {
     ];
   };
 
-  aarch64-replicant-minimal = nixosSystem {
+  aarch64-replicant-minimal = nixosSystemCommon {
     build = "x86_64-linux";
      host = "aarch64-linux";
      modules = [
@@ -93,7 +93,7 @@ in {
     ];
   };
 
-  riscv64-replicant-minimal = nixosSystem {
+  riscv64-replicant-minimal = nixosSystemCommon {
     build = "x86_64-linux";
      host = "riscv64-linux";
      modules = [
