@@ -1,3 +1,4 @@
+{lib,config,...}:
 {
   # Enable the OpenSSH daemon.
   services.openssh = {
@@ -10,8 +11,10 @@
     };
   };
 
-  programs.ssh.extraConfig = ''
-  Host *
-      IdentityFile /etc/nixos/secrets/ssh/id_rsa
-  '';
+  # for containers, don't specify ssh key
+  programs.ssh.extraConfig = lib.optionalString (! config.boot.isContainer)
+    ''
+    Host *
+        IdentityFile /etc/nixos/secrets/ssh/id_rsa
+    '';
 }
