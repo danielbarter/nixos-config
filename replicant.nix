@@ -73,9 +73,10 @@ in {
   # not cripplingly slow
   fileSystems."/" = {
     fsType = "tmpfs";
-    options = [ "size=4G" ];
+    options = [ "size=4G" "mode=0755" ];
 
   };
+
 
   # we put the nix store on an overlay filesystem with the lower part in the
   # device image, and the upper part a temp filesystem. this prevents operations
@@ -87,7 +88,7 @@ in {
 
   fileSystems."/nix-store-upper" = {
     fsType = "tmpfs";
-    options = [ "size=4G" ];
+    options = [ "size=4G" "mode=0755" ];
     neededForBoot = true;
   };
 
