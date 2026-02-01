@@ -71,7 +71,8 @@
     pinentryPackage = pkgs.pinentry-curses;
   };
 
-  system.etc.overlay.enable = true;
+  # don't do overlay etc if we are a container
+  system.etc.overlay.enable = ! config.boot.isContainer;
 
   # allow processes to persist after logout
   services.logind.settings.Login.killUserProcesses = false;
