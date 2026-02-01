@@ -74,6 +74,7 @@ in {
   fileSystems."/" = {
     fsType = "tmpfs";
     options = [ "size=4G" ];
+
   };
 
   # we put the nix store on an overlay filesystem with the lower part in the
