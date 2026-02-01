@@ -5,6 +5,6 @@
 {
 
   imports = [
-    "${modulesPath}/nixos/modules/virtualisation/docker-image.nix"
+    "${modulesPath}/virtualisation/docker-image.nix"
   ];
 }
