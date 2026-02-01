@@ -15,9 +15,6 @@ ln -sf /etc/nixos/dotfiles/git/gitconfig /root/.gitconfig
 
 
 # cosmic config
-# first purge exsting cosmic config, so we can place ours
-rm -r /home/danielbarter/.config/cosmic
-
 ln -sf /etc/nixos/dotfiles/cosmic /home/danielbarter/.config
 touch /home/danielbarter/.config/cosmic-initial-setup-done
 ln -sf /etc/nixos/wallpapers /home/danielbarter
