@@ -20,6 +20,13 @@
   };
 
 in {
+  oci = nixosSystem {
+    build = "x86_64-linux";
+    host = "x86_64-linux";
+    modules = [
+    ];
+  };
+
   jasper = nixosSystem {
     build = "x86_64-linux";
     host = "x86_64-linux";
