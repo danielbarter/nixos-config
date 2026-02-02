@@ -7,8 +7,8 @@
 }:
 let
     replicant-nixos-config = builtins.path {
-      path = /tmp/nixos.zip.gpg;
-      name = "nixos.zip.gpg";
+      path = /tmp/nixos.zip;
+      name = "nixos.zip";
     };
 in {
 
@@ -16,9 +16,7 @@ in {
     "${modulesPath}/image/repart.nix"
   ];
 
-  # forces sysinit to block until setup-replicant has finished
   systemd.targets.sysinit.requires = [ "setup-replicant.service" ];
-  systemd.targets.sysinit.after = [ "setup-replicant.service" ];
 
   systemd.services.setup-replicant = {
     wantedBy = [ "sysinit.target" ];
@@ -27,7 +25,7 @@ in {
       REPLICANT_NIXOS_CONFIG = replicant-nixos-config;
     };
 
-    path = [ config.programs.gnupg.package pkgs.zip pkgs.unzip ];
+    path = [ pkgs.unzip ];
 
     unitConfig = {
       DefaultDependencies = "no";
@@ -38,13 +36,10 @@ in {
     };
 
     script = ''
-      cp $REPLICANT_NIXOS_CONFIG /nixos.zip.gpg
+      cp $REPLICANT_NIXOS_CONFIG /nixos.zip
       cd /
 
-      PASSWORD=$(systemd-ask-password --timeout=0 --no-tty)
-      echo $PASSWORD | gpg --pinentry-mode loopback  --passphrase-fd 0 /nixos.zip.gpg
       unzip /nixos.zip
-
       cd /etc/nixos
 
       # set permissions for /etc/nixos
