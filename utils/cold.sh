@@ -6,7 +6,7 @@
 # - WireGuard uses Curve25519 via wg genkey/pubkey.
 # - Nix signing key uses nix-key generate-secret (Ed25519).
 
-gen_keys() {
+gen_cold() {
   set -uo pipefail
 
   local root="${1:-}"
@@ -87,7 +87,7 @@ gen_keys() {
 # - secrets: 0700/0600
 # - public:  0755/0644
 # - WireGuard secret keys: owner root, group systemd-network, mode 0640
-set_key_perms() {
+set_cold_perms() {
   set -uo pipefail
 
   local root="${1:-}"
