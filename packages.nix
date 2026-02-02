@@ -32,7 +32,7 @@
       helix
       aspell
       aspellDicts.en
-      (pass.withExtensions (exts: [ exts.pass-otp ]))
+      passage
 
     ] ++ lib.optionals dev-machine [
 
