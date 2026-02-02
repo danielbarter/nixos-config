@@ -2,6 +2,10 @@
 mkdir -p /home/danielbarter/.config
 ln -sf /etc/nixos/dotfiles/helix /home/danielbarter/.config
 
+# age
+mkdir -p /home/danielbarter/.passage
+ln -sf /etc/nixos/public/ssh/id_rsa.pub /home/danielbarter/.passage/identities
+
 # symlink shell config files into home
 ln -sf /etc/nixos/dotfiles/shell/alacritty.toml /home/danielbarter/.alacritty.toml
 ln -sf /etc/nixos/dotfiles/shell/bashrc /home/danielbarter/.bashrc
