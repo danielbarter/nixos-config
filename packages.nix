@@ -35,6 +35,7 @@
       parted
       e2fsprogs
       wireguard-tools
+      pass
       
     ] ++ lib.optionals dev-machine [
 
