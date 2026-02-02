@@ -32,8 +32,8 @@
       helix
       aspell
       aspellDicts.en
-      passage
-
+      parted
+      e2fsprogs
     ] ++ lib.optionals dev-machine [
 
       binutils # objdump, readelf and c++filt
