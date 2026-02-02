@@ -19,7 +19,6 @@
     efi-flash = "${pkgs.pkgsCross.riscv64.OVMF.fd}/FV/RISCV_VIRT_CODE.fd";
   };
 
-
   vm = arch-params: image: pkgs.writeScriptBin arch-params.script-name ''
     #!${pkgs.runtimeShell}
     cp ${image}/image.raw /dev/shm/image.raw
@@ -28,6 +27,8 @@
     ${arch-params.qemu-invocation} \
     -drive file=${arch-params.efi-flash},readonly=on,if=pflash \
     -drive file=/dev/shm/image.raw,format=raw \
+    -blockdev driver=host_device,filename=$(findmnt -no SOURCE /cold),read-only=on,node-name=cold \
+    -device virtio-blk-pci,drive=cold,write-cache=off \
     -smp 4 \
     -nographic \
     -m 4G
