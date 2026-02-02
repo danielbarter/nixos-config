@@ -39,9 +39,6 @@
       };
     };
 
-    # wireguard interface for headless machines
-    environment.systemPackages = [ pkgs.wireguard-tools ];
-
     systemd.network = {
       netdevs = {
         "30-wg0" = {

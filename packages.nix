@@ -34,6 +34,8 @@
       aspellDicts.en
       parted
       e2fsprogs
+      wireguard-tools
+      
     ] ++ lib.optionals dev-machine [
 
       binutils # objdump, readelf and c++filt
