@@ -15,7 +15,7 @@
   config.environment.systemPackages =
     let dev-machine = config.dev-machine;
     in with pkgs; [
-
+      tree
       tmux # terminal multiplexer
       git
       file
