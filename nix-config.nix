@@ -11,7 +11,7 @@
   nix = {
     settings = {
       experimental-features = "nix-command flakes";
-      trusted-public-keys = [ (builtins.readFile "/etc/nixos/public/nix/public-key") ];
+      trusted-public-keys = [ (builtins.readFile "/cold/public/nix/public-key") ];
       trusted-users = [ "danielbarter" ];
     };
 
@@ -32,7 +32,7 @@
       in
       ''
         flake-registry = ${emptyFlakeRegistry};
-        secret-key-files = /etc/nixos/secrets/nix/private-key
+        secret-key-files = /cold/secrets/nix/private-key
       '';
   };
 

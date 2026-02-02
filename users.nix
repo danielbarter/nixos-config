@@ -18,25 +18,25 @@
           "wheel"
         ];
         openssh.authorizedKeys.keyFiles = [
-          "/etc/nixos/public/ssh/id_rsa.pub"
-          "/etc/nixos/public/ssh/phone.pub"
+          "/cold/public/ssh/id_rsa.pub"
+          "/cold/public/ssh/phone.pub"
         ];
 
-        initialHashedPassword = lib.strings.fileContents "/etc/nixos/secrets/user_password_hash";
+        initialHashedPassword = lib.strings.fileContents "/cold/secrets/user_password_hash";
 
         shell = pkgs.bashInteractive;
         home = "/home/danielbarter";
       };
 
       root = { 
-        initialHashedPassword = lib.strings.fileContents "/etc/nixos/secrets/root_password_hash";
+        initialHashedPassword = lib.strings.fileContents "/cold/secrets/root_password_hash";
         extraGroups = [ "users" "wheel" ];
       };
 
       # serve nix store over ssh
       nix-ssh = {
         openssh.authorizedKeys.keyFiles = [
-            "/etc/nixos/public/ssh/id_rsa.pub"
+            "/cold/public/ssh/id_rsa.pub"
         ];
       };
 

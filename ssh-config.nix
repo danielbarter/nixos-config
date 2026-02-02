@@ -13,6 +13,6 @@
   programs.ssh.extraConfig =
     ''
     Host *
-        IdentityFile /etc/nixos/secrets/ssh/id_rsa
+        IdentityFile /cold/secrets/ssh/id_rsa
     '';
 }
