@@ -1,7 +1,6 @@
 { nixpkgs, hosts}: let
 
   # common modules + better platform support for all physical machines
-  # we don't use it for containers, because we don't want users.nix or ssh.nix in there
   nixosSystemCommon = { build, host, modules }:
    nixpkgs.lib.nixosSystem {
     system = build;
