@@ -28,9 +28,6 @@ in {
     modules = [
       ./container.nix
       { nix.nixPath = [ "nixpkgs=${nixpkgs.outPath}" ]; }
-      ./base.nix
-      ./nix-config.nix
-      ./packages.nix
     ];
   };
 
