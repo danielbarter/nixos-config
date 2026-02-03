@@ -18,14 +18,15 @@
       ./users.nix
       ./packages.nix
       ./ssh-config.nix
+      ./secrets.nix
     ];
   };
 
 in {
-  tarball = nixpkgs.lib.nixosSystem {
+  container = nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
     modules = [
-      ./tarball.nix
+      ./container.nix
       { nix.nixPath = [ "nixpkgs=${nixpkgs.outPath}" ]; }
       ./base.nix
       ./nix-config.nix
@@ -40,7 +41,6 @@ in {
       ./jasper.nix
       ./gui.nix
       ./intel-gpu.nix
-      ./secrets.nix
      ];
   };
 
@@ -51,7 +51,6 @@ in {
       ./punky.nix
       ./headless-networking.nix
       ./static-bond-interface.nix
-      ./secrets.nix
     ];
   };
 
@@ -63,7 +62,6 @@ in {
        hosts.nixosModule
        ./blaze.nix
        ./headless-networking.nix
-      ./secrets.nix
      ];
   };
 
@@ -75,7 +73,6 @@ in {
       ./replicant.nix
       ./intel-gpu.nix
       ./gui.nix
-      ./secrets.nix
       
     ];
   };
@@ -85,7 +82,6 @@ in {
      host = "x86_64-linux";
      modules = [
       ./replicant.nix
-      ./secrets.nix
       { boot.kernelParams = ["console=ttyS0"];}
     ];
   };
@@ -95,7 +91,6 @@ in {
      host = "aarch64-linux";
      modules = [
       ./replicant.nix
-      ./secrets.nix
       { boot.kernelParams = ["console=ttyAMA0"];}
     ];
   };
@@ -105,7 +100,6 @@ in {
      host = "riscv64-linux";
      modules = [
       ./replicant.nix
-      ./secrets.nix
       { boot.kernelParams = ["console=ttyS0"];}
     ];
   };
