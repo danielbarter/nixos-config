@@ -84,6 +84,6 @@ in {
 
   # Install new init script
   system.activationScripts.installInitScript = ''
-    ln -fs $systemConfig/init /sbin/init
+    ln -fs $systemConfig/init /init
   '';  
 }
