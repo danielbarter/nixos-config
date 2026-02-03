@@ -14,6 +14,13 @@
   # store all debug symbols on dev machines
   environment.enableDebugInfo = config.dev-machine;
 
+
+  # systemd managed nixos container
+  systemd.nspawn.nixos.execConfig = {
+    Boot = false;
+    Parameters = "/init";
+  };
+
   # switch to doas instead of sudo
   security = {
     doas = {
