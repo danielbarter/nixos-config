@@ -47,7 +47,7 @@ in {
   networking.resolvconf.enable = false;
   networking.useHostResolvConf = false;
 
-  config.environment.systemPackages = [
+  environment.systemPackages = [
     pkgs.git
     pkgs.ripgrep
     pkgs.fd
