@@ -47,6 +47,14 @@ in {
   networking.resolvconf.enable = false;
   networking.useHostResolvConf = false;
 
+  config.environment.systemPackages = [
+    pkgs.git
+    pkgs.ripgrep
+    pkgs.fd
+    pkgs.jq
+    pkgs.python3
+  ];
+
   # Create the tarball
   system.build.tarball = pkgs.callPackage (pkgs.path + "/nixos/lib/make-system-tarball.nix") {
     contents = [
