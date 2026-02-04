@@ -20,6 +20,7 @@
     execConfig = {
       Boot = false;
       Parameters = "/init";
+      PrivateUsers = false;
     };
     filesConfig = {
       Bind = "/home/danielbarter/container:/host";
