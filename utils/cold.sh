@@ -105,28 +105,28 @@ set_cold_perms() {
   fi
 
   # Base directory perms
-  find "${secrets_dir}" -type d -exec chmod 0700 {} +
-  find "${public_dir}"  -type d -exec chmod 0755 {} +
+  sudo find "${secrets_dir}" -type d -exec chmod 0700 {} +
+  sudo find "${public_dir}"  -type d -exec chmod 0755 {} +
 
   # Secret files: 0600 by default
-  find "${secrets_dir}" -type f -exec chmod 0600 {} +
+  sudo find "${secrets_dir}" -type f -exec chmod 0600 {} +
 
   # Public files: 0644
-  find "${public_dir}" -type f -exec chmod 0644 {} +
+  sudo find "${public_dir}" -type f -exec chmod 0644 {} +
 
   # WireGuard secret keys: root:systemd-network 0640
   # (Group must exist; on most systemd systems it does.)
   if getent group systemd-network >/dev/null 2>&1; then
-    chown root:systemd-network "${secrets_dir}/wireguard/"{blaze,punky} 2>/dev/null || true
-    chmod 0640 "${secrets_dir}/wireguard/"{blaze,punky} 2>/dev/null || true
+    sudo chown root:systemd-network "${secrets_dir}/wireguard/"{blaze,punky} 2>/dev/null || true
+    sudo chmod 0640 "${secrets_dir}/wireguard/"{blaze,punky} 2>/dev/null || true
   else
     echo "Warning: group 'systemd-network' not found; skipping wireguard group ownership." >&2
   fi
 
   # GPG home strict perms if present
   if [[ -d "${secrets_dir}/gpg/.gnupg" ]]; then
-    chmod 0700 "${secrets_dir}/gpg/.gnupg"
-    find "${secrets_dir}/gpg/.gnupg" -type f -exec chmod 0600 {} +
+    sudo chmod 0700 "${secrets_dir}/gpg/.gnupg"
+    sudo find "${secrets_dir}/gpg/.gnupg" -type f -exec chmod 0600 {} +
   fi
 }
 
