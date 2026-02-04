@@ -42,6 +42,10 @@ in {
   users.users.root.hashedPassword = "";
   services.getty.autologinUser = "root";
 
+  # DNS
+  services.resolved.enable = true;
+  networking.resolvconf.enable = false;
+  networking.useHostResolvConf = false;
 
   # Create the tarball
   system.build.tarball = pkgs.callPackage (pkgs.path + "/nixos/lib/make-system-tarball.nix") {
