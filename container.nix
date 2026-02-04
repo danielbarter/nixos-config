@@ -22,6 +22,20 @@ in {
   boot.isNspawnContainer = true;
   boot.isContainer = true;
   console.enable = true;
+  boot.supportedFilesystems = [ "overlay" ];
+
+  fileSystems."/nix/store" = {
+    overlay = {
+      lowerdir = "/nix-store-lower";
+      upperdir = "/nix-store-upper/diff";
+      workdir = "/nix-store-upper/work";
+    };
+  };
+
+  systemd.tmpfiles.rules = [
+    "d /nix-store-upper/diff 0755 root root - -"
+    "d /nix-store-upper/work 0755 root root - -"
+  ];
 
   nix.extraOptions =
     let
