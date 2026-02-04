@@ -16,9 +16,14 @@
 
 
   # systemd managed nixos container
-  systemd.nspawn.nixos.execConfig = {
-    Boot = false;
-    Parameters = "/init";
+  systemd.nspawn.nixos = {
+    execConfig = {
+      Boot = false;
+      Parameters = "/init";
+    };
+    filesConfig = {
+      Bind = "/home/danielbarter/container:/host";
+    };
   };
 
   # switch to doas instead of sudo
