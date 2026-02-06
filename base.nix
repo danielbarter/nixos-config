@@ -24,7 +24,7 @@
     };
     filesConfig = {
       Bind = "/home/danielbarter/container:/host";
-      BindReadOnly = "/nix/store:/nix/store";
+      Overlay = "/nix/store:/var/lib/machines/nixos/nix-store-upper:/nix/store";
     };
   };
 
