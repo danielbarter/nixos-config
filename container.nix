@@ -4,14 +4,7 @@
   config,
   ...
 }:
-
-let
-
-  pkgs2storeContents = map (x: {
-    object = x;
-    symlink = "none";
-  });
-in {
+{
 
   imports = [
     "${modulesPath}/profiles/minimal.nix"
@@ -22,20 +15,6 @@ in {
   boot.isNspawnContainer = true;
   boot.isContainer = true;
   console.enable = true;
-  boot.supportedFilesystems = [ "overlay" ];
-
-  fileSystems."/nix/store" = {
-    overlay = {
-      lowerdir = "/nix-store-lower";
-      upperdir = "/nix-store-upper/diff";
-      workdir = "/nix-store-upper/work";
-    };
-  };
-
-  systemd.tmpfiles.rules = [
-    "d /nix-store-upper/diff 0755 root root - -"
-    "d /nix-store-upper/work 0755 root root - -"
-  ];
 
   nix.extraOptions =
     let
@@ -78,12 +57,6 @@ in {
       }
     ];
     extraArgs = "--owner=0";
-
-    # Add init script to image
-    storeContents = pkgs2storeContents [
-      config.system.build.toplevel
-      pkgs.stdenv
-    ];
 
     # Some container managers like lxc need these
     extraCommands =
