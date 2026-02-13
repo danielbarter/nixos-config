@@ -1,16 +1,9 @@
 {
   pkgs,
-  modulesPath,
   config,
   ...
 }:
 {
-
-  imports = [
-    "${modulesPath}/profiles/minimal.nix"
-    "${modulesPath}/profiles/clone-config.nix"
-    "${modulesPath}/installer/cd-dvd/channel.nix"
-  ];
 
   boot.isNspawnContainer = true;
   boot.isContainer = true;
