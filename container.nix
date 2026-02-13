@@ -58,7 +58,7 @@
     ];
     extraArgs = "--owner=0";
 
-    # Some container managers like lxc need these
+    # needed to launch
     extraCommands =
       let
         script = pkgs.writeScript "extra-commands.sh" ''
@@ -77,7 +77,7 @@
       rm /nix-path-registration
     fi
 
-    # nixos-rebuild also requires a "system" profile
+    # needed to launch
     ${config.nix.package.out}/bin/nix-env -p /nix/var/nix/profiles/system --set /run/current-system
   '';
 
