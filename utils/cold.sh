@@ -117,6 +117,10 @@ set_cold_perms() {
   # WireGuard secret keys: root:systemd-network 0640
   # (Group must exist; on most systemd systems it does.)
   if getent group systemd-network >/dev/null 2>&1; then
+    # Allow systemd-network to traverse to the WireGuard keys without
+    # granting read access to other secret paths.
+    sudo chown root:systemd-network "${secrets_dir}" "${secrets_dir}/wireguard"
+    sudo chmod 0710 "${secrets_dir}" "${secrets_dir}/wireguard"
     sudo chown root:systemd-network "${secrets_dir}/wireguard/"{blaze,punky} 2>/dev/null || true
     sudo chmod 0640 "${secrets_dir}/wireguard/"{blaze,punky} 2>/dev/null || true
   else
