@@ -8,7 +8,7 @@ pack_etc_nixos() {
     rm -f /etc/nixos/result
 
     # zip up everything except the .git folder, since that contains a lot of files
-    doas zip -r /tmp/nixos.zip /etc/nixos -x /etc/nixos/.git\*
+    zip -r /tmp/nixos.zip /etc/nixos -x /etc/nixos/.git\*
 }
 
 read -p "Packing up /etc/nixos. Continue (y/n)? " choice
