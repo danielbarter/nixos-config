@@ -16,20 +16,15 @@ in {
     "${modulesPath}/image/repart.nix"
   ];
 
-  systemd.targets.sysinit.requires = [ "setup-replicant.service" ];
-
   systemd.services.setup-replicant = {
-    wantedBy = [ "sysinit.target" ];
+    wantedBy = [ "multi-user.target" ];
+    after = [ "local-fs.target" ];
 
     environment = {
       REPLICANT_NIXOS_CONFIG = replicant-nixos-config;
     };
 
-    path = [ pkgs.unzip ];
-
-    unitConfig = {
-      DefaultDependencies = "no";
-    };
+    path = [ pkgs.coreutils pkgs.unzip ];
 
     serviceConfig = {
       Type = "oneshot";
