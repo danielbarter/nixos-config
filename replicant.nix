@@ -62,7 +62,10 @@ in {
   ];
 
   # boot partition
-  fileSystems."/efi".device = "/dev/disk/by-label/EFI";
+  fileSystems."/efi" = {
+    fsType = "vfat";
+    device = "/dev/disk/by-label/EFI";
+  };
 
   # root should be a filesystem contained in ram so that machine operation is
   # not cripplingly slow
@@ -77,6 +80,7 @@ in {
   # device image, and the upper part a temp filesystem. this prevents operations
   # which write to the store from being crippilingly slow
   fileSystems."/nix-store-lower" = {
+    fsType = "ext4";
     device = "/dev/disk/by-label/nix-store-lower";
     neededForBoot = true;
   };
