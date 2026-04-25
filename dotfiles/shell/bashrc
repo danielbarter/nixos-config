@@ -95,13 +95,6 @@ toggle_git_hash() {
     fi
 }
 
-mute() {
-    wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
-}
-
-volume() {
-    wpctl set-volume @DEFAULT_AUDIO_SINK@ $1
-}
 
 set_dns() {
     # helper to run the repo's DNS configurator
