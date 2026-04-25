@@ -74,6 +74,7 @@ is_pseudoterminal() {
 }
 
 SHOW_PWD='no'
+SHOW_GIT_HASH='yes'
 
 toggle_pwd() {
     if [ $SHOW_PWD == no ]
@@ -81,6 +82,16 @@ toggle_pwd() {
         SHOW_PWD=yes
     else
         SHOW_PWD=no
+    fi
+}
+
+toggle_git_hash() {
+    if [ "$SHOW_GIT_HASH" == no ]
+    then
+        SHOW_GIT_HASH=yes
+    else
+        SHOW_GIT_HASH=no
+        GIT_SHORT_HASH=""
     fi
 }
 
@@ -130,6 +141,11 @@ update_title() {
 GIT_SHORT_HASH=""
 
 update_git_short_hash() {
+    if [ "$SHOW_GIT_HASH" != yes ]; then
+        GIT_SHORT_HASH=""
+        return
+    fi
+
     if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
         GIT_SHORT_HASH=$(git rev-parse --short=3 HEAD)
         # \[ and \] tell bash to treat the enclosed characters as non-printing when
