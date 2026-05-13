@@ -8,6 +8,7 @@ secrets
 ├── ssh
 │   └── id_rsa
 └── wireguard
+    ├── replicant
     └── blaze
 
 
@@ -19,6 +20,7 @@ public
 ├── ssh
 │   ├── id_rsa.pub
 └── wireguard
+    ├── replicant
     └── blaze
 
 

@@ -65,8 +65,8 @@ gen_cold_sec() {
   ln -sfn "id_ed25519.pub" "${public_dir}/ssh/id_rsa.pub"
 
   # ---- WireGuard ----
-  # generate blaze wireguard key
-  for name in blaze; do
+  # generate wireguard keys for blaze and replicant
+  for name in blaze replicant; do
     umask 077
     wg genkey | tee "${secrets_dir}/wireguard/${name}" | wg pubkey > "${public_dir}/wireguard/${name}"
   done
