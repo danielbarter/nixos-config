@@ -58,6 +58,7 @@ in {
        hosts.nixosModule
        ./blaze.nix
        ./headless-networking.nix
+       ./wireguard-interface.nix
      ];
   };
 

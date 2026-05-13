@@ -1,11 +1,5 @@
 let network-ids = import ./network-ids.nix;
-in [
-  {
-    PublicKeyFile = "/cold/public/wireguard/punky";
-    AllowedIPs = [ "192.168.2.${network-ids.punky}" ];
-    Endpoint = [ "hobiehomelab.duckdns.org:51821"];
-  }
-  
+in [ 
   {
     PublicKeyFile = "/cold/public/wireguard/phone";
     AllowedIPs = [ "192.168.2.${network-ids.phone}" ];
