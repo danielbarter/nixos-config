@@ -8,8 +8,7 @@ secrets
 ├── ssh
 │   └── id_rsa
 └── wireguard
-    ├── blaze
-    └── punky
+    └── blaze
 
 
 public
@@ -20,8 +19,7 @@ public
 ├── ssh
 │   ├── id_rsa.pub
 └── wireguard
-    ├── blaze
-    └── punky
+    └── blaze
 
 
 the nix private-key/public-key pair is a nix signing key for substituters. It is fine if the function requires human interaction. Please use strong encryption protocols.
