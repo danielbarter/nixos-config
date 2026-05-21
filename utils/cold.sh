@@ -80,7 +80,7 @@ gen_cold_sec() {
     echo "nix-key not found. Install Nix that provides nix-key, then rerun Nix section." >&2
   fi
 
-  echo "Done. Run: set_key_perms '${root%/}'"
+  echo "Done. Run: set_cold_perms '${root%/}'"
 }
 
 # Set permissions and ownership for the created tree.
@@ -92,7 +92,7 @@ set_cold_perms() {
 
   local root="${1:-}"
   if [[ -z "${root}" ]]; then
-    echo "usage: set_key_perms <target-dir>" >&2
+    echo "usage: set_cold_perms <target-dir>" >&2
     return 2
   fi
 
@@ -121,8 +121,8 @@ set_cold_perms() {
     # granting read access to other secret paths.
     sudo chown root:systemd-network "${secrets_dir}" "${secrets_dir}/wireguard"
     sudo chmod 0710 "${secrets_dir}" "${secrets_dir}/wireguard"
-    sudo chown root:systemd-network "${secrets_dir}/wireguard/"{blaze,punky} 2>/dev/null || true
-    sudo chmod 0640 "${secrets_dir}/wireguard/"{blaze,punky} 2>/dev/null || true
+    sudo chown root:systemd-network "${secrets_dir}/wireguard/"{blaze,replicant} 2>/dev/null || true
+    sudo chmod 0640 "${secrets_dir}/wireguard/"{blaze,replicant} 2>/dev/null || true
   else
     echo "Warning: group 'systemd-network' not found; skipping wireguard group ownership." >&2
   fi
