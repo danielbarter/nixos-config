@@ -2,7 +2,6 @@
 chown -R danielbarter /etc/nixos
 chgrp -R users /etc/nixos
 
-# 660 for all files not in secrets
 for file in $(find /etc/nixos -print)
 do
     chmod 660 $file
