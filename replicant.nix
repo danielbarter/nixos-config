@@ -7,8 +7,8 @@
 }:
 let
     replicant-nixos-config = builtins.path {
-      path = /tmp/nixos.zip;
-      name = "nixos.zip";
+      path = ./.;
+      name = "nixos-config";
     };
 in {
 
@@ -24,17 +24,16 @@ in {
       REPLICANT_NIXOS_CONFIG = replicant-nixos-config;
     };
 
-    path = [ pkgs.coreutils pkgs.unzip ];
+    path = [ pkgs.coreutils ];
 
     serviceConfig = {
       Type = "oneshot";
     };
 
     script = ''
-      cp $REPLICANT_NIXOS_CONFIG /nixos.zip
-      cd /
-
-      unzip /nixos.zip
+      rm -rf /etc/nixos
+      mkdir -p /etc
+      cp -R --no-preserve=mode,ownership $REPLICANT_NIXOS_CONFIG /etc/nixos
       cd /etc/nixos
 
       # set permissions for /etc/nixos
