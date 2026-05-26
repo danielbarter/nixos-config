@@ -11,7 +11,7 @@
 # nix-store --realise --substituters ssh://nix-ssh@punky.lan <path>
 {
   inputs = {
-    nixpkgs.url = "github:NixOs/nixpkgs/release-25.11";
+    nixpkgs.url = "github:NixOs/nixpkgs/release-26.05";
     hosts.url = "github:StevenBlack/hosts";
 
     # unify nixpkgs across inputs
@@ -26,12 +26,17 @@
     }:
     let
       system = "x86_64-linux";
-      nixpkgsSource = nixpkgs.outPath;
+      pkgs = import nixpkgs { inherit system; };
+      nixpkgsSource = pkgs.applyPatches {
+        name = "nixpkgs-patched";
+        src = nixpkgs;
+        patches = [ ./patches/cross_build.patch ];
+      };
     in
     {
 
       # In this file, nixpkgs is the flake input object. Past this boundary,
-      # nixpkgs is the nixpkgs source tree path.
+      # nixpkgs is the patched nixpkgs source tree path.
       nixosConfigurations = import ./nixos-configurations.nix {
         nixpkgs = nixpkgsSource;
         hosts = hosts.nixosModule;
