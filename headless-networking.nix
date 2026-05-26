@@ -37,15 +37,15 @@
         extraGroups = [ "users" "wheel" ];
       };
     };
-        
-    services.resolved = {
-      # use resolved for dns management
-      # since it works more seamlessly with systemd-networkd
-      enable = true;
+
+    # use resolved for dns management
+    # since it works more seamlessly with systemd-networkd
+    services.resolved.enable = true;
+    services.resolved.settings.Resolve = {
 
       # dnssec randomly failing sometimes
       # with DNSSEC validation failed: no-signature
-      dnssec = "false";
+      DNSSEC = false;
 
       # residential ISPs tend to provide
       # /64 ipv6 addresses, which makes
@@ -53,10 +53,10 @@
       # multicast dns protocols generally
       # expect a dual ipv4/6 network,
       # so disabling LLMNR
-      llmnr = "false";
+      LLMNR = false;
 
       # if not set, resolved defaults to its own list
-      fallbackDns = [
+      FallbackDNS = [
         "1.1.1.1"
         "8.8.8.8"
       ];

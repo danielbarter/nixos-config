@@ -47,10 +47,9 @@
   };
 
   # serve DNS stub on local network
-  services.resolved.extraConfig = ''
-    DNSStubListenerExtra=192.168.1.${config.network-id}
-    DNSStubListenerExtra=192.168.2.${config.network-id}
-  '';
+  services.resolved.settings.Resolve.DNSStubListnerExtra = [
+    "192.168.1.${config.network-id}"
+  ];
 
   # ddns update for LAN
   systemd.services.ddns-update = let

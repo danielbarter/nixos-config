@@ -15,9 +15,7 @@
 
   # on everything except the router, we don't want to run
   # DNS stub listner
-  services.resolved.extraConfig = ''
-    DNSStubListener=no
-  '';
+  services.resolved.settings.Resolve.DNSStubListner = false;
 
 
   # this config is for headless systems without network manager. So we use iwd for
