@@ -7,7 +7,6 @@
     HandlePowerKey = "suspend";
   };
 
-  programs.adb.enable = true;
 
   hardware.cpu.intel.updateMicrocode = true;
 
