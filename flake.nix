@@ -28,7 +28,7 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; };
       nixpkgsSource = pkgs.applyPatches {
-        name = "nixpkgs-patched";
+        name = "nixpkgs";
         src = nixpkgs;
         patches = [ ./patches/cross_build.patch ];
       };
