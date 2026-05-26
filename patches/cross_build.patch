@@ -1,0 +1,29 @@
+diff --git a/pkgs/by-name/gi/git/package.nix b/pkgs/by-name/gi/git/package.nix
+index fa7bcc7cd054..0a919f73dfab 100644
+--- a/pkgs/by-name/gi/git/package.nix
++++ b/pkgs/by-name/gi/git/package.nix
+@@ -54,6 +54,7 @@
+   testers,
+   rustSupport ? lib.meta.availableOn stdenv.hostPlatform rustc,
+   cargo,
++  rust,
+   rustc,
+ }:
+ 
+@@ -221,6 +222,16 @@ stdenv.mkDerivation (finalAttrs: {
+   // lib.attrsets.optionalAttrs (rustSupport && (stdenv.buildPlatform != stdenv.hostPlatform)) {
+     # Rust cross-compilation
+     CARGO_BUILD_TARGET = stdenv.hostPlatform.rust.rustcTargetSpec;
++
++    "CC_${stdenv.buildPlatform.rust.cargoEnvVarTarget}" = rust.envVars.ccForBuild;
++    "CXX_${stdenv.buildPlatform.rust.cargoEnvVarTarget}" = rust.envVars.cxxForBuild;
++    "CARGO_TARGET_${stdenv.buildPlatform.rust.cargoEnvVarTarget}_LINKER" = rust.envVars.ccForBuild;
++    HOST_CC = rust.envVars.ccForBuild;
++    HOST_CXX = rust.envVars.cxxForBuild;
++
++    "CC_${stdenv.hostPlatform.rust.cargoEnvVarTarget}" = rust.envVars.ccForHost;
++    "CXX_${stdenv.hostPlatform.rust.cargoEnvVarTarget}" = rust.envVars.cxxForHost;
++    "CARGO_TARGET_${stdenv.hostPlatform.rust.cargoEnvVarTarget}_LINKER" = rust.envVars.ccForHost;
+   };
+ 
+   configureFlags = [

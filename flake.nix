@@ -24,12 +24,21 @@
       nixpkgs,
       hosts,
     }:
+    let
+      system = "x86_64-linux";
+      nixpkgsSource = nixpkgs.outPath;
+    in
     {
 
-      nixosConfigurations = import ./nixos-configurations.nix { inherit nixpkgs hosts;};
-      packages."x86_64-linux" = import ./images.nix {
+      # In this file, nixpkgs is the flake input object. Past this boundary,
+      # nixpkgs is the nixpkgs source tree path.
+      nixosConfigurations = import ./nixos-configurations.nix {
+        nixpkgs = nixpkgsSource;
+        hosts = hosts.nixosModule;
+      };
+      packages.${system} = import ./images.nix {
         nixosConfigurations = self.nixosConfigurations;
-        inherit nixpkgs;
+        nixpkgs = nixpkgsSource;
       };
     };
 }

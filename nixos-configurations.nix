@@ -1,8 +1,9 @@
 { nixpkgs, hosts}: let
+  nixosSystem = import "${nixpkgs}/nixos/lib/eval-config.nix";
 
   # common modules + better platform support for all physical machines
   nixosSystemCommon = { build, host, modules }:
-   nixpkgs.lib.nixosSystem {
+   nixosSystem {
     system = build;
     modules = modules ++ [
       {
@@ -10,7 +11,7 @@
         nixpkgs.hostPlatform.system = host;
       }
 
-      { nix.nixPath = [ "nixpkgs=${nixpkgs.outPath}" ]; }
+      { nix.nixPath = [ "nixpkgs=${nixpkgs}" ]; }
 
       ./base.nix
       ./nix-config.nix
@@ -22,11 +23,11 @@
   };
 
 in {
-  container = nixpkgs.lib.nixosSystem {
+  container = nixosSystem {
     system = "x86_64-linux";
     modules = [
       ./container.nix
-      { nix.nixPath = [ "nixpkgs=${nixpkgs.outPath}" ]; }
+      { nix.nixPath = [ "nixpkgs=${nixpkgs}" ]; }
     ];
   };
 
@@ -55,7 +56,7 @@ in {
     build = "x86_64-linux";
     host = "x86_64-linux";
     modules = [
-       hosts.nixosModule
+       hosts
        ./blaze.nix
        ./headless-networking.nix
        ./wireguard-interface.nix
