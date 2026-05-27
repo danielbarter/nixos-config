@@ -47,7 +47,8 @@
   };
 
   # serve DNS stub on local network
-  services.resolved.settings.Resolve.DNSStubListnerExtra = [
+  services.resolved.settings.Resolve.DNSStubListener= true;
+  services.resolved.settings.Resolve.DNSStubListenerExtra = [
     "192.168.1.${config.network-id}"
   ];
 
