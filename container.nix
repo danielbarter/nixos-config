@@ -56,7 +56,7 @@
       let
         script = pkgs.writeScript "extra-commands.sh" ''
           rm etc
-          mkdir -p proc sys dev etc
+          mkdir -p proc sys dev etc usr
         '';
       in
       script;
