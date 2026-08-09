@@ -18,7 +18,6 @@
     pkgs.alacritty
     pkgs.zathura
     pkgs.wl-clipboard
-    pkgs.lutris
   ];
   
 }
