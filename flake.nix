@@ -30,7 +30,7 @@
       nixpkgsSource = pkgs.applyPatches {
         name = "nixpkgs";
         src = nixpkgs;
-        patches = [ ./patches/cross_build.patch ];
+        # patches = [ ./patches/cross_build.patch ];
       };
     in
     {
