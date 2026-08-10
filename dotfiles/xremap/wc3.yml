@@ -1,0 +1,10 @@
+modmap:
+  - name: Warcraft III inventory
+    remap:
+      T: KP7
+      Y: KP8
+      G: KP4
+      H: KP5
+      B: KP1
+      N: KP2
+      F12: NUMLOCK
