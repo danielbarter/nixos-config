@@ -1,4 +1,8 @@
 (
     state: Enabled,
+    acceleration: Some((
+        profile: None,
+        speed: -0.37158959128836094,
+    )),
     left_handed: Some(true),
 )
