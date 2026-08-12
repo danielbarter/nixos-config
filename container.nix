@@ -3,6 +3,13 @@
   config,
   ...
 }:
+let
+  codex = import ./utils/codex.nix {
+    inherit pkgs;
+    version = "0.147.0";
+    hash = "sha256-vXWNU9VuQdxl4EX0WJ33mgOO0ZegEa3LUqJY5q1kz9o=";
+  };
+in
 {
 
   boot.isNspawnContainer = true;
@@ -39,6 +46,7 @@
     pkgs.fd
     pkgs.jq
     pkgs.python3
+    codex
   ];
 
   # Create the tarball
