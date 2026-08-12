@@ -27,10 +27,18 @@
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; };
+      patchFiles = builtins.readDir ./patches;
+      patches = builtins.map (name: ./patches + "/${name}") (
+        builtins.filter (
+          name:
+          builtins.match ".*\\.patch" name != null
+          && patchFiles.${name} == "regular"
+        ) (builtins.attrNames patchFiles)
+      );
       nixpkgsSource = pkgs.applyPatches {
         name = "nixpkgs";
         src = nixpkgs;
-        # patches = [ ./patches/cross_build.patch ];
+        inherit patches;
       };
     in
     {
