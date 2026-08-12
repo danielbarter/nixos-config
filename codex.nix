@@ -17,6 +17,8 @@ pkgs.stdenvNoCC.mkDerivation {
   pname = "codex";
   inherit version;
 
+  nativeBuildInputs = [ pkgs.makeWrapper ];
+
   src = pkgs.fetchurl {
     url = "https://github.com/openai/codex/releases/download/rust-v${version}/codex-package-${target}.tar.gz";
     inherit hash;
@@ -29,6 +31,8 @@ pkgs.stdenvNoCC.mkDerivation {
 
     mkdir -p $out
     cp -r bin codex-path codex-resources codex-package.json $out/
+    wrapProgram $out/bin/codex \
+      --add-flags --dangerously-bypass-approvals-and-sandbox
 
     runHook postInstall
   '';
