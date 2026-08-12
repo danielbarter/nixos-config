@@ -27,6 +27,7 @@
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; };
+      # collect all .patch files in the patches folder and apply them to nixpkgs
       patchFiles = if builtins.pathExists ./patches then builtins.readDir ./patches else { };
       patches = builtins.map (name: ./patches + "/${name}") (
         builtins.filter (
