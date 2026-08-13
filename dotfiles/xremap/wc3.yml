@@ -1,5 +1,7 @@
 modmap:
   - name: Warcraft III inventory
+    window:
+      only: Warcraft III
     remap:
       T: KP7
       Y: KP8
