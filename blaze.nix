@@ -25,6 +25,7 @@
         DHCPPrefixDelegation = true;
         IPv6PrivacyExtensions = false;
         IPv6SendRA = true;
+        MulticastDNS = true;
       };
 
       # Use the first /64 within the prefix delegated specifically to Blaze.

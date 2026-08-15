@@ -3,16 +3,22 @@
   ...
 }:
 {
-  # Let NetworkManager pass per-link DNS and LLMNR configuration to
+  # Let NetworkManager pass per-link DNS, LLMNR, and mDNS configuration to
   # systemd-resolved on graphical hosts.
   networking.networkmanager = {
     dns = "systemd-resolved";
-    settings.connection.llmnr = 2;
+    settings.connection = {
+      llmnr = 2;
+      mdns = 2;
+    };
   };
 
   services.resolved = {
     enable = true;
-    settings.Resolve.LLMNR = true;
+    settings.Resolve = {
+      LLMNR = true;
+      MulticastDNS = true;
+    };
   };
 
   # LLMNR normally uses UDP and falls back to TCP for oversized responses.

@@ -40,6 +40,8 @@
       # with DNSSEC validation failed: no-signature
       DNSSEC = false;
 
+      MulticastDNS = true;
+
       # if not set, resolved defaults to its own list
       FallbackDNS = [
         "1.1.1.1"
