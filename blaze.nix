@@ -62,9 +62,17 @@
         LLDP = "no";
       };
 
+      # Use only the DNS servers configured in networking.nameservers.
+      dhcpV4Config.UseDNS = false;
+
       # Ask AT&T for the /60 advertised by its router. The server may return
       # a different prefix length, which networkd will still accept.
-      dhcpV6Config.PrefixDelegationHint = "::/60";
+      dhcpV6Config = {
+        PrefixDelegationHint = "::/60";
+        UseDNS = false;
+      };
+
+      ipv6AcceptRAConfig.UseDNS = false;
     };
   };
 
