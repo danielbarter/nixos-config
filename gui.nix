@@ -3,6 +3,18 @@
   ...
 }:
 {
+  # Let NetworkManager pass per-link DNS and LLMNR configuration to
+  # systemd-resolved on graphical hosts.
+  networking.networkmanager = {
+    dns = "systemd-resolved";
+    settings.connection.llmnr = 2;
+  };
+
+  services.resolved = {
+    enable = true;
+    settings.Resolve.LLMNR = true;
+  };
+
   # firefox integration
   programs = {
     firefox.enable = true;
