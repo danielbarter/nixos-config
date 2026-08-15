@@ -15,6 +15,12 @@
     settings.Resolve.LLMNR = true;
   };
 
+  # LLMNR normally uses UDP and falls back to TCP for oversized responses.
+  networking.firewall = {
+    allowedUDPPorts = [ 5355 ];
+    allowedTCPPorts = [ 5355 ];
+  };
+
   # firefox integration
   programs = {
     firefox.enable = true;
