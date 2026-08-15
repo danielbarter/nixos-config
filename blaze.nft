@@ -35,9 +35,6 @@ table inet filter {
         # Set default policy to Drop (block everything unless explicitly allowed)
         type filter hook input priority filter; policy drop;
 
-        # Immediately drop all IPv6 traffic as upstream is broken and network is IPv4 only
-        meta nfproto ipv6 counter drop
-
         # Accept traffic on the loopback interface (localhost)
         iifname "lo" accept
 
@@ -49,6 +46,15 @@ table inet filter {
 
         # Accept ICMP (Ping) packets to the router for diagnostics
         ip protocol icmp accept
+
+        # Accept ICMPv6 errors required for correct routing and path MTU discovery
+        meta nfproto ipv6 icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem } accept
+
+        # Accept IPv6 router and neighbor discovery from the directly connected WAN
+        iifname $WAN_IF ip6 saddr fe80::/10 ip6 hoplimit 255 icmpv6 type { nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
+
+        # Accept replies from the ISP's DHCPv6 server, including prefix delegation
+        iifname $WAN_IF udp sport 547 udp dport 546 accept
 
         # Accept incoming UDP traffic on port 51820 for the Router's own WireGuard instance
         iifname $WAN_IF udp dport $ROUTER_WG_PORT accept
@@ -65,14 +71,14 @@ table inet filter {
         # Set default policy to Drop (lock down routing paths)
         type filter hook forward priority filter; policy drop;
 
-        # Immediately drop all IPv6 forwarding traffic
-        meta nfproto ipv6 counter drop
-
         # Accept forwarded traffic for established and related connections
         ct state established,related accept
 
         # Drop forwarded packets marked as invalid
         ct state invalid drop
+
+        # Accept ICMPv6 errors required for forwarded traffic and path MTU discovery
+        meta nfproto ipv6 icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem } accept
 
         # Allow traffic from LAN to WAN (Access Internet)
         iifname $LAN_IF oifname $WAN_IF accept

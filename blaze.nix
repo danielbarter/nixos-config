@@ -8,6 +8,7 @@
 
   boot.kernel.sysctl = {
     "net.ipv4.conf.all.forwarding" = true;
+    "net.ipv6.conf.all.forwarding" = true;
   };
 
 
@@ -21,7 +22,22 @@
       networkConfig = {
         DHCPServer = "yes";
         Address = "192.168.1.${config.network-id}/24";
+        DHCPPrefixDelegation = true;
+        IPv6SendRA = true;
       };
+
+      # Use the first /64 within the prefix delegated specifically to Blaze.
+      # Subnet ID zero also works if AT&T delegates only a single /64.
+      dhcpPrefixDelegationConfig = {
+        UplinkInterface = "eno0";
+        SubnetId = 0;
+        Assign = true;
+        Announce = true;
+      };
+
+      # LAN clients can continue using the IPv4 DNS server distributed by
+      # DHCPv4 until resolved is configured to listen on a stable IPv6 address.
+      ipv6SendRAConfig.EmitDNS = false;
 
       dhcpServerConfig = {
         ServerAddress = "192.168.1.${config.network-id}/24";
@@ -40,9 +56,14 @@
       };
 
       networkConfig = {
-        DHCP = "ipv4";
+        DHCP = "yes";
+        IPv6AcceptRA = true;
         LLDP = "no";
       };
+
+      # Ask AT&T for the /60 advertised by its router. The server may return
+      # a different prefix length, which networkd will still accept.
+      dhcpV6Config.PrefixDelegationHint = "::/60";
     };
   };
 
@@ -138,4 +159,3 @@
   system.stateVersion = "25.05"; # Did you read the comment?
 
 }
-
