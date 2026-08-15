@@ -127,11 +127,7 @@
     # enter static IP addresses into DNS
     hosts = { 
       "192.168.1.${network-ids.punky}" = [ "punky.lan" ];
-      "192.168.2.${network-ids.punky}" = [ "punky.wg" ];
-      
       "192.168.1.${network-ids.blaze}" = [ "blaze.lan" ];
-      "192.168.2.${network-ids.blaze}" = [ "blaze.wg" ];
-
       "192.168.1.${network-ids.asus2}" = [ "asus2.lan" ];
       "192.168.1.${network-ids.asus3}" = [ "asus3.lan" ];
     };
