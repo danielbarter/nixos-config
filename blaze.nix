@@ -61,6 +61,7 @@
         DHCP = "yes";
         IPv6AcceptRA = true;
         LLDP = "no";
+        LLMNR = false;
       };
 
       # Use only the DNS servers configured in networking.nameservers.
