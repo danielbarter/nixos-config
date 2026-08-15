@@ -23,8 +23,8 @@ table ip nat {
         # Hook into the postrouting stage to handle source NAT
         type nat hook postrouting priority srcnat; policy accept;
 
-        # Masquerade traffic leaving WAN interface (replace source IP with router's public IP)
-        oifname $WAN_IF masquerade
+        # Masquerade only traffic from the LAN and WireGuard IPv4 networks
+        ip saddr { $LAN_NET, $WG_NET } oifname $WAN_IF masquerade
     }
 }
 

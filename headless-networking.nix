@@ -31,13 +31,6 @@
       networkmanager.enable = false;
     };
 
-    users.users = {
-      # let systemd-networkd access files belonging to users, like public wireguard keys
-      systemd-network = {
-        extraGroups = [ "users" "wheel" ];
-      };
-    };
-
     # use resolved for dns management
     # since it works more seamlessly with systemd-networkd
     services.resolved.enable = true;
@@ -47,12 +40,7 @@
       # with DNSSEC validation failed: no-signature
       DNSSEC = false;
 
-      # residential ISPs tend to provide
-      # /64 ipv6 addresses, which makes
-      # enabling ipv6 on LAN akward...
-      # multicast dns protocols generally
-      # expect a dual ipv4/6 network,
-      # so disabling LLMNR
+      # Disable LLMNR because it is not used on this network.
       LLMNR = false;
 
       # if not set, resolved defaults to its own list

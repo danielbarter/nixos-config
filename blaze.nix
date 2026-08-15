@@ -23,6 +23,7 @@
         DHCPServer = "yes";
         Address = "192.168.1.${config.network-id}/24";
         DHCPPrefixDelegation = true;
+        IPv6PrivacyExtensions = false;
         IPv6SendRA = true;
       };
 
