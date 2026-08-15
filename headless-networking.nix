@@ -40,9 +40,6 @@
       # with DNSSEC validation failed: no-signature
       DNSSEC = false;
 
-      # Disable LLMNR because it is not used on this network.
-      LLMNR = false;
-
       # if not set, resolved defaults to its own list
       FallbackDNS = [
         "1.1.1.1"
