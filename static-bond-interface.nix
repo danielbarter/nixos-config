@@ -72,6 +72,7 @@
         networkConfig = {
           Gateway = "192.168.1.${(import ./network-ids.nix).blaze}";
           Address = "192.168.1.${config.network-id}/24";
+          IPv6AcceptRA = true;
         };
       };
     };
