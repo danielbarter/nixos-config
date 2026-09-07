@@ -70,7 +70,7 @@
       # Ask AT&T for the /60 advertised by its router. The server may return
       # a different prefix length, which networkd will still accept.
       dhcpV6Config = {
-        PrefixDelegationHint = "::/60";
+        PrefixDelegationHint = "::/64";
         UseDNS = false;
       };
 
