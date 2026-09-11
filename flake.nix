@@ -12,10 +12,14 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOs/nixpkgs/release-26.05";
-    hosts.url = "github:StevenBlack/hosts";
-
-    # unify nixpkgs across inputs
-    hosts.inputs.nixpkgs.follows = "nixpkgs";
+    hosts = {
+      url = "github:StevenBlack/hosts";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    voxtype = {
+      url = "github:danielbarter/voice_to_text";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -23,6 +27,7 @@
       self,
       nixpkgs,
       hosts,
+      voxtype
     }:
     let
       system = "x86_64-linux";
@@ -49,6 +54,7 @@
       nixosConfigurations = import ./nixos-configurations.nix {
         nixpkgs = nixpkgsSource;
         hosts = hosts.nixosModule;
+        voxtype = voxtype.nixosModules.default;
       };
       packages.${system} = import ./images.nix {
         nixosConfigurations = self.nixosConfigurations;

@@ -39,7 +39,28 @@
     "root": {
       "inputs": {
         "hosts": "hosts",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "voxtype": "voxtype"
+      }
+    },
+    "voxtype": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1789154399,
+        "narHash": "sha256-mVUpTrv9t2EIHdo66ZZNbQSU8rXXbkMiwhLm6KQ4fAo=",
+        "owner": "danielbarter",
+        "repo": "voice_to_text",
+        "rev": "81e3978d947ae995bd6578cd0c874424c1aed02b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "danielbarter",
+        "repo": "voice_to_text",
+        "type": "github"
       }
     }
   },

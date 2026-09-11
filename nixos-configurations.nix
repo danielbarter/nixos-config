@@ -1,4 +1,4 @@
-{ nixpkgs, hosts}: let
+{ nixpkgs, hosts, voxtype}: let
   nixosSystem = import "${nixpkgs}/nixos/lib/eval-config.nix";
 
   # common modules + better platform support for all physical machines
@@ -35,6 +35,8 @@ in {
     build = "x86_64-linux";
     host = "x86_64-linux";
     modules = [
+      voxtype
+      { services.voxtype.enable = true; }
       ./jasper.nix
       ./gui.nix
       ./intel-gpu.nix
