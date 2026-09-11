@@ -3,14 +3,7 @@
         modifiers: [
             Super,
         ],
-        key: "F1",
-    ): System(LockScreen),
-    (
-        modifiers: [
-            Super,
-            Shift,
-        ],
-        key: "r",
+        key: "t",
     ): Disable,
     (
         modifiers: [
@@ -22,7 +15,19 @@
         modifiers: [
             Super,
         ],
-        key: "y",
+        key: "Escape",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "F11",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "r",
     ): Disable,
     (
         modifiers: [
@@ -35,6 +40,44 @@
             Super,
         ],
         key: "q",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "x",
+    ): Maximize,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "a",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+            Shift,
+        ],
+        key: "d",
+    ): Close,
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "F1",
+    ): System(LockScreen),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "g",
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+            Shift,
+        ],
+        key: "Escape",
     ): Disable,
     (
         modifiers: [
@@ -53,30 +96,18 @@
         modifiers: [
             Super,
         ],
+    ): Disable,
+    (
+        modifiers: [
+            Super,
+        ],
         key: "slash",
     ): Disable,
     (
         modifiers: [
             Super,
         ],
-        key: "g",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "f",
-    ): Fullscreen,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "a",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
+        key: "y",
     ): Disable,
     (
         modifiers: [
@@ -92,12 +123,16 @@
         key: "t",
     ): ToggleTiling,
     (
+        modifiers: [],
+        key: "Insert",
+        description: Some("voxtype"),
+    ): Spawn("voxtype-ctl"),
+    (
         modifiers: [
             Super,
-            Shift,
         ],
-        key: "Escape",
-    ): Disable,
+        key: "f",
+    ): Fullscreen,
     (
         modifiers: [
             Super,
@@ -107,43 +142,8 @@
     (
         modifiers: [
             Super,
-        ],
-        key: "F11",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "Escape",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
             Shift,
-        ],
-        key: "d",
-    ): Close,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "t",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "x",
-    ): Maximize,
-    (
-        modifiers: [
-            Super,
         ],
         key: "r",
     ): Disable,
-    (
-        modifiers: [],
-        key: "Insert",
-        description: Some("VoxType — Start or stop dictation"),
-    ): Spawn("/nix/store/47yszp07vnxsdd72iqmbgx5h4v85d5ly-voxtype-0.2.0/bin/voxtype-ctl"),
 }
