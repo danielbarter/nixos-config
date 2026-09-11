@@ -54,7 +54,7 @@
       nixosConfigurations = import ./nixos-configurations.nix {
         nixpkgs = nixpkgsSource;
         hosts = hosts.nixosModule;
-        voxtype = voxtype.nixosModules.default;
+        voxtype = voxtype.nixosModule;
       };
       packages.${system} = import ./images.nix {
         nixosConfigurations = self.nixosConfigurations;
