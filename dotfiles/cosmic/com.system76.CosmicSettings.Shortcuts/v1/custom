@@ -141,4 +141,9 @@
         ],
         key: "r",
     ): Disable,
+    (
+        modifiers: [],
+        key: "Insert",
+        description: Some("VoxType — Start or stop dictation"),
+    ): Spawn("/nix/store/47yszp07vnxsdd72iqmbgx5h4v85d5ly-voxtype-0.2.0/bin/voxtype-ctl"),
 }
