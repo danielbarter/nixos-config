@@ -50,11 +50,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789157941,
+        "lastModified": 1789158293,
         "narHash": "sha256-rWdn52t+4aDOoi9/pYedakKyEbMAeSxZp6nUQhxJQRU=",
         "owner": "danielbarter",
         "repo": "voice_to_text",
-        "rev": "fe57c22fcd4db50310acb18556583b85d1ec3e33",
+        "rev": "5ecb3a311830c60e6dbbfe48cb73fa5446efc8f6",
         "type": "github"
       },
       "original": {
