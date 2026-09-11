@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1785954190,
-        "narHash": "sha256-B5mWsgN/k0cDJFK+xy7+/bM41k0WenfbwoyO7U/IVso=",
+        "lastModified": 1788994729,
+        "narHash": "sha256-4XxaSGWKmG3AM89H3mnNpQQWfsnjOubURZbnlrth9iI=",
         "owner": "StevenBlack",
         "repo": "hosts",
-        "rev": "92a38fd106abe49f50ed6904ff0e867f4eb44f9f",
+        "rev": "83dd698bbcdcb8c11a7796af7188d7ab4ccd02f1",
         "type": "github"
       },
       "original": {
@@ -22,11 +22,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1786313170,
-        "narHash": "sha256-9BG7OgUWdu0ONDO5X2q6+K4bsuBITkX/3W4nNJu1Ito=",
+        "lastModified": 1789155820,
+        "narHash": "sha256-cTHZTeYRV42p62ss3ZEFnBXrW3WpLgDpYWYyat4V2b8=",
         "owner": "NixOs",
         "repo": "nixpkgs",
-        "rev": "fcb8fcd6bf2d0adecae5bd491afaaaf8311b758d",
+        "rev": "8029b6c369415ee1ef02a86f352806348f104db9",
         "type": "github"
       },
       "original": {
@@ -50,11 +50,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789154399,
-        "narHash": "sha256-mVUpTrv9t2EIHdo66ZZNbQSU8rXXbkMiwhLm6KQ4fAo=",
+        "lastModified": 1789157941,
+        "narHash": "sha256-rWdn52t+4aDOoi9/pYedakKyEbMAeSxZp6nUQhxJQRU=",
         "owner": "danielbarter",
         "repo": "voice_to_text",
-        "rev": "81e3978d947ae995bd6578cd0c874424c1aed02b",
+        "rev": "fe57c22fcd4db50310acb18556583b85d1ec3e33",
         "type": "github"
       },
       "original": {
