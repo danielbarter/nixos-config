@@ -50,11 +50,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1789188054,
-        "narHash": "sha256-MOFq9GlnGiFni0+kIWhu+8rH5+fSJ9UfJ2Xm+DPfAjI=",
+        "lastModified": 1789225588,
+        "narHash": "sha256-U8m8GfNgVaRoRJFqa+hRpN9lhxYrJjd4kZs/kgUXnGQ=",
         "owner": "danielbarter",
         "repo": "voice_to_text",
-        "rev": "27087ae919608b21057f96fd98d716e894cbf7d0",
+        "rev": "b70945510bda823f0ef3c013141b5c9a2ba4707f",
         "type": "github"
       },
       "original": {
