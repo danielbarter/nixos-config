@@ -39,7 +39,6 @@
       e2fsprogs
       wireguard-tools
       pass
-      codex
     ] ++ lib.optionals dev-machine [
 
       binutils # objdump, readelf and c++filt
@@ -52,5 +51,6 @@
       ty # python type checker
       nixd
       git-lfs
+      codex
     ];
 }
