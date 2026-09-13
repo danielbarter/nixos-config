@@ -7,8 +7,8 @@
 
 let
   inherit (pkgs) lib;
-  version = "0.147.0";
-  hash = "sha256-vXWNU9VuQdxl4EX0WJ33mgOO0ZegEa3LUqJY5q1kz9o=";
+  version = "0.154.0";
+  hash = "sha256-/G4+O4Xyz31mRSDuXGan/kqhK659RoNPR+LxZf0Nb3g=";
   target = "x86_64-unknown-linux-musl";
 in
 pkgs.stdenvNoCC.mkDerivation {
