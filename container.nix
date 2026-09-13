@@ -6,8 +6,7 @@
 let
   codex = import ./codex.nix {
     inherit pkgs;
-    version = "0.147.0";
-    hash = "sha256-vXWNU9VuQdxl4EX0WJ33mgOO0ZegEa3LUqJY5q1kz9o=";
+    sandboxed = false;
   };
 in
 {

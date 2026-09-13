@@ -14,6 +14,9 @@
 
   config.environment.systemPackages =
     let dev-machine = config.dev-machine;
+    codex = import ./codex.nix {
+      inherit pkgs;
+    };
     in with pkgs; [
       tree
       tmux # terminal multiplexer
@@ -36,7 +39,7 @@
       e2fsprogs
       wireguard-tools
       pass
-      
+      codex
     ] ++ lib.optionals dev-machine [
 
       binutils # objdump, readelf and c++filt
