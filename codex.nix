@@ -8,8 +8,18 @@
 let
   inherit (pkgs) lib;
   version = "0.154.0";
-  hash = "sha256-/G4+O4Xyz31mRSDuXGan/kqhK659RoNPR+LxZf0Nb3g=";
-  target = "x86_64-unknown-linux-musl";
+  sources = {
+    x86_64-linux = {
+      target = "x86_64-unknown-linux-musl";
+      hash = "sha256-/G4+O4Xyz31mRSDuXGan/kqhK659RoNPR+LxZf0Nb3g=";
+    };
+    aarch64-linux = {
+      target = "aarch64-unknown-linux-musl";
+      hash = "sha256-l9k+Ed9y08JnctsBnm6ou3LCRlANRrmMdgg58yQDVeY=";
+    };
+  };
+  inherit (sources.${pkgs.stdenv.hostPlatform.system}
+    or (throw "Unsupported Codex platform: ${pkgs.stdenv.hostPlatform.system}")) target hash;
 in
 pkgs.stdenvNoCC.mkDerivation {
   pname = "codex";
@@ -56,7 +66,7 @@ pkgs.stdenvNoCC.mkDerivation {
     homepage = "https://github.com/openai/codex";
     license = lib.licenses.asl20;
     mainProgram = "codex";
-    platforms = [ "x86_64-linux" ];
+    platforms = builtins.attrNames sources;
     sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
   };
 }

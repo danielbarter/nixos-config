@@ -1,19 +1,11 @@
 {
   pkgs,
-  config,
-  lib,
   ...
 }:
 {
 
-  options.dev-machine = lib.mkOption {
-    type = lib.types.bool;
-    default = false;
-    description = "flag for specifying whether to include development packages in systemPackages";
-  };
-
-  config.environment.systemPackages =
-    let dev-machine = config.dev-machine;
+  environment.systemPackages =
+    let
     codex = import ./codex.nix {
       inherit pkgs;
     };
@@ -21,6 +13,7 @@
       tree
       tmux # terminal multiplexer
       git
+      git-lfs
       file
       htop
       jq # json pretty print
@@ -39,8 +32,6 @@
       e2fsprogs
       wireguard-tools
       pass
-    ] ++ lib.optionals dev-machine [
-
       binutils # objdump, readelf and c++filt
       strace
       radare2
@@ -50,7 +41,6 @@
       man-pages-posix # posix man pages
       ty # python type checker
       nixd
-      git-lfs
       codex
     ];
 }

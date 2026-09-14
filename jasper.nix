@@ -1,6 +1,4 @@
 {
-  dev-machine = true;
-
   networking.hostName = "jasper";
  
   services.logind.settings.Login = {

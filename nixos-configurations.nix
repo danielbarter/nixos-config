@@ -16,7 +16,6 @@
       ./base.nix
       ./nix-config.nix
       ./users.nix
-      ./packages.nix
       ./ssh-config.nix
       ./secrets.nix
     ];
@@ -40,6 +39,7 @@ in {
       ./jasper.nix
       ./gui.nix
       ./intel-gpu.nix
+      ./packages.nix
      ];
   };
 
@@ -50,6 +50,7 @@ in {
       ./punky.nix
       ./headless-networking.nix
       ./static-bond-interface.nix
+      ./packages.nix
     ];
   };
 
@@ -62,6 +63,7 @@ in {
        ./blaze.nix
        ./headless-networking.nix
        ./wireguard-interface.nix
+      ./packages.nix
      ];
   };
 
@@ -73,6 +75,7 @@ in {
       ./replicant.nix
       ./intel-gpu.nix
       ./gui.nix
+      ./packages.nix
       
     ];
   };

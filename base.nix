@@ -1,6 +1,5 @@
 {
   pkgs,
-  config,
   ...
 }:
 
@@ -11,8 +10,8 @@
   #   SYSTEMD_LOG_LEVEL = "debug";
   # };
 
-  # store all debug symbols on dev machines
-  environment.enableDebugInfo = config.dev-machine;
+  # store all debug symbols
+  environment.enableDebugInfo = true;
 
 
   # systemd managed nixos container
