@@ -8,8 +8,6 @@ let
   host = config.networking.hostName;
 in
 {
-  options.secretsManagement.enable = lib.mkEnableOption "SOPS-managed host secrets";
-
   config = {
     fileSystems."/cold" = {
       device = "/dev/disk/by-label/cold";

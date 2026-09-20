@@ -12,15 +12,16 @@
       }
 
       { nix.nixPath = [ "nixpkgs=${nixpkgs}" ]; }
-      { secretsManagement.enable = managedSecrets; }
+      ({ lib, ... }: {
+        options.secretsManagement.enable = lib.mkEnableOption "SOPS-managed host secrets";
+        config.secretsManagement.enable = managedSecrets;
+      })
 
       ./base.nix
       ./nix-config.nix
       ./users.nix
       ./ssh-config.nix
-      ./secrets.nix
-      sopsModule
-    ];
+    ] ++ (if managedSecrets then [ ./secrets.nix sopsModule ] else [ ]);
   };
 
 in {

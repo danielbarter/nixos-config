@@ -20,6 +20,10 @@ accounts have empty passwords for local login. Consoles automatically log in
 as `danielbarter`, as does the COSMIC desktop on graphical images. SSH uses
 public-key authentication. Images do not receive a private SSH client key,
 Nix signing private key, or `pass` key.
+They do not load the SOPS module or mount `/cold`, and their VM launchers do
+not attach the host's `/cold` drive. Images do not bundle the `/etc/nixos`
+repository; only the dotfiles and wallpapers used for home setup are included
+under `/etc/nixos`.
 
 ## Normal changes and rotation
 

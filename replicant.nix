@@ -5,12 +5,7 @@
   config,
   ...
 }:
-let
-    replicant-nixos-config = builtins.path {
-      path = ./.;
-      name = "nixos-config";
-    };
-in {
+{
 
   imports = [
     "${modulesPath}/image/repart.nix"
@@ -20,10 +15,6 @@ in {
     wantedBy = [ "multi-user.target" ];
     after = [ "local-fs.target" ];
 
-    environment = {
-      REPLICANT_NIXOS_CONFIG = replicant-nixos-config;
-    };
-
     path = [ pkgs.coreutils ];
 
     serviceConfig = {
@@ -31,17 +22,11 @@ in {
     };
 
     script = ''
-      rm -rf /etc/nixos
-      mkdir -p /etc
-      cp -R --no-preserve=mode,ownership $REPLICANT_NIXOS_CONFIG /etc/nixos
-      cd /etc/nixos
-
-      # set permissions for /etc/nixos
-      source /etc/nixos/utils/set_permissions.sh
-
-      # setup home
-      source /etc/nixos/utils/home_setup.sh
-    '';
+      mkdir -p /etc/nixos
+      cp -RT --no-preserve=mode,ownership ${./dotfiles} /etc/nixos/dotfiles
+      cp -RT --no-preserve=mode,ownership ${./wallpapers} /etc/nixos/wallpapers
+      chown -R danielbarter:users /etc/nixos
+    '' + builtins.readFile ./utils/home_setup.sh;
   };
 
   system.stateVersion = "24.05";
@@ -147,7 +132,6 @@ in {
         "nix-store-lower" = {
           storePaths = [
             config.system.build.toplevel
-            replicant-nixos-config
           ];
           nixStorePrefix = "/";
           repartConfig = {
