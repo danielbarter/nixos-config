@@ -1,0 +1,18 @@
+{
+  "id": "homelab-nix-baa42fa40993",
+  "kind": "nix",
+  "hosts": [
+    "punky",
+    "jasper",
+    "blaze"
+  ],
+  "public_file": "keys/nix/homelab-nix-baa42fa40993.pub",
+  "public": "homelab-nix-baa42fa40993:5opTryiDDIxD+odzr/nkwAMoBaVWsPnJsQk4IInNnYo=",
+  "old_public": "punky:7PtqAdr2jlG92HlnKqwcEoYU/o9/9tUHxRWwlNwBVrg=",
+  "add": {
+    "jasper": 1789942986
+  },
+  "apply": {},
+  "retire": {},
+  "finished": false
+}
