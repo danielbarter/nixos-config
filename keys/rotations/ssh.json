@@ -19,6 +19,8 @@
     "jasper": 1789942132,
     "blaze": 1789942238
   },
-  "retire": {},
+  "retire": {
+    "jasper": 1789942314
+  },
   "finished": false
 }
