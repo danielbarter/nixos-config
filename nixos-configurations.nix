@@ -73,18 +73,6 @@ in {
   };
 
 
-  x86_64-replicant = nixosSystemCommon {
-    build = "x86_64-linux";
-    host = "x86_64-linux";
-    modules = [
-      ./replicant.nix
-      ./intel-gpu.nix
-      ./gui.nix
-      ./packages.nix
-      
-    ];
-  };
-
   x86_64-replicant-minimal  = nixosSystemCommon {
     build = "x86_64-linux";
      host = "x86_64-linux";

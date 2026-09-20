@@ -15,57 +15,20 @@ normal package and continues to use `~/.gnupg`; a oneshot service imports the
 deployed GPG export on boot and whenever that export changes.
 
 The `replicant` images contain only public authorized SSH keys and the public
-Nix signing key used to verify cache paths. Their password logins are locked,
-and they do not receive a private SSH client key, Nix signing private key, or
-`pass` key.
+Nix signing key used to verify cache paths. Their `danielbarter` and root
+accounts have empty passwords for local login. Consoles automatically log in
+as `danielbarter`, as does the COSMIC desktop on graphical images. SSH uses
+public-key authentication. Images do not receive a private SSH client key,
+Nix signing private key, or `pass` key.
 
-## One-time migration
+## Normal changes and rotation
 
-Commit and push this secrets-management implementation. The migration script
-creates the age key on each host's existing `/cold` drive; no separate recovery
-key is required. Do not rebuild a host until its `secrets/<host>.json` exists
-and the generated public keys and encrypted file are tracked in Git.
-
-On each of `jasper`, `punky`, and `blaze`, pull that commit and enter the pinned
-tool environment:
+On the host whose secrets you want to edit, enter the pinned tool environment:
 
 ```sh
 cd /etc/nixos
-git pull --ff-only
 nix develop .#secrets
 ```
-
-Export the live GPG key used by `pass` into the user runtime directory, then run
-the migration. The script reads existing `/cold` values, creates this host's age
-identity if necessary, and refuses to overwrite existing encrypted files or
-different public keys.
-
-```sh
-umask 077
-gpg --export-options backup --armor --export-secret-keys \
-  > "$XDG_RUNTIME_DIR/pass-secret-key.asc"
-doas env "PATH=$PATH" ./utils/migrate-secrets \
-  "$XDG_RUNTIME_DIR/pass-secret-key.asc"
-rm -- "$XDG_RUNTIME_DIR/pass-secret-key.asc"
-```
-
-Commit the generated `secrets/<host>.json` and `keys/` files. Before switching,
-verify that the host key can decrypt the file (the key is readable only by root):
-
-```sh
-doas env "PATH=$PATH" SOPS_AGE_KEY_FILE=/cold/age/key.agekey sops decrypt \
-  "secrets/$(hostname).json" >/dev/null
-nixos-rebuild build --flake ".#$(hostname)"
-doas nixos-rebuild switch --flake ".#$(hostname)"
-```
-
-Verify a fresh SSH login, a local password login after reboot, `pass`, and—on
-Blaze—the phone VPN. Keep the old `/cold/secrets` tree until all three hosts
-have been tested. Once migration is complete, remove the old `/cold/secrets`
-and `/cold/public` trees, leaving `/cold/age/key.agekey`, and delete
-`utils/migrate-secrets` from the repository.
-
-## Normal changes and rotation
 
 Edit one encrypted host file using its local identity:
 
@@ -74,8 +37,17 @@ doas env "PATH=$PATH" "TMPDIR=$XDG_RUNTIME_DIR" \
   SOPS_AGE_KEY_FILE=/cold/age/key.agekey sops "secrets/$(hostname).json"
 ```
 
-Commit, pull, and run `nixos-rebuild switch`. SOPS restarts the affected service
-when the GPG export, WireGuard key, DuckDNS token, or Nix signing key changes.
+Verify decryption, then build and activate the configuration:
+
+```sh
+doas env "PATH=$PATH" SOPS_AGE_KEY_FILE=/cold/age/key.agekey sops decrypt \
+  "secrets/$(hostname).json" >/dev/null
+nixos-rebuild build --flake ".#$(hostname)"
+doas nixos-rebuild switch --flake ".#$(hostname)"
+```
+
+Commit and push the encrypted changes. SOPS restarts the affected service when
+the GPG export, WireGuard key, DuckDNS token, or Nix signing key changes.
 
 SSH rotation needs an overlap: add the new public key to `users.nix`, deploy it
 everywhere, update the relevant encrypted private key, test a fresh connection,

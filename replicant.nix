@@ -48,6 +48,17 @@ in {
 
   networking.hostName = "replicant";
 
+  users.users = {
+    danielbarter.hashedPassword = "";
+    root.hashedPassword = "";
+  };
+
+  services.getty.autologinUser = "danielbarter";
+  services.displayManager.autoLogin = lib.mkIf config.services.displayManager.cosmic-greeter.enable {
+    enable = true;
+    user = "danielbarter";
+  };
+
   # need ext4 kernel module to mount nix store in stage 1
   boot.initrd.availableKernelModules = [
     "ext4"

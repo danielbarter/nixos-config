@@ -29,7 +29,7 @@ in {
       } // lib.optionalAttrs managed {
         hashedPasswordFile = config.sops.secrets.user-password.path;
       } // lib.optionalAttrs (!managed) {
-        hashedPassword = "!";
+        hashedPassword = lib.mkDefault "!";
       };
 
       root = {
@@ -37,7 +37,7 @@ in {
       } // lib.optionalAttrs managed {
         hashedPasswordFile = config.sops.secrets.root-password.path;
       } // lib.optionalAttrs (!managed) {
-        hashedPassword = "!";
+        hashedPassword = lib.mkDefault "!";
       };
 
       # serve nix store over ssh
