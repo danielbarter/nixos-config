@@ -273,21 +273,29 @@ class Rotation:
                 key = directory / "key"
                 key.write_text(self.payload(plan)["private"])
                 options = ["-F", "/dev/null", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10",
+                           "-o", "StrictHostKeyChecking=accept-new",
                            "-o", "IdentityAgent=none", "-o", "IdentitiesOnly=yes", "-i", str(key)]
                 if overlap:
                     options.extend(["-i", "/run/secrets/ssh-client"])
                 for host in HOSTS:
-                    system = run(["ssh", *options, f"danielbarter@{host}",
-                                  "readlink -f /run/current-system"]).strip()
+                    try:
+                        system = run(["ssh", *options, f"danielbarter@{host}",
+                                      "readlink -f /run/current-system"]).strip()
+                    except RotationError as error:
+                        raise RotationError(f"SSH login with the replacement key failed for {host}") from error
                     if not system.startswith("/nix/store/") or "\n" in system:
                         raise RotationError(f"Unexpected system store path from {host}")
-                    run(["nix", "path-info", "--store", f"ssh://nix-ssh@{host}", system],
-                        env=dict(os.environ, NIX_SSHOPTS=" ".join(options)))
+                    try:
+                        run(["nix", "path-info", "--store", f"ssh://nix-ssh@{host}", system],
+                            env=dict(os.environ, NIX_SSHOPTS=" ".join(options)))
+                    except RotationError as error:
+                        raise RotationError(f"Nix-store SSH with the replacement key failed for {host}") from error
             return
         # Use the current deployed identity, with no agent or alternate identities.
         for host in HOSTS:
             output = run(["ssh", "-F", "/dev/null", "-o", "BatchMode=yes",
-                          "-o", "ConnectTimeout=10", "-o", "IdentityAgent=none",
+                          "-o", "ConnectTimeout=10", "-o", "StrictHostKeyChecking=accept-new",
+                          "-o", "IdentityAgent=none",
                           "-o", "IdentitiesOnly=yes", "-i", "/run/secrets/ssh-client",
                           f"danielbarter@{host}", "nix config show --json"])
             if plan["public"] not in json.loads(output)["trusted-public-keys"]["value"]:

@@ -144,6 +144,7 @@ class RotationTests(unittest.TestCase):
             if args[0] == "ssh":
                 self.assertIn("IdentityAgent=none", args)
                 self.assertIn("IdentitiesOnly=yes", args)
+                self.assertIn("StrictHostKeyChecking=accept-new", args)
                 self.assertNotIn("/run/secrets/ssh-client", args)
                 self.assertEqual(Path(args[args.index("-i") + 1]).read_text(), "new private key")
                 return "/nix/store/test-system\n"
