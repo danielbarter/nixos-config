@@ -10,7 +10,8 @@
   "public": "homelab-nix-baa42fa40993:5opTryiDDIxD+odzr/nkwAMoBaVWsPnJsQk4IInNnYo=",
   "old_public": "punky:7PtqAdr2jlG92HlnKqwcEoYU/o9/9tUHxRWwlNwBVrg=",
   "add": {
-    "jasper": 1789942986
+    "jasper": 1789942986,
+    "punky": 1789943126
   },
   "apply": {},
   "retire": {},
