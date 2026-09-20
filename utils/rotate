@@ -425,7 +425,7 @@ class Rotation:
         self.save(plan)
         print(f"Retired {self.kind} on {self.host}. Review and distribute the changed files.")
         if self.kind in ("ssh", "nix"):
-            print("Run retire on the remaining hosts. Replace old Replicant images too.")
+            print("Run retire on the remaining hosts.")
         elif self.kind == "gpg":
             print("Push/sync the re-encrypted password store separately. Old GPG subkeys are retained for history.")
 

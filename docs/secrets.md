@@ -16,11 +16,9 @@
 - [ ] Review, commit, and distribute the changes, including the updated progress file.
 - [ ] On each remaining host, pull the changes, run `add`, track any new files, run `apply`, and distribute its changes. The same shared replacement is reused.
 - [ ] Run `./utils/rotate ssh status` and confirm all three hosts have applied the new key.
-- [ ] Rebuild and replace Replicant images so they accept the new public key.
 - [ ] For Nix, re-sign any separate archives/caches that still rely solely on the old key. `apply` already signs all local store paths with both keys.
 - [ ] On each host, pull the latest changes and run `./utils/rotate ssh retire`. It verifies the new key works, removes the old private/public key, and rebuilds that host.
 - [ ] Review and distribute each host's retirement changes, including deleted files. The last host removes the shared encrypted replacement file.
-- [ ] Rebuild Replicant images again to remove their old public-key authorization/trust.
 
 ## GPG encryption subkey
 
