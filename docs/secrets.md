@@ -2,7 +2,9 @@
 
 Each physical host has one age identity at `/cold/age/key.agekey`. Its private
 key never enters Git. The corresponding public recipient, ordinary public keys,
-and SOPS-encrypted host secrets are committed to this repository.
+and SOPS-encrypted host secrets are committed to this repository. Each host's
+file is encrypted only to its own age key. Keep a backup of that private key;
+it is needed to recover the secrets if the `/cold` drive fails.
 
 `keys/` contains public material only: age recipients, authorized SSH keys, the
 Nix signing public key, and WireGuard peer identities. Private material is
@@ -19,18 +21,10 @@ and they do not receive a private SSH client key, Nix signing private key, or
 
 ## One-time migration
 
-First create an age recovery key on a separate offline device. Keep the private
-key off every host and out of Git:
-
-```sh
-umask 077
-age-keygen -o /media/recovery/recovery.agekey
-age-keygen -y /media/recovery/recovery.agekey > keys/age/recovery.pub
-```
-
-Commit this secrets-management implementation and the recovery recipient
-together, then push it. Do not rebuild a host until its
-`secrets/<host>.json` exists.
+Commit and push this secrets-management implementation. The migration script
+creates the age key on each host's existing `/cold` drive; no separate recovery
+key is required. Do not rebuild a host until its `secrets/<host>.json` exists
+and the generated public keys and encrypted file are tracked in Git.
 
 On each of `jasper`, `punky`, and `blaze`, pull that commit and enter the pinned
 tool environment:
@@ -56,30 +50,28 @@ rm -- "$XDG_RUNTIME_DIR/pass-secret-key.asc"
 ```
 
 Commit the generated `secrets/<host>.json` and `keys/` files. Before switching,
-prove that both the host key and offline recovery key can decrypt the file:
+verify that the host key can decrypt the file (the key is readable only by root):
 
 ```sh
-SOPS_AGE_KEY_FILE=/cold/age/key.agekey sops decrypt \
-  "secrets/$(hostname).json" >/dev/null
-SOPS_AGE_KEY_FILE=/media/recovery/recovery.agekey sops decrypt \
+doas env "PATH=$PATH" SOPS_AGE_KEY_FILE=/cold/age/key.agekey sops decrypt \
   "secrets/$(hostname).json" >/dev/null
 nixos-rebuild build --flake ".#$(hostname)"
 doas nixos-rebuild switch --flake ".#$(hostname)"
 ```
 
 Verify a fresh SSH login, a local password login after reboot, `pass`, and—on
-Blaze—the phone VPN. Keep the old `/cold/secrets` tree until all three hosts and
-the recovery key have been tested. Once migration is complete, delete
+Blaze—the phone VPN. Keep the old `/cold/secrets` tree until all three hosts
+have been tested. Once migration is complete, remove the old `/cold/secrets`
+and `/cold/public` trees, leaving `/cold/age/key.agekey`, and delete
 `utils/migrate-secrets` from the repository.
 
 ## Normal changes and rotation
 
-Edit one encrypted host file with its local identity or the recovery identity:
+Edit one encrypted host file using its local identity:
 
 ```sh
-export SOPS_AGE_KEY_FILE=/cold/age/key.agekey
-export TMPDIR="$XDG_RUNTIME_DIR"
-sops secrets/"$(hostname)".json
+doas env "PATH=$PATH" "TMPDIR=$XDG_RUNTIME_DIR" \
+  SOPS_AGE_KEY_FILE=/cold/age/key.agekey sops "secrets/$(hostname).json"
 ```
 
 Commit, pull, and run `nixos-rebuild switch`. SOPS restarts the affected service
