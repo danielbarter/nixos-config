@@ -1,5 +1,7 @@
 { lib, pkgs, config, ... }:
-{
+let
+  managed = config.secretsManagement.enable;
+in {
 
   users = {
 
@@ -18,25 +20,30 @@
           "wheel"
         ];
         openssh.authorizedKeys.keyFiles = [
-          "/cold/public/ssh/id_rsa.pub"
-          "/cold/public/ssh/phone.pub"
+          ./keys/ssh/legacy.pub
+          ./keys/ssh/phone.pub
         ];
-
-        initialHashedPassword = lib.strings.fileContents "/cold/secrets/user_password_hash";
 
         shell = pkgs.bashInteractive;
         home = "/home/danielbarter";
+      } // lib.optionalAttrs managed {
+        hashedPasswordFile = config.sops.secrets.user-password.path;
+      } // lib.optionalAttrs (!managed) {
+        hashedPassword = "!";
       };
 
-      root = { 
-        initialHashedPassword = lib.strings.fileContents "/cold/secrets/root_password_hash";
+      root = {
         extraGroups = [ "users" "wheel" ];
+      } // lib.optionalAttrs managed {
+        hashedPasswordFile = config.sops.secrets.root-password.path;
+      } // lib.optionalAttrs (!managed) {
+        hashedPassword = "!";
       };
 
       # serve nix store over ssh
       nix-ssh = {
         openssh.authorizedKeys.keyFiles = [
-            "/cold/public/ssh/id_rsa.pub"
+          ./keys/ssh/legacy.pub
         ];
       };
 

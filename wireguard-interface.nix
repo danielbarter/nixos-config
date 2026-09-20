@@ -11,7 +11,7 @@
           Name = "wg0";
         };
         wireguardConfig = {
-          PrivateKeyFile = "/cold/secrets/wireguard/${config.networking.hostName}";
+          PrivateKeyFile = config.sops.secrets.wireguard.path;
           ListenPort = 51820;
         };
         wireguardPeers = import ./wireguard-peers.nix; 

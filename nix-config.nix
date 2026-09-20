@@ -1,9 +1,12 @@
 {
+  lib,
   pkgs,
+  config,
   ...
 }:
-
-{
+let
+  managed = config.secretsManagement.enable;
+in {
 
 
   nixpkgs.config.allowUnfree = true;
@@ -11,7 +14,7 @@
   nix = {
     settings = {
       experimental-features = "nix-command flakes";
-      trusted-public-keys = [ (builtins.readFile "/cold/public/nix/public-key") ];
+      trusted-public-keys = [ (builtins.readFile ./keys/nix/signing.pub) ];
       trusted-users = [ "danielbarter" ];
     };
 
@@ -32,7 +35,8 @@
       in
       ''
         flake-registry = ${emptyFlakeRegistry};
-        secret-key-files = /cold/secrets/nix/private-key
+      '' + lib.optionalString managed ''
+        secret-key-files = ${config.sops.secrets.nix-signing.path}
       '';
   };
 

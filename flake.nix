@@ -11,6 +11,10 @@
 # nix-store --realise --substituters ssh://nix-ssh@punky.lan <path>
 {
   inputs = {
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixpkgs.url = "github:NixOs/nixpkgs/release-26.05";
     hosts = {
       url = "github:StevenBlack/hosts";
@@ -27,7 +31,8 @@
       self,
       nixpkgs,
       hosts,
-      voxtype
+      voxtype,
+      sops-nix
     }:
     let
       system = "x86_64-linux";
@@ -48,6 +53,10 @@
       };
     in
     {
+      devShells.${system}.secrets = pkgs.mkShell {
+        packages = with pkgs; [ age sops gnupg wireguard-tools jq ];
+        shellHook = "umask 077";
+      };
 
       # In this file, nixpkgs is the flake input object. Past this boundary,
       # nixpkgs is the patched nixpkgs source tree path.
@@ -55,6 +64,7 @@
         nixpkgs = nixpkgsSource;
         hosts = hosts.nixosModule;
         voxtype = voxtype.nixosModules.default;
+        sopsModule = sops-nix.nixosModules.sops;
       };
       packages.${system} = import ./images.nix {
         nixosConfigurations = self.nixosConfigurations;

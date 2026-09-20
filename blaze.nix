@@ -94,7 +94,7 @@
     serviceConfig = {
       Type = "oneshot";
       ExecStart = ''
-        ${ddns-update}/bin/ddns_update --token_file /cold/secrets/duckdns_token --domain hobiehomelab --wan_interface eno0
+        ${ddns-update}/bin/ddns_update --token_file ${config.sops.secrets.duckdns.path} --domain hobiehomelab --wan_interface eno0
         '';
     };
     unitConfig = {

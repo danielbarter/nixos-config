@@ -1,8 +1,8 @@
-{ nixpkgs, hosts, voxtype}: let
+{ nixpkgs, hosts, voxtype, sopsModule }: let
   nixosSystem = import "${nixpkgs}/nixos/lib/eval-config.nix";
 
   # common modules + better platform support for all physical machines
-  nixosSystemCommon = { build, host, modules }:
+  nixosSystemCommon = { build, host, modules, managedSecrets ? false }:
    nixosSystem {
     system = build;
     modules = modules ++ [
@@ -12,12 +12,14 @@
       }
 
       { nix.nixPath = [ "nixpkgs=${nixpkgs}" ]; }
+      { secretsManagement.enable = managedSecrets; }
 
       ./base.nix
       ./nix-config.nix
       ./users.nix
       ./ssh-config.nix
       ./secrets.nix
+      sopsModule
     ];
   };
 
@@ -31,6 +33,7 @@ in {
   };
 
   jasper = nixosSystemCommon {
+    managedSecrets = true;
     build = "x86_64-linux";
     host = "x86_64-linux";
     modules = [
@@ -44,6 +47,7 @@ in {
   };
 
   punky = nixosSystemCommon {
+    managedSecrets = true;
     build = "x86_64-linux";
     host = "x86_64-linux";
     modules = [
@@ -56,6 +60,7 @@ in {
 
 
   blaze = nixosSystemCommon {
+    managedSecrets = true;
     build = "x86_64-linux";
     host = "x86_64-linux";
     modules = [

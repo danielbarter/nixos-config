@@ -43,8 +43,12 @@ pkgs.stdenvNoCC.mkDerivation {
       if sandboxed then
         ''
           mv $out/bin/codex $out/bin/codex-unwrapped
-          makeWrapper ${pkgs.systemd}/bin/systemd-run $out/bin/codex \
-            --add-flags "--user --pty -p WorkingDirectory=\$(pwd) -p InaccessiblePaths=-/cold $out/bin/codex-unwrapped --dangerously-bypass-approvals-and-sandbox"
+          cp ${./utils/agent-sandbox.sh} $out/bin/codex
+          substituteInPlace $out/bin/codex \
+            --replace-fail '@bash@' '${pkgs.bash}/bin/bash' \
+            --replace-fail '@systemd_run@' '${pkgs.systemd}/bin/systemd-run' \
+            --replace-fail '@binary@' "$out/bin/codex-unwrapped"
+          chmod +x $out/bin/codex
         ''
       else
         ''
