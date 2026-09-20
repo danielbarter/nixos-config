@@ -39,12 +39,10 @@
   riscv64-vm = vm riscv64-vm-params;
 in rec {
   
-  x86_64-replicant-image = nixosConfigurations.x86_64-replicant.config.system.build.image;
   x86_64-replicant-minimal-image = nixosConfigurations.x86_64-replicant-minimal.config.system.build.image;
   aarch64-replicant-minimal-image = nixosConfigurations.aarch64-replicant-minimal.config.system.build.image;
   riscv64-replicant-minimal-image = nixosConfigurations.riscv64-replicant-minimal.config.system.build.image;
 
-  x86_64-replicant-vm = x86_64-vm x86_64-replicant-image;
   x86_64-replicant-minimal-vm = x86_64-vm x86_64-replicant-minimal-image;
   aarch64-replicant-minimal-vm = aarch64-vm aarch64-replicant-minimal-image;
   riscv64-replicant-minimal-vm = riscv64-vm riscv64-replicant-minimal-image;

@@ -1,6 +1,12 @@
 { lib, pkgs, config, ... }:
 let
   managed = config.secretsManagement.enable;
+  sshKeys = builtins.readDir ./keys/ssh;
+  hostKeyFiles = map (name: ./keys/ssh + "/${name}") (
+    builtins.filter (name:
+      sshKeys.${name} == "regular" && lib.hasSuffix ".pub" name && name != "phone.pub"
+    ) (builtins.attrNames sshKeys)
+  );
 in {
 
   users = {
@@ -19,10 +25,7 @@ in {
           "audio"
           "wheel"
         ];
-        openssh.authorizedKeys.keyFiles = [
-          ./keys/ssh/legacy.pub
-          ./keys/ssh/phone.pub
-        ];
+        openssh.authorizedKeys.keyFiles = hostKeyFiles ++ [ ./keys/ssh/phone.pub ];
 
         shell = pkgs.bashInteractive;
         home = "/home/danielbarter";
@@ -42,9 +45,7 @@ in {
 
       # serve nix store over ssh
       nix-ssh = {
-        openssh.authorizedKeys.keyFiles = [
-          ./keys/ssh/legacy.pub
-        ];
+        openssh.authorizedKeys.keyFiles = hostKeyFiles;
       };
 
     };

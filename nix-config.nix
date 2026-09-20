@@ -6,6 +6,10 @@
 }:
 let
   managed = config.secretsManagement.enable;
+  publicKeys = builtins.readDir ./keys/nix;
+  signingKeys = builtins.filter
+    (name: name == "nix-signing" || lib.hasPrefix "nix-signing-" name)
+    (builtins.attrNames config.sops.secrets);
 in {
 
 
@@ -14,7 +18,10 @@ in {
   nix = {
     settings = {
       experimental-features = "nix-command flakes";
-      trusted-public-keys = [ (builtins.readFile ./keys/nix/signing.pub) ];
+      trusted-public-keys = map (name: lib.strings.fileContents (./keys/nix + "/${name}")) (
+        builtins.filter (name: publicKeys.${name} == "regular" && lib.hasSuffix ".pub" name)
+          (builtins.attrNames publicKeys)
+      );
       trusted-users = [ "danielbarter" ];
     };
 
@@ -36,7 +43,7 @@ in {
       ''
         flake-registry = ${emptyFlakeRegistry};
       '' + lib.optionalString managed ''
-        secret-key-files = ${config.sops.secrets.nix-signing.path}
+        secret-key-files = ${lib.concatMapStringsSep " " (name: config.sops.secrets.${name}.path) signingKeys}
       '';
   };
 

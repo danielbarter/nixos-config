@@ -1,72 +1,51 @@
-# Secrets
+# Secrets checklist
 
-Each physical host has one age identity at `/cold/age/key.agekey`. Its private
-key never enters Git. The corresponding public recipient, ordinary public keys,
-and SOPS-encrypted host secrets are committed to this repository. Each host's
-file is encrypted only to its own age key. Keep a backup of that private key;
-it is needed to recover the secrets if the `/cold` drive fails.
+## Before rotating
 
-`keys/` contains public material only: age recipients, authorized SSH keys, the
-Nix signing public key, and WireGuard peer identities. Private material is
-either the age identity on `/cold` or a value inside `secrets/<host>.json`.
+- [ ] Distribute the updated utility and Nix configuration to Punky, Jasper, and Blaze.
+- [ ] Run commands as `danielbarter` from `/etc/nixos` in a normal terminal.
+- [ ] Keep a backup of each host's `/cold/age/key.agekey` outside Git.
+- [ ] Handle Git yourself: the utility does not stage, commit, push, or pull.
+- [ ] Work on one key type and host at a time; distribute each host's changes before continuing on the next.
 
-At activation, sops-nix decrypts secrets into `/run/secrets`. `pass` remains the
-normal package and continues to use `~/.gnupg`; a oneshot service imports the
-deployed GPG export on boot and whenever that export changes.
+## Shared SSH or Nix key
 
-The `replicant` images contain only public authorized SSH keys and the public
-Nix signing key used to verify cache paths. Their `danielbarter` and root
-accounts have empty passwords for local login. Consoles automatically log in
-as `danielbarter`, as does the COSMIC desktop on graphical images. SSH uses
-public-key authentication. Images do not receive a private SSH client key,
-Nix signing private key, or `pass` key.
-They do not load the SOPS module or mount `/cold`, and their VM launchers do
-not attach the host's `/cold` drive. Images do not bundle the `/etc/nixos`
-repository; only the dotfiles and wallpapers used for home setup are included
-under `/etc/nixos`.
+- [ ] On the first host, run `./utils/rotate ssh add` (use `nix` instead of `ssh` for signing keys).
+- [ ] Track the new public key, `keys/rotations/<kind>.json`, `secrets/rotations/<kind>.json`, and the changed `secrets/<host>.json`. New files must be tracked before the Git-backed flake can include them.
+- [ ] Run `./utils/rotate ssh apply`. It builds and switches with both private keys active; SSH tries the new key first, and Nix signs with both keys.
+- [ ] Review, commit, and distribute the changes, including the updated progress file.
+- [ ] On each remaining host, pull the changes, run `add`, track any new files, run `apply`, and distribute its changes. The same shared replacement is reused.
+- [ ] Run `./utils/rotate ssh status` and confirm all three hosts have applied the new key.
+- [ ] Rebuild and replace Replicant images so they accept the new public key.
+- [ ] For Nix, re-sign any separate archives/caches that still rely solely on the old key. `apply` already signs all local store paths with both keys.
+- [ ] On each host, pull the latest changes and run `./utils/rotate ssh retire`. It verifies the new key works, removes the old private/public key, and rebuilds that host.
+- [ ] Review and distribute each host's retirement changes, including deleted files. The last host removes the shared encrypted replacement file.
+- [ ] Rebuild Replicant images again to remove their old public-key authorization/trust.
 
-## Normal changes and rotation
+## GPG encryption subkey
 
-On the host whose secrets you want to edit, enter the pinned tool environment:
+- [ ] On the first host, run `./utils/rotate gpg add`. If prompted to select a primary key, use `--fingerprint FULL_FINGERPRINT` for the key used by `pass`.
+- [ ] Track the generated public export, rotation files, and changed host secret file; run `./utils/rotate gpg apply`.
+- [ ] Distribute the changes and repeat `add` then `apply` on each remaining host. Old subkeys and unrelated keys are retained.
+- [ ] Wait until all hosts have applied the new subkey before changing or synchronizing passwords.
+- [ ] On a host with the password store, pull the latest progress file and run `./utils/rotate gpg retire`. It re-encrypts and verifies entries while preserving nested recipients and `.gpg-id` files. Update any explicit `!` subkey pins first.
+- [ ] Review and distribute the configuration changes and re-encrypted password store yourself.
+- [ ] Retain old private GPG subkeys for historical password-store revisions.
 
-```sh
-cd /etc/nixos
-nix develop .#secrets
-```
+## WireGuard: Blaze and phone
 
-Edit one encrypted host file using its local identity:
+- [ ] Use LAN or console access to Blaze.
+- [ ] If rotating the phone's key too, generate it on the phone and copy only its public key to a file on Blaze.
+- [ ] Run `./utils/rotate wireguard` on Blaze. Add `--phone-public-key /path/to/phone.pub` if the phone has a new key.
+- [ ] Set the printed Blaze public key as the phone tunnel's server public key.
+- [ ] Review and track the changed `secrets/blaze.json` and `keys/wireguard/` files.
+- [ ] Run `nixos-rebuild build --flake .#blaze`, then `doas nixos-rebuild switch --flake .#blaze`.
+- [ ] Turn off the phone's Wi-Fi, connect the VPN, and test access to the LAN.
+- [ ] Commit and distribute the changed encrypted secret and public keys.
 
-```sh
-doas env "PATH=$PATH" "TMPDIR=$XDG_RUNTIME_DIR" \
-  SOPS_AGE_KEY_FILE=/cold/age/key.agekey sops "secrets/$(hostname).json"
-```
+## Other secret edits
 
-Verify decryption, then build and activate the configuration:
-
-```sh
-doas env "PATH=$PATH" SOPS_AGE_KEY_FILE=/cold/age/key.agekey sops decrypt \
-  "secrets/$(hostname).json" >/dev/null
-nixos-rebuild build --flake ".#$(hostname)"
-doas nixos-rebuild switch --flake ".#$(hostname)"
-```
-
-Commit and push the encrypted changes. SOPS restarts the affected service when
-the GPG export, WireGuard key, DuckDNS token, or Nix signing key changes.
-
-SSH rotation needs an overlap: add the new public key to `users.nix`, deploy it
-everywhere, update the relevant encrypted private key, test a fresh connection,
-then remove the old public key. The phone's private SSH and WireGuard keys stay
-on the phone; only their public files belong in `keys/`.
-
-For GPG, rotate encryption subkeys under the existing primary identity. Export
-the updated private key into each host's encrypted file, deploy it everywhere,
-and only then re-encrypt the password store. Retain old encryption subkeys for
-historical password-store revisions.
-
-Changing Blaze's WireGuard private key also requires changing the server public
-key in the phone configuration. Do that from LAN or console access.
-
-Public SOPS ciphertext can be committed publicly, but publication is permanent:
-someone who later obtains an age private key can decrypt every historical file
-that was encrypted to it. Keep the repository private unless public availability
-serves a purpose.
+- [ ] Enter the tools shell: `nix develop .#secrets`.
+- [ ] Edit the local encrypted file: `doas env "PATH=$PATH" "TMPDIR=$XDG_RUNTIME_DIR" SOPS_AGE_KEY_FILE=/cold/age/key.agekey sops "secrets/$(hostname).json"`.
+- [ ] Build and switch: `nixos-rebuild build --flake ".#$(hostname)"`, then `doas nixos-rebuild switch --flake ".#$(hostname)"`.
+- [ ] Verify the affected service and commit/distribute the encrypted changes.

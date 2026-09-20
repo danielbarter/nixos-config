@@ -6,6 +6,10 @@
 }:
 let
   host = config.networking.hostName;
+  encrypted = builtins.fromJSON (builtins.readFile (./secrets + "/${host}.json"));
+  keyNames = prefix: builtins.filter
+    (name: name == prefix || lib.hasPrefix "${prefix}-" name)
+    (builtins.attrNames encrypted);
 in
 {
   config = {
@@ -28,17 +32,19 @@ in
       secrets = {
         user-password.neededForUsers = true;
         root-password.neededForUsers = true;
-        ssh-client = {
-          owner = "danielbarter";
-          mode = "0400";
-        };
         pass-gpg = {
           owner = "danielbarter";
           mode = "0400";
           restartUnits = [ "pass-gpg-import.service" ];
         };
-        nix-signing.restartUnits = [ "nix-daemon.service" ];
       }
+      // lib.genAttrs (keyNames "ssh-client") (_: {
+        owner = "danielbarter";
+        mode = "0400";
+      })
+      // lib.genAttrs (keyNames "nix-signing") (_: {
+        restartUnits = [ "nix-daemon.service" ];
+      })
       // lib.optionalAttrs (host == "blaze") {
         wireguard = {
           group = "systemd-network";
