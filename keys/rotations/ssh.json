@@ -21,7 +21,8 @@
   },
   "retire": {
     "jasper": 1789942314,
-    "punky": 1789942480
+    "punky": 1789942480,
+    "blaze": 1789942563
   },
-  "finished": false
+  "finished": true
 }
