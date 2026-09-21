@@ -54,7 +54,7 @@
     in
     {
       devShells.${system}.secrets = pkgs.mkShell {
-        packages = with pkgs; [ age sops gnupg wireguard-tools jq python3 openssh ];
+        packages = with pkgs; [ age sops wireguard-tools jq python3 openssh ];
         shellHook = "umask 077";
       };
 

@@ -231,17 +231,6 @@ class Rotation:
         print(f"Retired the old {self.kind} key for {self.host}.")
         print("Distribute the changes and rebuild every host to complete revocation.")
 
-    def cleanup_gpg(self):
-        if self.kind != "passage":
-            raise RotationError("cleanup-gpg is only for Passage")
-        values = self.decrypt()
-        if "pass-gpg" not in values:
-            print("The old GPG export is already absent.")
-            return
-        values.pop("pass-gpg")
-        self.encrypt(values)
-        print(f"Removed the old GPG export from {self.secret_file}.")
-
     def status(self):
         encrypted = json.loads(self.secret_file.read_text())
         print(f"{self.host} {self.kind}:")
@@ -255,16 +244,6 @@ class Rotation:
 def password_files(store, suffix):
     return [path for path in sorted(store.rglob(f"*{suffix}"))
             if not path.is_symlink() and ".git" not in path.relative_to(store).parts]
-
-
-def passage_recipients(repo):
-    paths = [repo / "keys" / "passage" / f"{host}.pub" for host in HOSTS]
-    if any(not path.exists() for path in paths):
-        raise RotationError("all three active Passage public keys are required")
-    recipients = [path.read_text().strip() for path in paths]
-    if len(set(recipients)) != len(HOSTS) or any(not item.startswith("age1") for item in recipients):
-        raise RotationError("Passage public keys are missing, duplicate, or invalid")
-    return recipients
 
 
 def stage_age_files(entries, recipients_for, identity_file, decrypt):
@@ -289,36 +268,6 @@ def stage_age_files(entries, recipients_for, identity_file, decrypt):
         for _, _, temporary in staged:
             temporary.unlink(missing_ok=True)
         raise
-
-
-def migrate_passage(repo, store):
-    identity_file = Path("/run/secrets/rendered/passage-identities")
-    if not identity_file.exists():
-        raise RotationError("rebuild this host with its Passage identity first")
-    gpg_ids = [path for path in sorted(store.rglob(".gpg-id"))
-               if ".git" not in path.relative_to(store).parts]
-    entries = password_files(store, ".gpg")
-    if not gpg_ids or not entries:
-        raise RotationError("no GPG password store found")
-    recipients = passage_recipients(repo)
-    staged = stage_age_files(
-        entries, lambda source: (source.with_suffix(".age"), recipients), identity_file,
-        lambda path: run(["gpg", "--batch", "--decrypt", path], binary=True),
-    )
-    for source, target, temporary in staged:
-        os.replace(temporary, target)
-        source.unlink()
-    recipient_text = "\n".join(recipients) + "\n"
-    for gpg_id in gpg_ids:
-        atomic_write(gpg_id.with_name(".age-recipients"), recipient_text, mode=0o600)
-        gpg_id.unlink()
-    attributes = store / ".gitattributes"
-    if attributes.exists():
-        lines = [line for line in attributes.read_text().splitlines()
-                 if not line.lstrip().startswith("*.gpg")]
-        lines.append("*.age diff=age")
-        atomic_write(attributes, "\n".join(dict.fromkeys(lines)) + "\n")
-    print(f"Converted and verified {len(staged)} passwords. Git was not touched.")
 
 
 def reencrypt_passage(rotation, store):
@@ -361,10 +310,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("kind", choices=FIELDS)
     parser.add_argument("phase", nargs="?", default="status",
-                        choices=("add", "apply", "retire", "status", "migrate", "reencrypt", "cleanup-gpg"))
+                        choices=("add", "apply", "retire", "status", "reencrypt"))
     parser.add_argument("--store", type=Path, default=Path.home() / ".password-store")
     args = parser.parse_args()
-    if args.phase in ("migrate", "reencrypt", "cleanup-gpg") and args.kind != "passage":
+    if args.phase == "reencrypt" and args.kind != "passage":
         parser.error(f"{args.phase} is only for Passage")
     repo = Path(__file__).resolve().parent.parent
     if os.geteuid() == 0:
@@ -375,9 +324,7 @@ def main():
     os.umask(0o077)
     resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
     rotation = Rotation(repo, socket.gethostname(), args.kind)
-    if args.phase == "migrate":
-        migrate_passage(repo, args.store)
-    elif args.phase == "reencrypt":
+    if args.phase == "reencrypt":
         reencrypt_passage(rotation, args.store)
     else:
         getattr(rotation, args.phase.replace("-", "_"))()

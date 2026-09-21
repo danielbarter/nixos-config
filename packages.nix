@@ -1,6 +1,4 @@
 {
-  config,
-  lib,
   pkgs,
   ...
 }:
@@ -44,5 +42,5 @@
       ty # python type checker
       nixd
       codex
-    ] ++ lib.optional config.programs.gnupg.agent.enable pass;
+    ];
 }

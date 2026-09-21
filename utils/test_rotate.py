@@ -3,7 +3,6 @@
 import importlib.machinery
 import importlib.util
 import json
-import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -82,30 +81,23 @@ class RotationTests(unittest.TestCase):
         rotation.retire()
         self.assertFalse(rotation.old_public.exists())
 
-    def test_passage_migration(self):
+    def test_passage_reencrypts_for_replacement_identity(self):
         store = self.repo / "password-store"
         store.mkdir()
-        (store / ".gpg-id").write_text("test@example.invalid\n")
-        (store / ".gitattributes").write_text("*.gpg diff=gpg\n")
-
-        gpg_home = self.repo / "gnupg"
-        gpg_home.mkdir(mode=0o700)
-        env = dict(os.environ, GNUPGHOME=str(gpg_home))
-        rotate.run(["gpg", "--batch", "--passphrase", "", "--quick-generate-key",
-                    "test@example.invalid", "rsa2048", "encr", "1d"], env=env)
+        old_private, old_public = rotate.generate("passage", "punky-old")
+        new_private, new_public = rotate.generate("passage", "punky-new")
+        other_private, other_public = rotate.generate("passage", "jasper")
+        (store / ".age-recipients").write_text(f"{old_public}\n{other_public}\n")
         plaintext = b"disposable password\n"
-        ciphertext = rotate.run(["gpg", "--batch", "--trust-model", "always", "--encrypt",
-                                 "--recipient", "test@example.invalid"], plaintext,
-                                binary=True, env=env)
-        (store / "example.gpg").write_bytes(ciphertext)
+        ciphertext = rotate.run(["age", "--encrypt", "--recipient", old_public,
+                                 "--recipient", other_public], plaintext, binary=True)
+        (store / "example.age").write_bytes(ciphertext)
 
-        identities = []
-        for host in rotate.HOSTS:
-            private, public = rotate.generate("passage", host)
-            identities.append(private)
-            (self.repo / f"keys/passage/{host}.pub").write_text(public + "\n")
         identity_file = self.repo / "identities"
-        identity_file.write_text("\n".join(identities))
+        identity_file.write_text(old_private + new_private + other_private)
+        rotation = FixtureRotation(self.repo, "punky", "passage")
+        rotation.old_public.write_text(old_public + "\n")
+        rotation.public.write_text(new_public + "\n")
 
         real_path = rotate.Path
         def mapped_path(value):
@@ -113,17 +105,14 @@ class RotationTests(unittest.TestCase):
                 return identity_file
             return real_path(value)
 
-        with mock.patch.object(rotate, "Path", side_effect=mapped_path), \
-             mock.patch.dict(os.environ, env):
-            rotate.migrate_passage(self.repo, store)
+        with mock.patch.object(rotate, "Path", side_effect=mapped_path):
+            rotate.reencrypt_passage(rotation, store)
 
-        self.assertFalse((store / "example.gpg").exists())
-        self.assertFalse((store / ".gpg-id").exists())
         self.assertEqual(
             rotate.run(["age", "--decrypt", "--identity", identity_file,
                         store / "example.age"], binary=True), plaintext)
-        self.assertEqual(len((store / ".age-recipients").read_text().splitlines()), 3)
-        self.assertEqual((store / ".gitattributes").read_text(), "*.age diff=age\n")
+        self.assertEqual((store / ".age-recipients").read_text().splitlines(),
+                         [new_public, other_public])
 
     def test_source_has_no_git_subprocess(self):
         source = Path(rotate.__file__).read_text()

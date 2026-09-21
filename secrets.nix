@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 let
@@ -11,7 +10,6 @@ let
     (name: name == prefix || lib.hasPrefix "${prefix}-" name)
     (builtins.attrNames encrypted);
   passageKeys = keyNames "passage-identity";
-  hasPassGpg = builtins.hasAttr "pass-gpg" encrypted;
 in
 {
   config = {
@@ -34,13 +32,6 @@ in
       secrets = {
         user-password.neededForUsers = true;
         root-password.neededForUsers = true;
-      }
-      // lib.optionalAttrs hasPassGpg {
-        pass-gpg = {
-          owner = "danielbarter";
-          mode = "0400";
-          restartUnits = [ "pass-gpg-import.service" ];
-        };
       }
       // lib.genAttrs (keyNames "ssh-client") (_: {
         owner = "danielbarter";
@@ -75,27 +66,6 @@ in
     environment.sessionVariables = lib.optionalAttrs (passageKeys != [ ]) {
       PASSAGE_DIR = "/home/danielbarter/.password-store";
       PASSAGE_IDENTITIES_FILE = config.sops.templates."passage-identities".path;
-    };
-
-    # Keep GPG available until this host has completed the Passage migration.
-    programs.gnupg.agent = lib.mkIf hasPassGpg {
-      enable = true;
-      pinentryPackage = pkgs.pinentry-curses;
-    };
-
-    systemd.services.pass-gpg-import = lib.mkIf hasPassGpg {
-      description = "Import the legacy password-store GPG key";
-      wantedBy = [ "multi-user.target" ];
-      after = [ "sops-install-secrets.service" ];
-      serviceConfig = {
-        Type = "oneshot";
-        User = "danielbarter";
-        Environment = [
-          "HOME=/home/danielbarter"
-          "GNUPGHOME=/home/danielbarter/.gnupg"
-        ];
-        ExecStart = "${pkgs.gnupg}/bin/gpg --batch --import ${config.sops.secrets.pass-gpg.path}";
-      };
     };
   };
 }
