@@ -10,6 +10,8 @@ let
   keyNames = prefix: builtins.filter
     (name: name == prefix || lib.hasPrefix "${prefix}-" name)
     (builtins.attrNames encrypted);
+  passageKeys = keyNames "passage-identity";
+  hasPassGpg = builtins.hasAttr "pass-gpg" encrypted;
 in
 {
   config = {
@@ -32,6 +34,8 @@ in
       secrets = {
         user-password.neededForUsers = true;
         root-password.neededForUsers = true;
+      }
+      // lib.optionalAttrs hasPassGpg {
         pass-gpg = {
           owner = "danielbarter";
           mode = "0400";
@@ -45,6 +49,10 @@ in
       // lib.genAttrs (keyNames "nix-signing") (_: {
         restartUnits = [ "nix-daemon.service" ];
       })
+      // lib.genAttrs passageKeys (_: {
+        owner = "danielbarter";
+        mode = "0400";
+      })
       // lib.optionalAttrs (host == "blaze") {
         wireguard = {
           group = "systemd-network";
@@ -53,12 +61,30 @@ in
         };
         duckdns.restartUnits = [ "ddns-update.service" ];
       };
+
+      templates = lib.optionalAttrs (passageKeys != [ ]) {
+        "passage-identities" = {
+          owner = "danielbarter";
+          mode = "0400";
+          content = lib.concatMapStringsSep "\n"
+            (name: config.sops.placeholder.${name}) passageKeys;
+        };
+      };
     };
 
-    # pass keeps using ~/.gnupg. This imports new subkeys after a pull and
-    # rebuild, so there is no wrapper and no second GPG home.
-    systemd.services.pass-gpg-import = lib.mkIf config.secretsManagement.enable {
-      description = "Import the pass GPG key";
+    environment.sessionVariables = lib.optionalAttrs (passageKeys != [ ]) {
+      PASSAGE_DIR = "/home/danielbarter/.password-store";
+      PASSAGE_IDENTITIES_FILE = config.sops.templates."passage-identities".path;
+    };
+
+    # Keep GPG available until this host has completed the Passage migration.
+    programs.gnupg.agent = lib.mkIf hasPassGpg {
+      enable = true;
+      pinentryPackage = pkgs.pinentry-curses;
+    };
+
+    systemd.services.pass-gpg-import = lib.mkIf hasPassGpg {
+      description = "Import the legacy password-store GPG key";
       wantedBy = [ "multi-user.target" ];
       after = [ "sops-install-secrets.service" ];
       serviceConfig = {

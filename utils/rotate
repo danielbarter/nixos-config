@@ -1,39 +1,34 @@
 #!/usr/bin/env python3
-"""Rotate shared credentials without copying plaintext private keys between hosts."""
+"""Rotate this host's keys without Git or private-key exchange."""
 
 import argparse
-import base64
 import contextlib
-import getpass
 import json
 import os
 from pathlib import Path
-import re
 import resource
 import socket
 import subprocess
 import sys
 import tempfile
-import time
 import uuid
 
 HOSTS = ("punky", "jasper", "blaze")
-FIELDS = {"ssh": "ssh-client", "nix": "nix-signing", "gpg": "pass-gpg", "wireguard": "wireguard"}
+FIELDS = {"ssh": "ssh-client", "nix": "nix-signing", "passage": "passage-identity"}
 
 
 class RotationError(Exception):
     pass
 
 
-def run(args, data=None, *, visible=False, env=None, binary=False):
+def run(args, data=None, *, binary=False, visible=False, env=None):
     result = subprocess.run(
-        [str(a) for a in args], input=data, text=not binary,
+        [str(arg) for arg in args], input=data, text=not binary,
         stdout=None if visible else subprocess.PIPE,
         stderr=None if visible else subprocess.PIPE, env=env,
     )
     if result.returncode:
-        # Some tools echo malformed input on failure. Never echo captured output.
-        raise RotationError(f"{args[0]} failed (exit {result.returncode}); no rotation receipt recorded")
+        raise RotationError(f"{args[0]} failed (exit {result.returncode})")
     return result.stdout
 
 
@@ -41,456 +36,357 @@ def root(args, data=None, *, visible=False):
     return run(["doas", "env", f"PATH={os.environ['PATH']}", *args], data, visible=visible)
 
 
-def atomic_write(path, text, mode=0o644):
+def atomic_write(path, contents, mode=0o644):
+    path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    fd, name = tempfile.mkstemp(prefix=".rotate-", dir=path.parent)
+    descriptor, temporary = tempfile.mkstemp(prefix=".rotate-", dir=path.parent)
     try:
-        with os.fdopen(fd, "wb" if isinstance(text, bytes) else "w") as stream:
-            stream.write(text)
+        with os.fdopen(descriptor, "wb" if isinstance(contents, bytes) else "w") as stream:
+            stream.write(contents)
             stream.flush()
             os.fsync(stream.fileno())
-        os.chmod(name, mode)  # Only public data or ciphertext reaches this function.
-        os.replace(name, path)
+        os.chmod(temporary, mode)
+        os.replace(temporary, path)
     finally:
-        if os.path.exists(name):
-            os.unlink(name)
+        if os.path.exists(temporary):
+            os.unlink(temporary)
 
 
 @contextlib.contextmanager
 def private_workspace():
     if run(["findmnt", "-n", "-o", "FSTYPE", "--target", "/dev/shm"]).strip() != "tmpfs":
-        raise RotationError("/dev/shm must be tmpfs for temporary private-key material")
+        raise RotationError("/dev/shm must be tmpfs")
     with tempfile.TemporaryDirectory(prefix="rotate-", dir="/dev/shm") as directory:
         yield Path(directory)
 
 
-@contextlib.contextmanager
-def keyring(exports):
-    with private_workspace() as directory:
-        env = dict(os.environ, GNUPGHOME=str(directory))
-        try:
-            for export in exports:
-                run(["gpg", "--batch", "--import"], export, env=env)
-            yield env
-        finally:
-            subprocess.run(["gpgconf", "--kill", "gpg-agent"], env=env,
-                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
-
-def fingerprints(env):
-    rows = run(["gpg", "--batch", "--with-colons", "--list-secret-keys"], env=env)
-    primary, all_fingerprints, previous = [], [], None
-    for line in rows.splitlines():
-        fields = line.split(":")
-        if fields[0] == "fpr":
-            all_fingerprints.append(fields[9])
-            if previous == "sec":
-                primary.append(fields[9])
-        previous = fields[0]
-    return primary, all_fingerprints
-
-
 def public_for(kind, private):
-    if kind == "ssh":
+    if kind in ("ssh", "passage"):
         with private_workspace() as directory:
-            path = directory / "key"
+            path = directory / "identity"
             path.write_text(private)
-            return " ".join(run(["ssh-keygen", "-y", "-P", "", "-f", path]).split()[:2])
+            command = (["ssh-keygen", "-y", "-P", "", "-f", path] if kind == "ssh"
+                       else ["age-keygen", "-y", path])
+            public = run(command).strip()
+            return " ".join(public.split()[:2]) if kind == "ssh" else public
     if kind == "nix":
         return run(["nix", "key", "convert-secret-to-public"], private).strip()
-    if kind == "wireguard":
-        return run(["wg", "pubkey"], private).strip()
-    raise RotationError("GPG requires a keyring")
+    raise RotationError(f"unknown key kind: {kind}")
 
 
-def generate(kind, old, identity, fingerprint=None):
+def generate(kind, identity):
     if kind == "ssh":
         with private_workspace() as directory:
-            path = directory / "key"
+            path = directory / "identity"
             run(["ssh-keygen", "-q", "-t", "ed25519", "-N", "", "-C", identity, "-f", path])
             private = path.read_text()
     elif kind == "nix":
         private = run(["nix", "key", "generate-secret", "--key-name", identity])
-    elif kind == "wireguard":
-        private = run(["wg", "genkey"])
+    elif kind == "passage":
+        with private_workspace() as directory:
+            path = directory / "identity"
+            run(["age-keygen", "-o", path])
+            private = path.read_text()
     else:
-        with keyring([old]) as env:
-            primary, before = fingerprints(env)
-            if fingerprint:
-                fingerprint = fingerprint.upper()
-            elif len(primary) == 1:
-                fingerprint = primary[0]
-            else:
-                raise RotationError("Multiple GPG primary keys: pass --fingerprint with the pass key's full fingerprint")
-            if fingerprint not in primary:
-                raise RotationError("Selected GPG primary key is not in this host's encrypted export")
-            passphrase = getpass.getpass("GPG key passphrase (Enter if none): ")
-            gpg = ["gpg", "--batch", "--pinentry-mode", "loopback", "--passphrase-fd", "0"]
-            run([*gpg, "--quick-add-key", fingerprint, "cv25519", "encr", "1y"],
-                passphrase + "\n", env=env)
-            _, after = fingerprints(env)
-            added = set(after) - set(before)
-            if len(added) != 1:
-                raise RotationError("Expected exactly one new GPG encryption subkey")
-            private = run([*gpg, "--armor", "--export-options", "backup",
-                           "--export-secret-keys", fingerprint], passphrase + "\n", env=env)
-            if not private:
-                raise RotationError("GPG did not export a private key")
-            public = run(["gpg", "--armor", "--export", fingerprint], env=env)
-            return {"private": private, "public": public, "primary": fingerprint,
-                    "subkey": added.pop()}
-    return {"private": private, "public": public_for(kind, private)}
+        raise RotationError(f"unknown key kind: {kind}")
+    return private, public_for(kind, private)
 
 
 class Rotation:
     def __init__(self, repo, host, kind):
-        self.repo, self.host, self.kind = Path(repo), host, kind
-        self.required = ("blaze",) if kind == "wireguard" else HOSTS
-        if host not in self.required:
-            raise RotationError(f"{kind} rotation runs on {', '.join(self.required)}")
+        self.repo = Path(repo)
+        self.host = host
+        self.kind = kind
+        if host not in HOSTS:
+            raise RotationError(f"run this on {', '.join(HOSTS)}")
+        self.field = FIELDS[kind]
         self.secret_file = self.repo / "secrets" / f"{host}.json"
-        self.manifest_file = self.repo / "keys" / "rotations" / f"{kind}.json"
-        self.pending_file = self.repo / "secrets" / "rotations" / f"{kind}.json"
+        self.key_dir = self.repo / "keys" / kind
+        self.public = self.key_dir / f"{host}.pub"
+        self.next_public = self.key_dir / f"{host}-next.pub"
+        self.old_public = self.key_dir / f"{host}-old.pub"
 
-    def decrypt(self, path):
-        return json.loads(root(["SOPS_AGE_KEY_FILE=/cold/age/key.agekey", "sops", "decrypt", path]))
+    def decrypt(self):
+        return json.loads(root([
+            "SOPS_AGE_KEY_FILE=/cold/age/key.agekey", "sops", "decrypt", self.secret_file
+        ]))
 
-    def encrypt(self, path, values, hosts):
-        recipients = [(self.repo / "keys" / "age" / f"{h}.pub").read_text().strip() for h in hosts]
-        if len(set(recipients)) != len(hosts) or any(not r.startswith("age1") for r in recipients):
-            raise RotationError("Missing, duplicate, or invalid host age recipients")
-        encrypted = run(["sops", "encrypt", "--input-type", "json", "--output-type", "json",
-                         "--filename-override", "rotation.json", "--age", ",".join(recipients)],
-                        json.dumps(values))
-        check = json.loads(encrypted)
-        if "sops" not in check or any(
-            not isinstance(value, str) or not value.startswith("ENC[AES256_GCM,")
-            for key, value in check.items() if key != "sops"
-        ):
-            raise RotationError("SOPS did not produce an encrypted document")
-        if sorted(a["recipient"] for a in check["sops"]["age"]) != sorted(recipients):
-            raise RotationError("SOPS used unexpected age recipients")
-        if any(check["sops"].get(key) for key in ("kms", "gcp_kms", "azure_kv", "hc_vault", "pgp", "key_groups")):
-            raise RotationError("SOPS used unexpected additional recipients")
-        atomic_write(path, encrypted)
+    def encrypt(self, values):
+        recipient = (self.repo / "keys" / "age" / f"{self.host}.pub").read_text().strip()
+        encrypted = run([
+            "sops", "encrypt", "--input-type", "json", "--output-type", "json",
+            "--filename-override", f"{self.host}.json", "--age", recipient,
+        ], json.dumps(values))
+        document = json.loads(encrypted)
+        if "sops" not in document or document["sops"]["age"][0]["recipient"] != recipient:
+            raise RotationError("SOPS used an unexpected recipient")
+        if any(not isinstance(value, str) or not value.startswith("ENC[AES256_GCM,")
+               for key, value in document.items() if key != "sops"):
+            raise RotationError("SOPS did not encrypt every secret")
+        atomic_write(self.secret_file, encrypted)
 
-    def save(self, plan):
-        atomic_write(self.manifest_file, json.dumps(plan, indent=2) + "\n")
+    def add(self):
+        values = self.decrypt()
+        if self.field + "-next" in values or self.field + "-old" in values:
+            raise RotationError("finish this host's current rotation first")
+        if self.kind != "passage" and self.field not in values:
+            raise RotationError(f"{self.field} is missing")
+        if self.next_public.exists() or self.old_public.exists():
+            raise RotationError("unexpected next/old public key file")
+        identity = f"{self.host}-{self.kind}-{uuid.uuid4().hex[:12]}"
+        private, public = generate(self.kind, identity)
+        values[self.field + "-next"] = private
+        self.encrypt(values)
+        atomic_write(self.next_public, public + "\n")
+        print(f"Added a new {self.kind} key for {self.host}; the current key remains active.")
+        print("Distribute the encrypted secret and public key, then rebuild every host before apply.")
 
-    def load(self):
-        if not self.manifest_file.exists():
-            raise RotationError(f"Run rotate {self.kind} add first")
-        plan = json.loads(self.manifest_file.read_text())
-        if plan.get("kind") != self.kind or plan.get("hosts") != list(self.required):
-            raise RotationError("Rotation manifest does not match the requested rotation")
-        identity = plan.get("id", "")
-        suffix = "asc" if self.kind == "gpg" else "pub"
-        if not re.fullmatch(f"homelab-{self.kind}-[0-9a-f]{{12}}", identity):
-            raise RotationError("Invalid rotation identity")
-        if plan.get("public_file") != f"keys/{self.kind}/{identity}.{suffix}":
-            raise RotationError("Unexpected public-key path in rotation manifest")
-        return plan
+    def verify_ssh(self, private):
+        with private_workspace() as directory:
+            identity = directory / "identity"
+            identity.write_text(private)
+            options = [
+                "-F", "/dev/null", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10",
+                "-o", "StrictHostKeyChecking=accept-new", "-o", "IdentityAgent=none",
+                "-o", "IdentitiesOnly=yes", "-i", str(identity),
+            ]
+            for host in HOSTS:
+                try:
+                    system = run(["ssh", *options, f"danielbarter@{host}",
+                                  "readlink -f /run/current-system"]).strip()
+                    run(["nix", "path-info", "--store", f"ssh://nix-ssh@{host}", system],
+                        env=dict(os.environ, NIX_SSHOPTS=" ".join(options)))
+                except RotationError as error:
+                    raise RotationError(f"new SSH key is not accepted by {host}") from error
 
-    def require_receipts(self, plan, phase):
-        missing = [h for h in self.required if h not in plan[phase]]
-        if missing:
-            raise RotationError(f"Run {phase} on {', '.join(missing)}, then distribute the updated progress file")
-
-    def rebuild(self):
-        run(["nixos-rebuild", "build", "--flake", f"{self.repo}#{self.host}"], visible=True)
-        root(["nixos-rebuild", "switch", "--flake", f"{self.repo}#{self.host}"], visible=True)
-
-    def add(self, fingerprint=None):
-        if self.manifest_file.exists() and not self.load()["finished"]:
-            plan = self.load()
-        else:
-            if self.pending_file.exists():
-                raise RotationError("An orphaned encrypted rotation file exists; inspect it before retrying")
-            current_values = self.decrypt(self.secret_file)
-            if FIELDS[self.kind] + "-next" in current_values:
-                raise RotationError("An additional private key already exists; complete its rotation first")
-            current = current_values[FIELDS[self.kind]]
-            identity = f"homelab-{self.kind}-{uuid.uuid4().hex[:12]}"
-            print(f"Generating {self.kind} replacement...", flush=True)
-            payload = generate(self.kind, current, identity, fingerprint)
-            suffix = "asc" if self.kind == "gpg" else "pub"
-            public_path = f"keys/{self.kind}/{identity}.{suffix}"
-            plan = {"id": identity, "kind": self.kind, "hosts": list(self.required),
-                    "public_file": public_path, "public": payload["public"],
-                    "old_public": None if self.kind == "gpg" else public_for(self.kind, current),
-                    "add": {}, "apply": {}, "retire": {}, "finished": False}
-            if self.kind == "gpg":
-                plan.update(primary=payload["primary"], subkey=payload["subkey"])
-            payload["id"] = identity
-            # Shared replacements are encrypted to each host's existing age recipient.
-            # Host secret files themselves remain encrypted only to their own host.
-            self.encrypt(self.pending_file, payload, self.required)
-            atomic_write(self.repo / public_path, payload["public"].rstrip() + "\n")
-            self.save(plan)
-        if self.host in plan["retire"]:
-            raise RotationError("This host has already retired the old key; run retire on the remaining hosts")
-        payload = self.payload(plan)
-        values = self.decrypt(self.secret_file)
-        field = FIELDS[self.kind]
-        if self.kind == "gpg":
-            with keyring([values[field]]) as env:
-                primary, _ = fingerprints(env)
-                if plan["primary"] not in primary:
-                    raise RotationError("This host does not have the selected GPG primary identity")
-                run(["gpg", "--batch", "--import"], payload["private"], env=env)
-                replacement = run(["gpg", "--armor", "--export-options", "backup", "--export-secret-keys"], env=env)
-                if not replacement:
-                    raise RotationError("GPG private-key export failed")
-            values[field] = replacement
-        else:
-            if public_for(self.kind, values[field]) != plan["old_public"]:
-                raise RotationError("Current key differs from this rotation's old shared key")
-            if field + "-next" in values and values[field + "-next"] != payload["private"]:
-                raise RotationError("A different additional private key is already present")
-            values[field + "-next"] = payload["private"]
-        self.encrypt(self.secret_file, values, (self.host,))
-        plan["add"][self.host] = int(time.time())
-        self.save(plan)
-        print(f"Added {self.kind} on {self.host}, retaining the old key.")
-        print("Track the new files yourself, then run apply. Review and distribute the changed files.")
-
-    def payload(self, plan):
-        payload = self.decrypt(self.pending_file)
-        if payload.get("id") != plan["id"] or payload.get("public") != plan["public"]:
-            raise RotationError("Encrypted replacement does not match the public manifest")
-        if self.kind != "gpg" and public_for(self.kind, payload["private"]) != plan["public"]:
-            raise RotationError("Replacement private key does not match its published public key")
-        if self.kind == "gpg":
-            with keyring([payload["private"]]) as env:
-                primary, all_keys = fingerprints(env)
-                if plan["primary"] not in primary or plan["subkey"] not in all_keys:
-                    raise RotationError("Replacement GPG export lacks the expected identity or subkey")
-        return payload
-
-    def verify_peers(self, plan, overlap=False):
-        if self.kind == "ssh":
-            with private_workspace() as directory:
-                key = directory / "key"
-                key.write_text(self.payload(plan)["private"])
-                options = ["-F", "/dev/null", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10",
-                           "-o", "StrictHostKeyChecking=accept-new",
-                           "-o", "IdentityAgent=none", "-o", "IdentitiesOnly=yes", "-i", str(key)]
-                if overlap:
-                    options.extend(["-i", "/run/secrets/ssh-client"])
-                for host in HOSTS:
-                    try:
-                        system = run(["ssh", *options, f"danielbarter@{host}",
-                                      "readlink -f /run/current-system"]).strip()
-                    except RotationError as error:
-                        raise RotationError(f"SSH login with the replacement key failed for {host}") from error
-                    if not system.startswith("/nix/store/") or "\n" in system:
-                        raise RotationError(f"Unexpected system store path from {host}")
-                    try:
-                        run(["nix", "path-info", "--store", f"ssh://nix-ssh@{host}", system],
-                            env=dict(os.environ, NIX_SSHOPTS=" ".join(options)))
-                    except RotationError as error:
-                        raise RotationError(f"Nix-store SSH with the replacement key failed for {host}") from error
-            return
-        # Use the current deployed identity, with no agent or alternate identities.
+    def verify_nix(self, public):
         for host in HOSTS:
-            output = run(["ssh", "-F", "/dev/null", "-o", "BatchMode=yes",
-                          "-o", "ConnectTimeout=10", "-o", "StrictHostKeyChecking=accept-new",
-                          "-o", "IdentityAgent=none",
-                          "-o", "IdentitiesOnly=yes", "-i", "/run/secrets/ssh-client",
-                          f"danielbarter@{host}", "nix config show --json"])
-            if plan["public"] not in json.loads(output)["trusted-public-keys"]["value"]:
-                raise RotationError(f"{host} does not yet trust the new Nix signing key")
+            output = run([
+                "ssh", "-F", "/dev/null", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10",
+                "-o", "StrictHostKeyChecking=accept-new", "-o", "IdentityAgent=none",
+                "-o", "IdentitiesOnly=yes", "-i", "/run/secrets/ssh-client",
+                f"danielbarter@{host}",
+                "nix config show --json",
+            ])
+            if public not in json.loads(output)["trusted-public-keys"]["value"]:
+                raise RotationError(f"new Nix key is not trusted by {host}")
+        deployed = Path(f"/run/secrets/{self.field}-next")
+        if not deployed.exists() or public_for("nix", root(["cat", deployed])) != public:
+            raise RotationError("rebuild this host with the next Nix key before apply")
+        root(["nix", "store", "sign", "--all", "--key-file", deployed], visible=True)
 
     def apply(self):
-        plan = self.load()
-        if plan["finished"]:
-            raise RotationError("This rotation is already finished")
-        if self.host not in plan["add"] or self.host in plan["retire"]:
-            raise RotationError("Run add on this host before apply")
-        payload = self.payload(plan)
-        values = self.decrypt(self.secret_file)
-        field = FIELDS[self.kind]
-        deployed_field = field if self.kind == "gpg" else field + "-next"
-        if self.kind != "gpg" and values.get(deployed_field) != payload["private"]:
-            raise RotationError("The additional private key does not match this rotation")
-        self.rebuild()
-        deployed = root(["cat", f"/run/secrets/{deployed_field}"])
-        if deployed != values[deployed_field]:
-            raise RotationError("Deployed secret does not match the replacement; rerun apply after fixing activation")
-        if self.kind != "gpg" and root(["cat", f"/run/secrets/{field}"]) != values[field]:
-            raise RotationError("The old private key was not retained during activation")
-        if self.kind == "nix":
-            for name in (field, deployed_field):
-                root(["nix", "store", "sign", "--all", "--key-file", f"/run/secrets/{name}"], visible=True)
-        elif self.kind == "gpg":
-            _, known = fingerprints(os.environ)
-            if plan["subkey"] not in known:
-                raise RotationError("The new GPG subkey has not been imported into your normal keyring")
+        values = self.decrypt()
+        next_field = self.field + "-next"
+        if next_field not in values or not self.next_public.exists():
+            raise RotationError("run add first")
+        if self.field + "-old" in values or self.old_public.exists():
+            raise RotationError("an old key is already waiting for retirement")
+        expected = self.next_public.read_text().strip()
+        if public_for(self.kind, values[next_field]) != expected:
+            raise RotationError("next private and public keys do not match")
+        if self.kind == "ssh":
+            self.verify_ssh(values[next_field])
+        elif self.kind == "nix":
+            self.verify_nix(expected)
         else:
-            self.verify_peers(plan, overlap=True)
-        plan["apply"][self.host] = int(time.time())
-        self.save(plan)
-        print(f"Applied {self.kind} on {self.host}. Review and distribute the changed files.")
+            identities = Path("/run/secrets/rendered/passage-identities")
+            if not identities.exists():
+                raise RotationError("rebuild this host with the Passage identity before apply")
+            deployed = {
+                public_for("passage", line + "\n")
+                for line in identities.read_text().splitlines()
+                if line.startswith("AGE-SECRET-KEY-")
+            }
+            if expected not in deployed:
+                raise RotationError("rebuild this host with the next Passage identity before apply")
+        if self.field in values:
+            values[self.field + "-old"] = values[self.field]
+        values[self.field] = values.pop(next_field)
+        if self.public.exists():
+            os.replace(self.public, self.old_public)
+        os.replace(self.next_public, self.public)
+        self.encrypt(values)
+        print(f"Applied the new {self.kind} key for {self.host}.")
+        if self.kind == "passage" and self.old_public.exists():
+            print("Run passage reencrypt before retire.")
+        else:
+            print("Distribute the changes and rebuild every host before retire.")
 
-    def reencrypt_password_store(self, plan):
-        store = Path(os.environ.get("PASSWORD_STORE_DIR", str(Path.home() / ".password-store")))
-        recipient_files = [p for p in sorted(store.rglob(".gpg-id"))
-                           if ".git" not in p.relative_to(store).parts]
-        if not recipient_files:
-            raise RotationError("No password-store .gpg-id files found; run retire on a host with the password store")
-        recipient_map = {}
-        for path in recipient_files:
-            recipients = [line.split("#", 1)[0].strip() for line in path.read_text().splitlines()]
-            recipients = [r for r in recipients if r]
-            if not recipients or any(r.endswith("!") for r in recipients):
-                raise RotationError(f"Inspect explicit subkey selection or empty recipients in {path} before re-encrypting")
-            selected = False
-            resolved = []
-            for recipient in recipients:
-                listing = run(["gpg", "--batch", "--with-colons", "--list-keys", recipient])
-                if any(line.startswith("fpr:") and line.split(":")[9] == plan["primary"]
-                       for line in listing.splitlines()):
-                    # Force this new encryption subkey even if older subkeys are retained.
-                    resolved.append(plan["subkey"] + "!")
-                    selected = True
-                else:
-                    resolved.append(recipient)
-            recipient_map[path.parent] = (resolved, selected)
-        changed = 0
-        for path in store.rglob("*.gpg"):
-            if path.is_symlink() or ".git" in path.relative_to(store).parts:
-                continue
-            parent = path.parent
-            while parent not in recipient_map and parent != store:
-                parent = parent.parent
-            if parent not in recipient_map:
-                raise RotationError(f"No recipients found for {path}")
-            recipients, selected = recipient_map[parent]
-            if not selected:
-                continue
-            plaintext = run(["gpg", "--batch", "--decrypt", path], binary=True)
-            args = ["gpg", "--batch", "--encrypt"]
+    def retire(self):
+        values = self.decrypt()
+        old_field = self.field + "-old"
+        if old_field not in values:
+            print("No old key to retire on this host.")
+            return
+        if self.kind == "passage":
+            old = self.old_public.read_text().strip()
+            store = Path(os.environ.get("PASSAGE_DIR", Path.home() / ".password-store"))
+            for recipients in store.rglob(".age-recipients"):
+                if ".git" not in recipients.relative_to(store).parts and old in recipients.read_text().split():
+                    raise RotationError(f"old recipient remains in {recipients}; run passage reencrypt")
+        values.pop(old_field)
+        self.encrypt(values)
+        self.old_public.unlink(missing_ok=True)
+        print(f"Retired the old {self.kind} key for {self.host}.")
+        print("Distribute the changes and rebuild every host to complete revocation.")
+
+    def cleanup_gpg(self):
+        if self.kind != "passage":
+            raise RotationError("cleanup-gpg is only for Passage")
+        values = self.decrypt()
+        if "pass-gpg" not in values:
+            print("The old GPG export is already absent.")
+            return
+        values.pop("pass-gpg")
+        self.encrypt(values)
+        print(f"Removed the old GPG export from {self.secret_file}.")
+
+    def status(self):
+        encrypted = json.loads(self.secret_file.read_text())
+        print(f"{self.host} {self.kind}:")
+        for suffix, path in (("active", self.public), ("next", self.next_public),
+                             ("old", self.old_public)):
+            field = self.field if suffix == "active" else f"{self.field}-{suffix}"
+            print(f"  {suffix}: secret={'yes' if field in encrypted else 'no'}, "
+                  f"public={'yes' if path.exists() else 'no'}")
+
+
+def password_files(store, suffix):
+    return [path for path in sorted(store.rglob(f"*{suffix}"))
+            if not path.is_symlink() and ".git" not in path.relative_to(store).parts]
+
+
+def passage_recipients(repo):
+    paths = [repo / "keys" / "passage" / f"{host}.pub" for host in HOSTS]
+    if any(not path.exists() for path in paths):
+        raise RotationError("all three active Passage public keys are required")
+    recipients = [path.read_text().strip() for path in paths]
+    if len(set(recipients)) != len(HOSTS) or any(not item.startswith("age1") for item in recipients):
+        raise RotationError("Passage public keys are missing, duplicate, or invalid")
+    return recipients
+
+
+def stage_age_files(entries, recipients_for, identity_file, decrypt):
+    staged = []
+    try:
+        for source in entries:
+            target, recipients = recipients_for(source)
+            if target.exists():
+                raise RotationError(f"refusing to overwrite {target}")
+            plaintext = decrypt(source)
+            args = ["age", "--encrypt"]
             for recipient in recipients:
                 args.extend(["--recipient", recipient])
             encrypted = run(args, plaintext, binary=True)
-            verified = run(["gpg", "--batch", "--decrypt"], encrypted, binary=True)
-            if verified != plaintext:
-                raise RotationError(f"Re-encryption verification failed for {path}")
-            atomic_write(path, encrypted, mode=0o600)
-            changed += 1
-        if not changed:
-            raise RotationError("No password entries use this GPG identity; run retire where its password store is available")
-        print(f"Re-encrypted and verified {changed} password entries. Recipient files were preserved.")
+            if run(["age", "--decrypt", "--identity", identity_file], encrypted, binary=True) != plaintext:
+                raise RotationError(f"verification failed for {source}")
+            temporary = target.with_name(target.name + ".migrating")
+            atomic_write(temporary, encrypted, mode=0o600)
+            staged.append((source, target, temporary))
+        return staged
+    except Exception:
+        for _, _, temporary in staged:
+            temporary.unlink(missing_ok=True)
+        raise
 
-    def retire(self):
-        plan = self.load()
-        if plan["finished"]:
-            print("This rotation is already finished.")
-            return
-        if self.host in plan["retire"]:
-            print("This host has already retired the old key.")
-            return
-        self.require_receipts(plan, "apply")
-        if self.kind == "gpg":
-            _, known = fingerprints(os.environ)
-            if plan["subkey"] not in known:
-                raise RotationError("Run retire on a host with the new GPG subkey imported")
-            self.reencrypt_password_store(plan)
-            plan["finished"] = True
-        else:
-            self.verify_peers(plan)
-            values = self.decrypt(self.secret_file)
-            field = FIELDS[self.kind]
-            replacement = values.get(field + "-next", values[field])
-            if public_for(self.kind, replacement) != plan["public"]:
-                raise RotationError("The replacement private key is missing from this host")
-            values[field] = replacement
-            values.pop(field + "-next", None)
-            self.encrypt(self.secret_file, values, (self.host,))
-            for path in (self.repo / "keys" / self.kind).glob("*.pub"):
-                if path.name == "phone.pub":
-                    continue
-                text = path.read_text().strip()
-                if self.kind == "ssh":
-                    text = " ".join(text.split()[:2])
-                if text == plan["old_public"]:
-                    path.unlink()
-            self.rebuild()
-            if root(["cat", f"/run/secrets/{field}"]) != replacement:
-                raise RotationError("The replacement key is not active; rerun retire after fixing activation")
-        plan["retire"][self.host] = int(time.time())
-        if self.kind == "gpg" or all(h in plan["retire"] for h in self.required):
-            plan["finished"] = True
-            self.pending_file.unlink()
-        self.save(plan)
-        print(f"Retired {self.kind} on {self.host}. Review and distribute the changed files.")
-        if self.kind in ("ssh", "nix"):
-            print("Run retire on the remaining hosts.")
-        elif self.kind == "gpg":
-            print("Push/sync the re-encrypted password store separately. Old GPG subkeys are retained for history.")
 
-    def replace_wireguard(self, phone_public_key=None):
-        phone_public = None
-        if phone_public_key:
-            phone_public = Path(phone_public_key).read_text().strip()
-            if len(base64.b64decode(phone_public, validate=True)) != 32:
-                raise RotationError("Phone public key must be a base64-encoded 32-byte WireGuard key")
-        values = self.decrypt(self.secret_file)
-        replacement = generate("wireguard", "", "blaze")
-        values["wireguard"] = replacement["private"]
-        self.encrypt(self.secret_file, values, ("blaze",))
-        atomic_write(self.repo / "keys/wireguard/blaze.pub", replacement["public"] + "\n")
-        if phone_public:
-            atomic_write(self.repo / "keys/wireguard/phone.pub", phone_public + "\n")
-        print(f"Blaze public key: {replacement['public']}")
-        print("Set that server public key on the phone, then rebuild Blaze from LAN or console and test the VPN.")
+def migrate_passage(repo, store):
+    identity_file = Path("/run/secrets/rendered/passage-identities")
+    if not identity_file.exists():
+        raise RotationError("rebuild this host with its Passage identity first")
+    gpg_ids = [path for path in sorted(store.rglob(".gpg-id"))
+               if ".git" not in path.relative_to(store).parts]
+    entries = password_files(store, ".gpg")
+    if not gpg_ids or not entries:
+        raise RotationError("no GPG password store found")
+    recipients = passage_recipients(repo)
+    staged = stage_age_files(
+        entries, lambda source: (source.with_suffix(".age"), recipients), identity_file,
+        lambda path: run(["gpg", "--batch", "--decrypt", path], binary=True),
+    )
+    for source, target, temporary in staged:
+        os.replace(temporary, target)
+        source.unlink()
+    recipient_text = "\n".join(recipients) + "\n"
+    for gpg_id in gpg_ids:
+        atomic_write(gpg_id.with_name(".age-recipients"), recipient_text, mode=0o600)
+        gpg_id.unlink()
+    attributes = store / ".gitattributes"
+    if attributes.exists():
+        lines = [line for line in attributes.read_text().splitlines()
+                 if not line.lstrip().startswith("*.gpg")]
+        lines.append("*.age diff=age")
+        atomic_write(attributes, "\n".join(dict.fromkeys(lines)) + "\n")
+    print(f"Converted and verified {len(staged)} passwords. Git was not touched.")
 
-    def status(self):
-        plan = self.load()
-        print(f"{plan['id']}: {'finished' if plan['finished'] else 'in progress'}")
-        for host in self.required:
-            print(f"  {host}: added={'yes' if host in plan['add'] else 'no'}, "
-                  f"applied={'yes' if host in plan['apply'] else 'no'}, "
-                  f"retired={'yes' if host in plan['retire'] else 'no'}")
+
+def reencrypt_passage(rotation, store):
+    if not rotation.old_public.exists() or not rotation.public.exists():
+        raise RotationError("apply the Passage rotation first")
+    identity_file = Path("/run/secrets/rendered/passage-identities")
+    old = rotation.old_public.read_text().strip()
+    new = rotation.public.read_text().strip()
+    recipient_files = [path for path in sorted(store.rglob(".age-recipients"))
+                       if ".git" not in path.relative_to(store).parts]
+    if not recipient_files:
+        raise RotationError("no Passage recipient files found")
+    mapping = {}
+    for path in recipient_files:
+        recipients = path.read_text().split()
+        mapping[path.parent] = [new if item == old else item for item in recipients]
+
+    def recipients_for(source):
+        parent = source.parent
+        while parent not in mapping and parent != store:
+            parent = parent.parent
+        if parent not in mapping:
+            raise RotationError(f"no recipients found for {source}")
+        return source.with_name(source.name + ".new"), mapping[parent]
+
+    entries = password_files(store, ".age")
+    staged = stage_age_files(
+        entries, recipients_for, identity_file,
+        lambda path: run(["age", "--decrypt", "--identity", identity_file, path], binary=True),
+    )
+    for source, _, temporary in staged:
+        os.replace(temporary, source)
+    for directory, recipients in mapping.items():
+        atomic_write(directory / ".age-recipients",
+                     "\n".join(dict.fromkeys(recipients)) + "\n", mode=0o600)
+    print(f"Re-encrypted and verified {len(staged)} passwords. Git was not touched.")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("kind", choices=FIELDS)
-    parser.add_argument("phase", nargs="?", default="add", choices=("add", "apply", "retire", "status"))
-    parser.add_argument("--fingerprint", help="GPG primary fingerprint when the export contains multiple keys")
-    parser.add_argument("--phone-public-key", type=Path, help="WireGuard: file containing the phone's new public key")
+    parser.add_argument("phase", nargs="?", default="status",
+                        choices=("add", "apply", "retire", "status", "migrate", "reencrypt", "cleanup-gpg"))
+    parser.add_argument("--store", type=Path, default=Path.home() / ".password-store")
     args = parser.parse_args()
-    if args.phone_public_key and args.kind != "wireguard":
-        parser.error("--phone-public-key is only for WireGuard")
-    if args.fingerprint and (args.kind != "gpg" or args.phase != "add"):
-        parser.error("--fingerprint is only for gpg add")
+    if args.phase in ("migrate", "reencrypt", "cleanup-gpg") and args.kind != "passage":
+        parser.error(f"{args.phase} is only for Passage")
     repo = Path(__file__).resolve().parent.parent
     if os.geteuid() == 0:
-        raise RotationError("Run as danielbarter; the utility uses doas only when needed")
+        raise RotationError("run as danielbarter; doas is used only for the encrypted host file")
     if os.environ.get("NIXOS_ROTATE_SHELL") != "1":
         os.execvp("nix", ["nix", "develop", f"{repo}#secrets", "--command", "env",
-                          "NIXOS_ROTATE_SHELL=1", "python3", str(Path(__file__).resolve()), *sys.argv[1:]])
+                           "NIXOS_ROTATE_SHELL=1", "python3", str(Path(__file__).resolve()), *sys.argv[1:]])
     os.umask(0o077)
     resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
     rotation = Rotation(repo, socket.gethostname(), args.kind)
-    if args.kind == "wireguard":
-        if args.phase != "add":
-            raise RotationError("WireGuard uses a single command: rotate wireguard [--phone-public-key FILE]")
-        rotation.replace_wireguard(args.phone_public_key)
-    elif args.phase == "add":
-        rotation.add(args.fingerprint)
-    elif args.phase == "apply":
-        rotation.apply()
+    if args.phase == "migrate":
+        migrate_passage(repo, args.store)
+    elif args.phase == "reencrypt":
+        reencrypt_passage(rotation, args.store)
     else:
-        getattr(rotation, args.phase)()
+        getattr(rotation, args.phase.replace("-", "_"))()
 
 
 if __name__ == "__main__":
     try:
         main()
-    except (RotationError, OSError, ValueError, KeyError) as error:
-        # Never display decrypted structures or subprocess output in an exception.
+    except (RotationError, OSError, ValueError, KeyError, json.JSONDecodeError) as error:
         message = str(error) if isinstance(error, RotationError) else type(error).__name__
         print(f"rotate: {message}", file=sys.stderr)
         sys.exit(1)

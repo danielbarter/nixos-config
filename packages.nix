@@ -1,4 +1,6 @@
 {
+  config,
+  lib,
   pkgs,
   ...
 }:
@@ -31,7 +33,7 @@
       parted
       e2fsprogs
       wireguard-tools
-      pass
+      passage
       binutils # objdump, readelf and c++filt
       strace
       radare2
@@ -42,5 +44,5 @@
       ty # python type checker
       nixd
       codex
-    ];
+    ] ++ lib.optional config.programs.gnupg.agent.enable pass;
 }

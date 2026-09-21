@@ -1,7 +1,4 @@
-{
-  pkgs,
-  ...
-}:
+{ ... }:
 
 {
 
@@ -77,12 +74,6 @@
   # allow real-time scheduling to be used by normal user processes.
   security.rtkit.enable = true;
   services.dbus.enable = true;
-
-  # enable gpg
-  programs.gnupg.agent = {
-    enable = true;
-    pinentryPackage = pkgs.pinentry-curses;
-  };
 
   system.etc.overlay.enable = true;
 
