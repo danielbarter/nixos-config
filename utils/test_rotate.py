@@ -34,70 +34,50 @@ class RotationTests(unittest.TestCase):
     def tearDown(self):
         self.temp.cleanup()
 
+    def setup_key(self, kind):
+        private, public = rotate.generate(kind, f"punky-{kind}-old")
+        (self.repo / "secrets/punky.json").write_text(
+            json.dumps({rotate.FIELDS[kind]: private, "unrelated": "preserved"}))
+        public_file = self.repo / f"keys/{kind}/punky.pub"
+        public_file.write_text(public + "\n")
+        return private, public
+
     def test_public_key_round_trips(self):
         for kind in rotate.FIELDS:
             private, public = rotate.generate(kind, f"punky-{kind}-test")
             self.assertEqual(rotate.public_for(kind, private), public)
 
-    def test_host_local_ssh_rotation(self):
-        old_private, old_public = rotate.generate("ssh", "shared-old")
-        secret = self.repo / "secrets/punky.json"
-        secret.write_text(json.dumps({"ssh-client": old_private, "unrelated": "keep"}))
-        shared = self.repo / "keys/ssh/shared.pub"
-        shared.write_text(old_public + "\n")
+    def test_ssh_rotation_replaces_only_this_hosts_key(self):
+        old_private, old_public = self.setup_key("ssh")
         rotation = FixtureRotation(self.repo, "punky", "ssh")
-
-        rotation.add()
+        rotation.rotate()
         values = rotation.decrypt()
-        self.assertEqual(values["ssh-client"], old_private)
-        self.assertIn("ssh-client-next", values)
-        self.assertTrue(rotation.next_public.exists())
-        self.assertTrue(shared.exists())
+        self.assertNotEqual(values["ssh-client"], old_private)
+        self.assertNotEqual(rotation.public_file.read_text().strip(), old_public)
+        self.assertEqual(rotate.public_for("ssh", values["ssh-client"]),
+                         rotation.public_file.read_text().strip())
+        self.assertEqual(values["unrelated"], "preserved")
+        self.assertFalse(list(rotation.public_file.parent.glob("punky-*.pub")))
 
-        with mock.patch.object(rotation, "verify_ssh") as verify:
-            rotation.apply()
-            verify.assert_called_once()
-        values = rotation.decrypt()
-        self.assertEqual(values["ssh-client-old"], old_private)
-        self.assertNotIn("ssh-client-next", values)
-        self.assertTrue(rotation.public.exists())
-        self.assertFalse(rotation.old_public.exists())
+    def test_rotation_rejects_mismatched_active_key(self):
+        self.setup_key("ssh")
+        other_private, _ = rotate.generate("ssh", "other")
+        (self.repo / "secrets/punky.json").write_text(json.dumps({"ssh-client": other_private}))
+        with self.assertRaises(rotate.RotationError):
+            FixtureRotation(self.repo, "punky", "ssh").rotate()
 
-        rotation.retire()
-        values = rotation.decrypt()
-        self.assertNotIn("ssh-client-old", values)
-        self.assertEqual(values["unrelated"], "keep")
-        self.assertTrue(shared.exists())
-
-    def test_second_rotation_keeps_old_public_until_retire(self):
-        active_private, active_public = rotate.generate("ssh", "punky-active")
-        (self.repo / "secrets/punky.json").write_text(json.dumps({"ssh-client": active_private}))
-        (self.repo / "keys/ssh/punky.pub").write_text(active_public + "\n")
-        rotation = FixtureRotation(self.repo, "punky", "ssh")
-        rotation.add()
-        with mock.patch.object(rotation, "verify_ssh"):
-            rotation.apply()
-        self.assertEqual(rotation.old_public.read_text().strip(), active_public)
-        rotation.retire()
-        self.assertFalse(rotation.old_public.exists())
-
-    def test_passage_reencrypts_for_replacement_identity(self):
+    def test_passage_rotation_reencrypts_store(self):
+        old_private, old_public = self.setup_key("passage")
+        other_private, other_public = rotate.generate("passage", "jasper")
         store = self.repo / "password-store"
         store.mkdir()
-        old_private, old_public = rotate.generate("passage", "punky-old")
-        new_private, new_public = rotate.generate("passage", "punky-new")
-        other_private, other_public = rotate.generate("passage", "jasper")
         (store / ".age-recipients").write_text(f"{old_public}\n{other_public}\n")
         plaintext = b"disposable password\n"
-        ciphertext = rotate.run(["age", "--encrypt", "--recipient", old_public,
-                                 "--recipient", other_public], plaintext, binary=True)
-        (store / "example.age").write_bytes(ciphertext)
-
+        (store / "example.age").write_bytes(rotate.run([
+            "age", "--encrypt", "--recipient", old_public, "--recipient", other_public
+        ], plaintext, binary=True))
         identity_file = self.repo / "identities"
-        identity_file.write_text(old_private + new_private + other_private)
-        rotation = FixtureRotation(self.repo, "punky", "passage")
-        rotation.old_public.write_text(old_public + "\n")
-        rotation.public.write_text(new_public + "\n")
+        identity_file.write_text(old_private + other_private)
 
         real_path = rotate.Path
         def mapped_path(value):
@@ -105,12 +85,19 @@ class RotationTests(unittest.TestCase):
                 return identity_file
             return real_path(value)
 
+        rotation = FixtureRotation(self.repo, "punky", "passage", store)
         with mock.patch.object(rotate, "Path", side_effect=mapped_path):
-            rotate.reencrypt_passage(rotation, store)
+            rotation.rotate()
 
-        self.assertEqual(
-            rotate.run(["age", "--decrypt", "--identity", identity_file,
-                        store / "example.age"], binary=True), plaintext)
+        new_private = rotation.decrypt()["passage-identity"]
+        new_public = rotation.public_file.read_text().strip()
+        self.assertNotEqual(new_public, old_public)
+        self.assertEqual(rotate.public_for("passage", new_private), new_public)
+        new_identity = self.repo / "new-identity"
+        new_identity.write_text(new_private)
+        self.assertEqual(rotate.run([
+            "age", "--decrypt", "--identity", new_identity, store / "example.age"
+        ], binary=True), plaintext)
         self.assertEqual((store / ".age-recipients").read_text().splitlines(),
                          [new_public, other_public])
 

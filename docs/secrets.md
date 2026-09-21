@@ -1,24 +1,30 @@
 # Secrets checklist
 
-## Rotate one host's SSH or Nix key
+The rotation utility changes files only. It never runs Git or rebuilds a host.
 
-- [ ] On that host, run `./utils/rotate ssh add` or `./utils/rotate nix add`.
-- [ ] Distribute the changed encrypted host file and `keys/<kind>/<host>-next.pub`.
-- [ ] Build and switch every host so all peers accept the new public key.
-- [ ] On the key's host, run `./utils/rotate <kind> apply`.
-- [ ] Distribute the changes and build and switch every host again.
-- [ ] Run `./utils/rotate <kind> retire` on the key's host.
-- [ ] Distribute the changes and build and switch every host to revoke the old key.
+## Rotate one host's SSH key
+
+- [ ] On the host whose key is changing, run `./utils/rotate ssh`.
+- [ ] Review and distribute `secrets/<host>.json` and `keys/ssh/<host>.pub`.
+- [ ] Build and switch the other two hosts so they accept the replacement key.
+- [ ] Build and switch the rotating host last.
+- [ ] Test user SSH and `ssh://nix-ssh@<host>` in both directions.
+
+## Rotate one host's Nix signing key
+
+- [ ] On the signing host, run `./utils/rotate nix`.
+- [ ] Review and distribute `secrets/<host>.json` and `keys/nix/<host>.pub`.
+- [ ] Build and switch all three hosts.
+- [ ] On the signing host, run `doas nix store sign --all --key-file /run/secrets/nix-signing`.
+- [ ] Test a store query or copy from another host.
 
 ## Rotate one host's Passage identity
 
-- [ ] On that host, run `./utils/rotate passage add`.
-- [ ] Distribute the encrypted host file and `keys/passage/<host>-next.pub`, then build and switch every host.
-- [ ] On that host, run `./utils/rotate passage apply` and distribute the changes.
-- [ ] On one machine with the password store, run `./utils/rotate passage reencrypt` and distribute the password-store changes yourself.
-- [ ] Confirm `passage show <entry>` works on every host.
-- [ ] On the identity's host, run `./utils/rotate passage retire` and distribute the changes.
-- [ ] Build and switch every host.
+- [ ] Start with clean `/etc/nixos` and password-store working trees.
+- [ ] On the host whose identity is changing, run `./utils/rotate passage`.
+- [ ] Review and distribute `secrets/<host>.json`, `keys/passage/<host>.pub`, and the password-store changes.
+- [ ] Confirm `passage show <entry>` works on the other two hosts.
+- [ ] Build and switch the rotating host, open a fresh shell, and confirm it can decrypt the store.
 
 ## Rotate WireGuard between Blaze and the phone
 

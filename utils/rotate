@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rotate this host's keys without Git or private-key exchange."""
+"""Replace one host-owned key. Git and deployment remain manual."""
 
 import argparse
 import contextlib
@@ -21,19 +21,18 @@ class RotationError(Exception):
     pass
 
 
-def run(args, data=None, *, binary=False, visible=False, env=None):
+def run(args, data=None, *, binary=False, env=None):
     result = subprocess.run(
         [str(arg) for arg in args], input=data, text=not binary,
-        stdout=None if visible else subprocess.PIPE,
-        stderr=None if visible else subprocess.PIPE, env=env,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env,
     )
     if result.returncode:
         raise RotationError(f"{args[0]} failed (exit {result.returncode})")
     return result.stdout
 
 
-def root(args, data=None, *, visible=False):
-    return run(["doas", "env", f"PATH={os.environ['PATH']}", *args], data, visible=visible)
+def root(args, data=None):
+    return run(["doas", "env", f"PATH={os.environ['PATH']}", *args], data)
 
 
 def atomic_write(path, contents, mode=0o644):
@@ -63,10 +62,10 @@ def private_workspace():
 def public_for(kind, private):
     if kind in ("ssh", "passage"):
         with private_workspace() as directory:
-            path = directory / "identity"
-            path.write_text(private)
-            command = (["ssh-keygen", "-y", "-P", "", "-f", path] if kind == "ssh"
-                       else ["age-keygen", "-y", path])
+            identity = directory / "identity"
+            identity.write_text(private)
+            command = (["ssh-keygen", "-y", "-P", "", "-f", identity] if kind == "ssh"
+                       else ["age-keygen", "-y", identity])
             public = run(command).strip()
             return " ".join(public.split()[:2]) if kind == "ssh" else public
     if kind == "nix":
@@ -92,19 +91,80 @@ def generate(kind, identity):
     return private, public_for(kind, private)
 
 
+def password_files(store):
+    return [path for path in sorted(store.rglob("*.age"))
+            if not path.is_symlink() and ".git" not in path.relative_to(store).parts]
+
+
+def stage_passage_rotation(store, old_public, new_public, new_private):
+    identity_file = Path("/run/secrets/rendered/passage-identities")
+    if not identity_file.exists():
+        raise RotationError("the deployed Passage identity is missing")
+    recipient_files = [path for path in sorted(store.rglob(".age-recipients"))
+                       if ".git" not in path.relative_to(store).parts]
+    if not recipient_files:
+        raise RotationError("no Passage recipient files found")
+
+    recipients_by_directory = {}
+    replacements = {}
+    for path in recipient_files:
+        recipients = path.read_text().split()
+        updated = [new_public if item == old_public else item for item in recipients]
+        recipients_by_directory[path.parent] = updated
+        if updated != recipients:
+            replacements[path] = "\n".join(dict.fromkeys(updated)) + "\n"
+    if not replacements:
+        raise RotationError("this host's current public key is not a Passage recipient")
+
+    with private_workspace() as directory:
+        new_identity = directory / "identity"
+        new_identity.write_text(new_private)
+        staged = []
+        try:
+            for source in password_files(store):
+                parent = source.parent
+                while parent not in recipients_by_directory and parent != store:
+                    parent = parent.parent
+                if parent not in recipients_by_directory:
+                    raise RotationError(f"no recipients found for {source}")
+                recipients = recipients_by_directory[parent]
+                if new_public not in recipients:
+                    continue
+                plaintext = run([
+                    "age", "--decrypt", "--identity", identity_file, source
+                ], binary=True)
+                args = ["age", "--encrypt"]
+                for recipient in recipients:
+                    args.extend(["--recipient", recipient])
+                encrypted = run(args, plaintext, binary=True)
+                verified = run([
+                    "age", "--decrypt", "--identity", new_identity
+                ], encrypted, binary=True)
+                if verified != plaintext:
+                    raise RotationError(f"verification failed for {source}")
+                temporary = source.with_name(source.name + ".rotating")
+                atomic_write(temporary, encrypted, mode=0o600)
+                staged.append((source, temporary))
+            if not staged:
+                raise RotationError("no password entries use this host's recipient")
+            return staged, replacements
+        except Exception:
+            for _, temporary in staged:
+                temporary.unlink(missing_ok=True)
+            raise
+
+
 class Rotation:
-    def __init__(self, repo, host, kind):
+    def __init__(self, repo, host, kind, store=None):
         self.repo = Path(repo)
         self.host = host
         self.kind = kind
+        self.store = Path(store) if store else Path.home() / ".password-store"
         if host not in HOSTS:
             raise RotationError(f"run this on {', '.join(HOSTS)}")
         self.field = FIELDS[kind]
         self.secret_file = self.repo / "secrets" / f"{host}.json"
-        self.key_dir = self.repo / "keys" / kind
-        self.public = self.key_dir / f"{host}.pub"
-        self.next_public = self.key_dir / f"{host}-next.pub"
-        self.old_public = self.key_dir / f"{host}-old.pub"
+        self.public_file = self.repo / "keys" / kind / f"{host}.pub"
 
     def decrypt(self):
         return json.loads(root([
@@ -125,196 +185,60 @@ class Rotation:
             raise RotationError("SOPS did not encrypt every secret")
         atomic_write(self.secret_file, encrypted)
 
-    def add(self):
+    def rotate(self):
         values = self.decrypt()
-        if self.field + "-next" in values or self.field + "-old" in values:
-            raise RotationError("finish this host's current rotation first")
-        if self.kind != "passage" and self.field not in values:
-            raise RotationError(f"{self.field} is missing")
-        if self.next_public.exists() or self.old_public.exists():
-            raise RotationError("unexpected next/old public key file")
+        if self.field not in values or not self.public_file.exists():
+            raise RotationError(f"missing active {self.kind} key")
+        transition_fields = [name for name in values if name.startswith(self.field + "-")]
+        transition_files = list(self.public_file.parent.glob(f"{self.host}-*.pub"))
+        if transition_fields or transition_files:
+            raise RotationError("remove unfinished next/old rotation state first")
+        old_private = values[self.field]
+        old_public = self.public_file.read_text().strip()
+        if public_for(self.kind, old_private) != old_public:
+            raise RotationError("active private and public keys do not match")
+
         identity = f"{self.host}-{self.kind}-{uuid.uuid4().hex[:12]}"
-        private, public = generate(self.kind, identity)
-        values[self.field + "-next"] = private
-        self.encrypt(values)
-        atomic_write(self.next_public, public + "\n")
-        print(f"Added a new {self.kind} key for {self.host}; the current key remains active.")
-        print("Distribute the encrypted secret and public key, then rebuild every host before apply.")
-
-    def verify_ssh(self, private):
-        with private_workspace() as directory:
-            identity = directory / "identity"
-            identity.write_text(private)
-            options = [
-                "-F", "/dev/null", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10",
-                "-o", "StrictHostKeyChecking=accept-new", "-o", "IdentityAgent=none",
-                "-o", "IdentitiesOnly=yes", "-i", str(identity),
-            ]
-            for host in HOSTS:
-                try:
-                    system = run(["ssh", *options, f"danielbarter@{host}",
-                                  "readlink -f /run/current-system"]).strip()
-                    run(["nix", "path-info", "--store", f"ssh://nix-ssh@{host}", system],
-                        env=dict(os.environ, NIX_SSHOPTS=" ".join(options)))
-                except RotationError as error:
-                    raise RotationError(f"new SSH key is not accepted by {host}") from error
-
-    def verify_nix(self, public):
-        for host in HOSTS:
-            output = run([
-                "ssh", "-F", "/dev/null", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10",
-                "-o", "StrictHostKeyChecking=accept-new", "-o", "IdentityAgent=none",
-                "-o", "IdentitiesOnly=yes", "-i", "/run/secrets/ssh-client",
-                f"danielbarter@{host}",
-                "nix config show --json",
-            ])
-            if public not in json.loads(output)["trusted-public-keys"]["value"]:
-                raise RotationError(f"new Nix key is not trusted by {host}")
-        deployed = Path(f"/run/secrets/{self.field}-next")
-        if not deployed.exists() or public_for("nix", root(["cat", deployed])) != public:
-            raise RotationError("rebuild this host with the next Nix key before apply")
-        root(["nix", "store", "sign", "--all", "--key-file", deployed], visible=True)
-
-    def apply(self):
-        values = self.decrypt()
-        next_field = self.field + "-next"
-        if next_field not in values or not self.next_public.exists():
-            raise RotationError("run add first")
-        if self.field + "-old" in values or self.old_public.exists():
-            raise RotationError("an old key is already waiting for retirement")
-        expected = self.next_public.read_text().strip()
-        if public_for(self.kind, values[next_field]) != expected:
-            raise RotationError("next private and public keys do not match")
-        if self.kind == "ssh":
-            self.verify_ssh(values[next_field])
-        elif self.kind == "nix":
-            self.verify_nix(expected)
-        else:
-            identities = Path("/run/secrets/rendered/passage-identities")
-            if not identities.exists():
-                raise RotationError("rebuild this host with the Passage identity before apply")
-            deployed = {
-                public_for("passage", line + "\n")
-                for line in identities.read_text().splitlines()
-                if line.startswith("AGE-SECRET-KEY-")
-            }
-            if expected not in deployed:
-                raise RotationError("rebuild this host with the next Passage identity before apply")
-        if self.field in values:
-            values[self.field + "-old"] = values[self.field]
-        values[self.field] = values.pop(next_field)
-        if self.public.exists():
-            os.replace(self.public, self.old_public)
-        os.replace(self.next_public, self.public)
-        self.encrypt(values)
-        print(f"Applied the new {self.kind} key for {self.host}.")
-        if self.kind == "passage" and self.old_public.exists():
-            print("Run passage reencrypt before retire.")
-        else:
-            print("Distribute the changes and rebuild every host before retire.")
-
-    def retire(self):
-        values = self.decrypt()
-        old_field = self.field + "-old"
-        if old_field not in values:
-            print("No old key to retire on this host.")
-            return
+        new_private, new_public = generate(self.kind, identity)
+        passage_changes = None
         if self.kind == "passage":
-            old = self.old_public.read_text().strip()
-            store = Path(os.environ.get("PASSAGE_DIR", Path.home() / ".password-store"))
-            for recipients in store.rglob(".age-recipients"):
-                if ".git" not in recipients.relative_to(store).parts and old in recipients.read_text().split():
-                    raise RotationError(f"old recipient remains in {recipients}; run passage reencrypt")
-        values.pop(old_field)
+            passage_changes = stage_passage_rotation(
+                self.store, old_public, new_public, new_private
+            )
+
+        values[self.field] = new_private
         self.encrypt(values)
-        self.old_public.unlink(missing_ok=True)
-        print(f"Retired the old {self.kind} key for {self.host}.")
-        print("Distribute the changes and rebuild every host to complete revocation.")
+        atomic_write(self.public_file, new_public + "\n")
+        if passage_changes:
+            staged, recipient_files = passage_changes
+            for source, temporary in staged:
+                os.replace(temporary, source)
+            for path, contents in recipient_files.items():
+                atomic_write(path, contents, mode=0o600)
+
+        print(f"Replaced {self.host}'s {self.kind} key. Git was not touched.")
+        if self.kind == "passage":
+            print(f"Re-encrypted and verified {len(passage_changes[0])} password entries.")
+        elif self.kind == "nix":
+            print("After deployment, sign existing paths with the new key as documented.")
+        else:
+            print("Rebuild the other hosts first and this host last.")
 
     def status(self):
         encrypted = json.loads(self.secret_file.read_text())
-        print(f"{self.host} {self.kind}:")
-        for suffix, path in (("active", self.public), ("next", self.next_public),
-                             ("old", self.old_public)):
-            field = self.field if suffix == "active" else f"{self.field}-{suffix}"
-            print(f"  {suffix}: secret={'yes' if field in encrypted else 'no'}, "
-                  f"public={'yes' if path.exists() else 'no'}")
-
-
-def password_files(store, suffix):
-    return [path for path in sorted(store.rglob(f"*{suffix}"))
-            if not path.is_symlink() and ".git" not in path.relative_to(store).parts]
-
-
-def stage_age_files(entries, recipients_for, identity_file, decrypt):
-    staged = []
-    try:
-        for source in entries:
-            target, recipients = recipients_for(source)
-            if target.exists():
-                raise RotationError(f"refusing to overwrite {target}")
-            plaintext = decrypt(source)
-            args = ["age", "--encrypt"]
-            for recipient in recipients:
-                args.extend(["--recipient", recipient])
-            encrypted = run(args, plaintext, binary=True)
-            if run(["age", "--decrypt", "--identity", identity_file], encrypted, binary=True) != plaintext:
-                raise RotationError(f"verification failed for {source}")
-            temporary = target.with_name(target.name + ".migrating")
-            atomic_write(temporary, encrypted, mode=0o600)
-            staged.append((source, target, temporary))
-        return staged
-    except Exception:
-        for _, _, temporary in staged:
-            temporary.unlink(missing_ok=True)
-        raise
-
-
-def reencrypt_passage(rotation, store):
-    if not rotation.old_public.exists() or not rotation.public.exists():
-        raise RotationError("apply the Passage rotation first")
-    identity_file = Path("/run/secrets/rendered/passage-identities")
-    old = rotation.old_public.read_text().strip()
-    new = rotation.public.read_text().strip()
-    recipient_files = [path for path in sorted(store.rglob(".age-recipients"))
-                       if ".git" not in path.relative_to(store).parts]
-    if not recipient_files:
-        raise RotationError("no Passage recipient files found")
-    mapping = {}
-    for path in recipient_files:
-        recipients = path.read_text().split()
-        mapping[path.parent] = [new if item == old else item for item in recipients]
-
-    def recipients_for(source):
-        parent = source.parent
-        while parent not in mapping and parent != store:
-            parent = parent.parent
-        if parent not in mapping:
-            raise RotationError(f"no recipients found for {source}")
-        return source.with_name(source.name + ".new"), mapping[parent]
-
-    entries = password_files(store, ".age")
-    staged = stage_age_files(
-        entries, recipients_for, identity_file,
-        lambda path: run(["age", "--decrypt", "--identity", identity_file, path], binary=True),
-    )
-    for source, _, temporary in staged:
-        os.replace(temporary, source)
-    for directory, recipients in mapping.items():
-        atomic_write(directory / ".age-recipients",
-                     "\n".join(dict.fromkeys(recipients)) + "\n", mode=0o600)
-    print(f"Re-encrypted and verified {len(staged)} passwords. Git was not touched.")
+        transition = sorted(name for name in encrypted if name.startswith(self.field + "-"))
+        print(f"{self.host} {self.kind}: active={'yes' if self.field in encrypted else 'no'}, "
+              f"public={'yes' if self.public_file.exists() else 'no'}")
+        if transition:
+            print(f"  unfinished fields: {', '.join(transition)}")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("kind", choices=FIELDS)
-    parser.add_argument("phase", nargs="?", default="status",
-                        choices=("add", "apply", "retire", "status", "reencrypt"))
+    parser.add_argument("action", nargs="?", default="rotate", choices=("rotate", "status"))
     parser.add_argument("--store", type=Path, default=Path.home() / ".password-store")
     args = parser.parse_args()
-    if args.phase == "reencrypt" and args.kind != "passage":
-        parser.error(f"{args.phase} is only for Passage")
     repo = Path(__file__).resolve().parent.parent
     if os.geteuid() == 0:
         raise RotationError("run as danielbarter; doas is used only for the encrypted host file")
@@ -323,11 +247,8 @@ def main():
                            "NIXOS_ROTATE_SHELL=1", "python3", str(Path(__file__).resolve()), *sys.argv[1:]])
     os.umask(0o077)
     resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
-    rotation = Rotation(repo, socket.gethostname(), args.kind)
-    if args.phase == "reencrypt":
-        reencrypt_passage(rotation, args.store)
-    else:
-        getattr(rotation, args.phase.replace("-", "_"))()
+    rotation = Rotation(repo, socket.gethostname(), args.kind, args.store)
+    getattr(rotation, args.action)()
 
 
 if __name__ == "__main__":
