@@ -21,18 +21,18 @@ class RotationError(Exception):
     pass
 
 
-def run(args, data=None, *, binary=False, env=None):
+def run(args, data=None, *, binary=False):
     result = subprocess.run(
         [str(arg) for arg in args], input=data, text=not binary,
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
     )
     if result.returncode:
         raise RotationError(f"{args[0]} failed (exit {result.returncode})")
     return result.stdout
 
 
-def root(args, data=None):
-    return run(["doas", "env", f"PATH={os.environ['PATH']}", *args], data)
+def root(args):
+    return run(["doas", "env", f"PATH={os.environ['PATH']}", *args])
 
 
 def atomic_write(path, contents, mode=0o644):
@@ -200,43 +200,32 @@ class Rotation:
 
         identity = f"{self.host}-{self.kind}-{uuid.uuid4().hex[:12]}"
         new_private, new_public = generate(self.kind, identity)
-        passage_changes = None
+        staged_passwords = []
+        recipient_updates = {}
         if self.kind == "passage":
-            passage_changes = stage_passage_rotation(
+            staged_passwords, recipient_updates = stage_passage_rotation(
                 self.store, old_public, new_public, new_private
             )
 
         values[self.field] = new_private
         self.encrypt(values)
         atomic_write(self.public_file, new_public + "\n")
-        if passage_changes:
-            staged, recipient_files = passage_changes
-            for source, temporary in staged:
-                os.replace(temporary, source)
-            for path, contents in recipient_files.items():
-                atomic_write(path, contents, mode=0o600)
+        for source, temporary in staged_passwords:
+            os.replace(temporary, source)
+        for path, contents in recipient_updates.items():
+            atomic_write(path, contents, mode=0o600)
 
         print(f"Replaced {self.host}'s {self.kind} key. Git was not touched.")
         if self.kind == "passage":
-            print(f"Re-encrypted and verified {len(passage_changes[0])} password entries.")
+            print(f"Re-encrypted and verified {len(staged_passwords)} password entries.")
         elif self.kind == "nix":
             print("After deployment, sign existing paths with the new key as documented.")
         else:
             print("Rebuild the other hosts first and this host last.")
 
-    def status(self):
-        encrypted = json.loads(self.secret_file.read_text())
-        transition = sorted(name for name in encrypted if name.startswith(self.field + "-"))
-        print(f"{self.host} {self.kind}: active={'yes' if self.field in encrypted else 'no'}, "
-              f"public={'yes' if self.public_file.exists() else 'no'}")
-        if transition:
-            print(f"  unfinished fields: {', '.join(transition)}")
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("kind", choices=FIELDS)
-    parser.add_argument("action", nargs="?", default="rotate", choices=("rotate", "status"))
     parser.add_argument("--store", type=Path, default=Path.home() / ".password-store")
     args = parser.parse_args()
     repo = Path(__file__).resolve().parent.parent
@@ -248,13 +237,13 @@ def main():
     os.umask(0o077)
     resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
     rotation = Rotation(repo, socket.gethostname(), args.kind, args.store)
-    getattr(rotation, args.action)()
+    rotation.rotate()
 
 
 if __name__ == "__main__":
     try:
         main()
-    except (RotationError, OSError, ValueError, KeyError, json.JSONDecodeError) as error:
+    except (RotationError, OSError, ValueError, KeyError) as error:
         message = str(error) if isinstance(error, RotationError) else type(error).__name__
         print(f"rotate: {message}", file=sys.stderr)
         sys.exit(1)
