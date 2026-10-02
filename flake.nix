@@ -1,6 +1,9 @@
 # flake inputs can be overriden eg
 # --override-input nixpkgs /home/danielbarter/nixpkgs
 #
+# enable Punky's cache on demand, keeping the default caches:
+# nix build --option extra-substituters ssh://nix-ssh@punky.lan
+#
 # substituters can be overriden with
 # --option substituters ssh://nix-ssh@punky.lan
 # 
