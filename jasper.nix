@@ -1,5 +1,6 @@
 {
   networking.hostName = "jasper";
+  networking.firewall.allowedTCPPorts = [ 8000 ];
  
   services.logind.settings.Login = {
     HandlePowerKey = "suspend";
