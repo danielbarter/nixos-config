@@ -2,16 +2,16 @@
 # --override-input nixpkgs /home/danielbarter/nixpkgs
 #
 # enable Punky's cache on demand, keeping the default caches:
-# nix build --option extra-substituters ssh://nix-ssh@punky.lan
+# nix build --option extra-substituters ssh://nix-ssh@punky
 #
 # substituters can be overriden with
-# --option substituters ssh://nix-ssh@punky.lan
+# --option substituters ssh://nix-ssh@punky
 # 
 # to rebuild, pulling image from punky:
-# sudo nixos-rebuild --impure --option substituters ssh://nix-ssh@punky.lan switch
+# sudo nixos-rebuild --impure --option substituters ssh://nix-ssh@punky switch
 #
 # copy closure of store path from substituter
-# nix-store --realise --substituters ssh://nix-ssh@punky.lan <path>
+# nix-store --realise --substituters ssh://nix-ssh@punky <path>
 {
   inputs = {
     sops-nix = {

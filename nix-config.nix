@@ -24,7 +24,7 @@ in {
       );
       # Permit opting into Punky's cache without granting daemon privileges.
       # This does not add it to the default substituters.
-      trusted-substituters = [ "ssh://nix-ssh@punky.lan" ];
+      trusted-substituters = [ "ssh://nix-ssh@punky" ];
     };
 
 
