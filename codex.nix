@@ -2,7 +2,6 @@
 #   nix-build codex.nix
 {
   pkgs ? import <nixpkgs> { },
-  sandboxed ? true,
 }:
 
 let
@@ -25,8 +24,6 @@ pkgs.stdenvNoCC.mkDerivation {
   pname = "codex";
   inherit version;
 
-  nativeBuildInputs = [ pkgs.makeWrapper ];
-
   src = pkgs.fetchurl {
     url = "https://github.com/openai/codex/releases/download/rust-v${version}/codex-package-${target}.tar.gz";
     inherit hash;
@@ -37,25 +34,15 @@ pkgs.stdenvNoCC.mkDerivation {
   installPhase = ''
     runHook preInstall
 
+    # Preserve the executable and manifest for daemon package validation.
     mkdir -p $out
     cp -r bin codex-path codex-resources codex-package.json $out/
-    ${
-      if sandboxed then
-        ''
-          mv $out/bin/codex $out/bin/codex-unwrapped
-          cp ${./utils/agent-sandbox.sh} $out/bin/codex
-          substituteInPlace $out/bin/codex \
-            --replace-fail '@bash@' '${pkgs.bash}/bin/bash' \
-            --replace-fail '@systemd_run@' '${pkgs.systemd}/bin/systemd-run' \
-            --replace-fail '@binary@' "$out/bin/codex-unwrapped"
-          chmod +x $out/bin/codex
-        ''
-      else
-        ''
-          wrapProgram $out/bin/codex \
-            --add-flags --dangerously-bypass-approvals-and-sandbox
-        ''
-    }
+    cp ${./utils/agent-sandbox.sh} $out/bin/agent
+    substituteInPlace $out/bin/agent \
+      --replace-fail '@bash@' '${pkgs.bash}/bin/bash' \
+      --replace-fail '@systemd_run@' '${pkgs.systemd}/bin/systemd-run' \
+      --replace-fail '@binary@' "$out/bin/codex"
+    chmod +x $out/bin/agent
 
     runHook postInstall
   '';

@@ -3,12 +3,6 @@
   config,
   ...
 }:
-let
-  codex = import ./codex.nix {
-    inherit pkgs;
-    sandboxed = false;
-  };
-in
 {
 
   boot.isNspawnContainer = true;
@@ -45,7 +39,6 @@ in
     pkgs.fd
     pkgs.jq
     pkgs.python3
-    codex
   ];
 
   # Create the tarball
